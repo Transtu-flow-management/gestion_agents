@@ -28,6 +28,7 @@ public class Agent implements UserDetails {
     private Integer id;
     private String username;
     private String password;
+    private Boolean isEnabled =false;
     @DBRef
     private Set<Role> roles = new HashSet<>();
     public void addRole(Role role){
