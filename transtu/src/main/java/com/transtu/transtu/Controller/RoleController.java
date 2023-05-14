@@ -5,6 +5,8 @@ import com.transtu.transtu.Document.Role;
 import com.transtu.transtu.Service.RoleService;
 import com.transtu.transtu.Service.SequenceGeneratorService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.IanaLinkRelations;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,12 +24,14 @@ public class RoleController {
     private RoleService roleService;
     @Autowired
     SequenceGeneratorService mongo;
+    //utilisation de Hateoas method Restful API
     @PostMapping("/add")
-    private ResponseEntity<Role> CreateRole(@RequestBody Role role){
+    private ResponseEntity<EntityModel<Role>> CreateRole(@RequestBody Role role){
         role.setId(mongo.generateSequence(SEQUENCE_NAME_Role));
-        Role createrole = roleService.CreateRole(role);
-        return ResponseEntity.ok(createrole);
+       EntityModel<Role> createdRole = roleService.CreateRole(role);
+       return ResponseEntity.created(createdRole.getRequiredLink(IanaLinkRelations.SELF).toUri()).body(createdRole);
     }
+
     @GetMapping
     public ResponseEntity<List<Role>> getAllRoles() {
         List<Role> roles = roleService.getAllRoles();
