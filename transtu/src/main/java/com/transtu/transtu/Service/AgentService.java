@@ -13,10 +13,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -27,9 +24,10 @@ public class AgentService implements UserDetailsService {
     private RoleRepo roleRepo;
 
     public List<AgentDTO> findAllAgents(){
-       List<Agent> agents = agentRepo.findAll();
-       return convertDtoToEntity(agents);
+        List<Agent> agents = agentRepo.findAll();
+        return convertDtoToEntity(agents);
     }
+
     public Agent createAgent(Agent agent){
         String username = agent.getUsername();
         if (agentRepo.existsByUsername(username)){
@@ -40,11 +38,25 @@ public class AgentService implements UserDetailsService {
     public void DeleteAgents(){
         agentRepo.deleteAll();
     }
+    public Agent updateAgent(Integer id,AgentDTO agent){
+        Agent agent1 = agentRepo.findById(id).orElseThrow(()->new NoSuchElementException(("Agent introuvable")));
+        agent1.setUsername(agent.getUsername());
+        agent1.setPassword(agent.getPassword());
+    return agentRepo.save(agent1);
+    }
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         return null;
     }
+    public AgentDTO convertDTOToDocument(Agent agent){
+        AgentDTO agentDTO = new AgentDTO();
+        agentDTO.setId(agent.getId());
+        agentDTO.setUsername(agent.getUsername());
+        agentDTO.setPassword(agent.getPassword());
+        return agentDTO;
+    }
 
+// convertion de DTO vers entité normale sur la methode GET seulement
     private static List<AgentDTO> convertDtoToEntity(List<Agent> userList) {
         List<AgentDTO> dtoList = new ArrayList<>();
 

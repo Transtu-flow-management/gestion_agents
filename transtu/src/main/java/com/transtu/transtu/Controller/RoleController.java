@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Set;
 
-import static com.transtu.transtu.Document.Agent.SEQUENCE_NAME;
 import static com.transtu.transtu.Document.Role.SEQUENCE_NAME_Role;
 
 

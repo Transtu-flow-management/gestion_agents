@@ -9,6 +9,7 @@ import com.transtu.transtu.Service.SequenceGeneratorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,16 +21,16 @@ import static com.transtu.transtu.Document.Agent.SEQUENCE_NAME;
 @RestController
 @RequestMapping("/api/agents")
 public class AgentController {
-
-@Autowired
-private AgentService service;
-@Autowired
+private BCryptPasswordEncoder passwordEncoder;
+    @Autowired
+    private AgentService service;
+    @Autowired
     SequenceGeneratorService mongo;
     @Autowired
     private AgentRepo agentRepo;
 
     @GetMapping
-   private List<AgentDTO>getall(){
+    private List<AgentDTO>getall(){
 
         return service.findAllAgents();
     }
@@ -47,12 +48,19 @@ private AgentService service;
         Agent addagent = service.createAgent(agent);
         return ResponseEntity.ok(addagent);
     }
-@DeleteMapping("/deleteAll")
+    @PutMapping("/update/{agentid}")
+    private ResponseEntity<AgentDTO> updateagent(@PathVariable Integer agentid,@RequestBody AgentDTO agentDTO){
+        Agent updated = service.updateAgent(agentid,agentDTO);
+        AgentDTO updatedtDTO = service.convertDTOToDocument(updated);
+        return ResponseEntity.ok(updatedtDTO);
+    }
+
+    @DeleteMapping("/deleteAll")
     private ResponseEntity<String> deleteAll(){
 
-       service.DeleteAgents();
-       mongo.resetSequence(SEQUENCE_NAME);
-       return ResponseEntity.ok("all agents are gone");
+        service.DeleteAgents();
+        mongo.resetSequence(SEQUENCE_NAME);
+        return ResponseEntity.ok("all agents are gone");
     }
     @PostMapping("/{agentid}/role/{roleid}")
     public ResponseEntity<String>AssignRoleToAgent(@PathVariable Integer agentid, @PathVariable Integer roleid) throws ChangeSetPersister.NotFoundException {

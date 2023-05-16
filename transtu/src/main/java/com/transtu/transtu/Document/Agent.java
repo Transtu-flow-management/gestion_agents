@@ -16,16 +16,20 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-@Document(collection = "agents")
+@Document(collection = "test")
 @Data
+@Builder
 @NoArgsConstructor
+@AllArgsConstructor
 @Getter
+
 @Setter
 public class Agent implements UserDetails {
     @Transient
     public static final String SEQUENCE_NAME = "agent_sequence";
     @Id
     private Integer id;
+    private String email;
     private String username;
     private String password;
     private Boolean isEnabled =false;
@@ -39,17 +43,19 @@ public class Agent implements UserDetails {
     }
 
 
-   // private Set<Role> roles;
+    // private Set<Role> roles;
 
-   /* @JsonIgnore
-    @Override
+    /* @JsonIgnore
+     @Override
+     public Collection<? extends GrantedAuthority> getAuthorities() {
+         roles.forEach(r ->System.out.println(r.getRoleName()));
+         return roles.stream().map(role -> new SimpleGrantedAuthority(role.getRoleName())).collect(Collectors.toSet());
+     }*/
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        roles.forEach(r ->System.out.println(r.getRoleName()));
-        return roles.stream().map(role -> new SimpleGrantedAuthority(role.getRoleName())).collect(Collectors.toSet());
-    }*/
-   public Collection<? extends GrantedAuthority> getAuthorities() {
-       return null;
-   }
+        return roles.stream()
+                .map(role -> new SimpleGrantedAuthority(role.getRoleName()))
+                .collect(Collectors.toSet());
+    }
     @Override
     public String getUsername() {
         return username;
