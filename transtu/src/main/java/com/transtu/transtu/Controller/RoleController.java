@@ -1,7 +1,10 @@
 package com.transtu.transtu.Controller;
 
+import com.transtu.transtu.DTO.AgentDTO;
+import com.transtu.transtu.Document.Agent;
 import com.transtu.transtu.Document.Permissions;
 import com.transtu.transtu.Document.Role;
+import com.transtu.transtu.Repositoy.RoleRepo;
 import com.transtu.transtu.Service.RoleService;
 import com.transtu.transtu.Service.SequenceGeneratorService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,27 +13,30 @@ import org.springframework.hateoas.IanaLinkRelations;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import static com.transtu.transtu.Document.Role.SEQUENCE_NAME_Role;
-
-
 @RestController
+@CrossOrigin(origins = "http://localhost:4200")
 @RequestMapping("/api/roles")
 public class RoleController {
     @Autowired
     private RoleService roleService;
     @Autowired
     SequenceGeneratorService mongo;
+    @Autowired
+    private RoleRepo roleRepo;
+
     //utilisation de Hateoas method Restful API
     @PostMapping("/add")
-    private ResponseEntity<EntityModel<Role>> CreateRole(@RequestBody Role role){
+    private ResponseEntity<EntityModel<Role>> CreateRole(@RequestBody Role role ){
         role.setId(mongo.generateSequence(SEQUENCE_NAME_Role));
        EntityModel<Role> createdRole = roleService.CreateRole(role);
        return ResponseEntity.created(createdRole.getRequiredLink(IanaLinkRelations.SELF).toUri()).body(createdRole);
     }
-
     @GetMapping
     public ResponseEntity<List<Role>> getAllRoles() {
         List<Role> roles = roleService.getAllRoles();
@@ -43,9 +49,33 @@ public class RoleController {
         mongo.resetSequence(SEQUENCE_NAME_Role);
         return ResponseEntity.ok("all Roles are gone");
     }
+    @PutMapping("/update/{roleid}")
+    private ResponseEntity<Role> updateagent(@PathVariable Integer roleid, @RequestBody Role role){
+        Role updated = roleService.updateRole(roleid,role);
+        return ResponseEntity.ok(updated);
+    }
     @PostMapping("/{roleid}/permissions")
-    public ResponseEntity<?> assignPermsToRole(@PathVariable Integer roleid, @RequestBody Set<Permissions> permission){
+    public ResponseEntity<?> assignPermsToRole(@PathVariable Integer roleid, @RequestBody Set<String> permission){
         roleService.assignPermstoRole(roleid,permission);
         return ResponseEntity.ok("permissions are assigned to role");
     }
+    @DeleteMapping("/delete/{roleid}")
+    public ResponseEntity<?>deleteRole(@PathVariable("roleid") Integer roleid){
+        Optional<Role> optionalrole = roleRepo.findById(roleid);
+        if(optionalrole.isEmpty()){
+            return ResponseEntity.notFound().build();
+        }
+        roleRepo.deleteById(roleid);
+        return ResponseEntity.ok("Role deleted");
+    }
+    @DeleteMapping("/delete/{roleid}/permission/{permission}")
+    public ResponseEntity<?>deletepermissionfromRole(@PathVariable("roleid") Integer roleid,@PathVariable("permission") Permissions permission){
+       Optional<Role> delroleperm = roleRepo.findById(roleid);
+       if(delroleperm.isEmpty()){
+           return ResponseEntity.notFound().build();
+       }
+       roleService.removepermissionfromRole(roleid,permission);
+       return ResponseEntity.ok("Permission Supprimé ");
+    }
+
 }

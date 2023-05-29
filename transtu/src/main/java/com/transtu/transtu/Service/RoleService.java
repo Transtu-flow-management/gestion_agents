@@ -10,13 +10,19 @@ import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class RoleService {
     @Autowired
     private RoleRepo roleRepo;
+    public Role getRolebyId(Integer id){
+        return roleRepo.findById(id).orElseThrow(()->new NoSuchElementException("Role introuvable"));
+    }
 
     public List<Role> getAllRoles() {
         return roleRepo.findAll();
@@ -25,19 +31,38 @@ public class RoleService {
         if (roleRepo.existsByRoleName(role.getRoleName())){
             throw new IllegalArgumentException("Role avec le meme nom deja existant");
         }
+        role.setDateOfCreation(new Date());
+        role.setPermissionNames(role.getPermissionNames());
         Role savedRole = roleRepo.save(role);
         WebMvcLinkBuilder selflink = WebMvcLinkBuilder.linkTo(RoleController.class).slash(savedRole.getId());
      EntityModel<Role> roleentity = EntityModel.of(savedRole);
      roleentity.add(selflink.withSelfRel());
      return roleentity;
     }
+    public Role updateRole(Integer id,Role role) {
+        Role newrole = roleRepo.findById(id).orElseThrow(() -> new NoSuchElementException(("Role introuvable")));
+        newrole.setRoleName(role.getRoleName());
+        newrole.setPermissions(role.getPermissions());
+        newrole.setDateOfModification(new Date());
+        return roleRepo.save(newrole);
+    }
     public void Deleteall(){
         roleRepo.deleteAll();
     }
-    public Role assignPermstoRole(Integer roleid, Set<Permissions> permission){
+    public Role assignPermstoRole(Integer roleid, Set<String> permissionNames){
         Role role = roleRepo.findById(roleid).orElseThrow(()-> new NotFoundExcemptionhandler(roleid));
-        role.setPermissions(permission);
+        Set<Permissions> permissions = permissionNames.stream()
+                        .map(Permissions::fromstring)
+                                .collect(Collectors.toSet());
+        role.setPermissions(permissions);
         roleRepo.save(role);
         return role;
     }
+
+    public Role removepermissionfromRole(Integer roleid,Permissions permission){
+        Role role = roleRepo.findById(roleid).orElseThrow(()-> new NotFoundExcemptionhandler(roleid));
+       role.getPermissions().remove(permission);
+       roleRepo.save(role);
+       return role;
+}
 }

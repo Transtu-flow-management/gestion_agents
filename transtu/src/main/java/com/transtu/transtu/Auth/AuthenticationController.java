@@ -1,28 +1,26 @@
 package com.transtu.transtu.Auth;
 import com.transtu.transtu.DTO.SignUpRequest;
-import com.transtu.transtu.Document.Token;
+import com.transtu.transtu.Document.Agent;
 import com.transtu.transtu.Service.AuthenticationService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 
 @RestController
+
 @RequestMapping("/api/auth")
 @RequiredArgsConstructor
 public class AuthenticationController {
         @Autowired
         private final AuthenticationService service;
 
-        @PostMapping("/register")
-        public ResponseEntity<AuthenticationResponse> register(@RequestBody SignUpRequest request) {
+       @PostMapping("/register")
+        public ResponseEntity<AuthenticationResponse> register(@RequestBody Agent request) {
             return ResponseEntity.ok(service.register(request));
         }
         @PostMapping("/authenticate")

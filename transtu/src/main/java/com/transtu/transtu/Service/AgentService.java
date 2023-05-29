@@ -28,20 +28,24 @@ public class AgentService implements UserDetailsService {
         return convertDtoToEntity(agents);
     }
 
-    public Agent createAgent(Agent agent){
+    /*public Agent createAgent(Agent agent){
         String username = agent.getUsername();
         if (agentRepo.existsByUsername(username)){
             throw new IllegalArgumentException("username deja existant");
         }
         return agentRepo.save(agent);
-    }
+    }*/
     public void DeleteAgents(){
         agentRepo.deleteAll();
     }
-    public Agent updateAgent(Integer id,AgentDTO agent){
+    public Agent updateAgent(Integer id,Agent agent){
         Agent agent1 = agentRepo.findById(id).orElseThrow(()->new NoSuchElementException(("Agent introuvable")));
+        agent1.setName(agent.getName());
+        agent1.setPrenom(agent.getPrenom());
+        agent1.setRoles(agent.getRoles());
         agent1.setUsername(agent.getUsername());
         agent1.setPassword(agent.getPassword());
+        agent1.setDateOfModification(new Date());
     return agentRepo.save(agent1);
     }
     @Override
@@ -51,8 +55,11 @@ public class AgentService implements UserDetailsService {
     public AgentDTO convertDTOToDocument(Agent agent){
         AgentDTO agentDTO = new AgentDTO();
         agentDTO.setId(agent.getId());
+        agentDTO.setName(agent.getName());
+        agentDTO.setEmail(agent.getEmail());
+        agentDTO.setPrenom(agent.getPrenom());
         agentDTO.setUsername(agent.getUsername());
-        agentDTO.setPassword(agent.getPassword());
+        agentDTO.setDateOfModification(agent.getDateOfModification());
         return agentDTO;
     }
 
@@ -65,11 +72,16 @@ public class AgentService implements UserDetailsService {
             AgentDTO dto = new AgentDTO();
 
             dto.setId(user2.getId());
+            dto.setName(user2.getName());
+            dto.setPrenom(user2.getPrenom());
+            dto.setEmail(user2.getEmail());
             dto.setUsername(user2.getUsername());
-            Set<String> roleNames = user2.getRoles().stream()
-                    .map(Role::getRoleName)
-                    .collect(Collectors.toSet());
-            dto.setRoleName(roleNames);
+            dto.setDateOfInsertion(user2.getDateOfInsertion());
+            dto.setDateOfModification(user2.getDateOfModification());
+            if (!user2.getRoles().isEmpty()) {
+                Role role = user2.getRoles().iterator().next();
+                dto.setRoleName(role.getRoleName());
+            }
             dtoList.add(dto);
         }
 

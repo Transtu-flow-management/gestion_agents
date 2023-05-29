@@ -3,8 +3,10 @@ package com.transtu.transtu.Service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.transtu.transtu.Auth.AuthenticationRequest;
 import com.transtu.transtu.Auth.AuthenticationResponse;
+import com.transtu.transtu.DTO.AgentDTO;
 import com.transtu.transtu.DTO.SignUpRequest;
 import com.transtu.transtu.Document.Agent;
+import com.transtu.transtu.Document.Role;
 import com.transtu.transtu.Document.Token;
 import com.transtu.transtu.Document.TokenType;
 import com.transtu.transtu.Repositoy.AgentRepo;
@@ -20,8 +22,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.util.Date;
 
-import static com.transtu.transtu.DTO.SignUpRequest.SEQUENCE_NAME_Signup;
+import static com.transtu.transtu.Document.Agent.SEQUENCE_NAME;
 import static com.transtu.transtu.Document.Token.SEQUENCE_NAME_TOKEN;
 
 
@@ -38,20 +41,36 @@ private final SequenceGeneratorService mongo;
     @Autowired
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
-    public AuthenticationResponse register(SignUpRequest request) {
-        Integer signid = mongo.generateSequence(SEQUENCE_NAME_Signup);
+    public AuthenticationResponse register(Agent request) {
+        Date currentDate = new Date();
+        Integer signid = mongo.generateSequence(SEQUENCE_NAME);
         var user = Agent.builder().id(signid)
+                .name((request.getName()))
+                .prenom(request.getPrenom())
+                .email(request.getEmail())
                 .username(request.getUsername())
                 .password(passwordEncoder.encode(request.getPassword()))
-                //.roles(request.getRoles())
+                .roles(request.getRoles())
+                .dateOfInsertion(currentDate)
                 .build();
+
         var savedUser = agentRepo.save(user);
+        AgentDTO agentDTO = new AgentDTO();
+        agentDTO.setId(savedUser.getId());
+        agentDTO.setPrenom(savedUser.getPrenom());
+        agentDTO.setName(savedUser.getName());
+        agentDTO.setUsername(savedUser.getUsername());
+        agentDTO.setEmail(savedUser.getEmail());
+        agentDTO.setDateOfInsertion(savedUser.getDateOfInsertion());
+        String rolename = savedUser.getRoles().stream().findFirst().map(Role::getRoleName).orElse(null);
+        agentDTO.setRoleName(rolename);
         var jwtToken = jwtService.generateToken(user);
         var refreshToken = jwtService.generateRefreshToken(user);
         saveUserToken(savedUser, jwtToken);
         return AuthenticationResponse.builder()
                 .accessToken(jwtToken)
                 .refreshToken(refreshToken)
+                .agent(agentDTO)
                 .build();
     }
 

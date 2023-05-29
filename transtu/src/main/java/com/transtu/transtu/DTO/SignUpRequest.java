@@ -17,9 +17,9 @@ public class SignUpRequest {
     @Transient
     public static final String SEQUENCE_NAME_Signup = "signup_sequence";
 
-   // private String nom;
-    //private String prenom;
-    //private String email;
+   private String nom;
+    private String prenom;
+    private String email;
     private String username;
     private String password;
     //private Set<Role> roles;
