@@ -33,6 +33,8 @@ import { RoleModalComponent } from './Dialogs/role-modal/role-modal.component';
 import { UpdateroleComponent } from './Dialogs/updaterole/updaterole.component';
 import { PermissionsComponent } from './Core/Pages/permissions/permissions.component';
 import { AdduserDialogComponent } from './Dialogs/adduser-dialog/adduser-dialog.component';
+import { AssignRoledialogComponent } from './Dialogs/assign-roledialog/assign-roledialog.component';
+import {MatRadioModule} from '@angular/material/radio';
 @NgModule({
   declarations: [
     AppComponent,
@@ -51,8 +53,10 @@ import { AdduserDialogComponent } from './Dialogs/adduser-dialog/adduser-dialog.
     UpdateroleComponent,
     PermissionsComponent,
     AdduserDialogComponent,
+    AssignRoledialogComponent,
   ],
   imports: [
+    MatRadioModule,
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,

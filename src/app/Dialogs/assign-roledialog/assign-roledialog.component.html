@@ -1,0 +1,16 @@
+<div class="flex flex-row relative">
+    <mat-form-field >
+        
+        <input matInput [readonly]="true" [(ngModel)]="id" />
+      </mat-form-field>
+<mat-radio-group [(ngModel)]="selected" (change)="onRoleSelectionChange()">
+    Select Role: <mat-radio-button *ngFor="let role of role" [value]="role.roleName"> {{role.roleName}}</mat-radio-button>
+</mat-radio-group>
+</div>
+<div><button
+    mat-raised-button
+    color="primary"
+    (click)="AddRole()" class="bg-blue-200 px-5 py-3 text-sm shadow-sm font-medium tracking-wider text-green-800 rounded-full hover:shadow-2xl hover:bg-green-300"
+    >
+    Add Role
+    </button></div>

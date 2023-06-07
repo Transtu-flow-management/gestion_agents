@@ -22,13 +22,15 @@ export class PermissionsComponent implements OnInit  {
       (res) => {
         this.permissions = res.map((permission) => ({
           permissionName: permission.permissionName,
-          selectedPerm: this.assignedPermissions.includes(permission.permissionName),
         }));
       },
       (error) => {
         console.log('Error fetching permissions', error);
       }
     );
+  }
+  isPermissionAssigned(permissionName: string): boolean {
+    return this.assignedPermissions.includes(permissionName);
   }
   
   public onpress():void{

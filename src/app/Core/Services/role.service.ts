@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Role } from '../interfaces/Role';
+import { IPermissions, Role } from '../interfaces/Role';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -24,15 +24,15 @@ export class RoleService {
   public getRoles(){
     return this.http.get<Role[]>(this.roleurl);
   }
- public updateRole(id:Number,role: Role) {
+ public updateRole(id:Number,role: Role):Observable<Role>{
   const url = `${this.roleurl}/update/${id}`;
-    return this.http.patch<Role>(url, role);
+    return this.http.put<Role>(url, role);
   }
   public deleteRole(id:Number):Observable<any>{
     const url =`${this.roleurl}/delete/${id}`;
     return this.http.delete(url);
   }
-  public AssignPermssionsToRole(id:Number,permissions : String[]):Observable<any>{
+  public AssignPermssionsToRole(id:Number,permissions : String[]):Observable<IPermissions>{
     const url = `${this.roleurl}/${id}/permissions`;
     return this.http.post<any>(url,permissions);
   }

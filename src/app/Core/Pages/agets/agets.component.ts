@@ -10,6 +10,7 @@ import { Role } from '../../interfaces/Role';
 import { RoleService } from '../../Services/role.service';
 import { AdduserDialogComponent } from '../../../Dialogs/adduser-dialog/adduser-dialog.component';
 import { AddUserComponent } from '../add-user/add-user.component';
+import { AssignRoledialogComponent } from 'src/app/Dialogs/assign-roledialog/assign-roledialog.component';
 
 
 @Component({
@@ -68,7 +69,16 @@ openEditAgentDialog(agent:Agent):void {
     }
   });
 }
-
+openAssignRole(agent:Number):void{
+  const dialg = this.dialog.open(AssignRoledialogComponent,{
+    width: '50%',
+    height:'50%',
+    data: {agent: { id: agent }},
+  });
+  dialg.afterClosed().subscribe(result => {
+    console.log('Dialog closed:', result);
+  });
+}
 
 openError(message: any) {
   const dialogRef = this.dialog.open(ErrorsComponent, {
@@ -90,7 +100,6 @@ this.agentservice.deleteAgent(id).subscribe({
     alert('Agent supprimé');
     this.fetchAgents();
   },
-  error: console.log
 })
 }
 public getRoles():void{
@@ -101,13 +110,6 @@ this.roleservice.getRoles().subscribe(
   }
 )
 }
-public assignroleToAgent():void{
-  this.agentservice
-}
-public openAssignRoleDialog(agent : Agent){
-  this.agentss =agent
-}
-
 
 }
 

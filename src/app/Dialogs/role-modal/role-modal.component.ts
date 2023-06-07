@@ -1,5 +1,5 @@
-import { Component  } from '@angular/core';
-import {  MatDialogRef } from '@angular/material/dialog';
+import { Component } from '@angular/core';
+import { MatDialogRef } from '@angular/material/dialog';
 import { RoleService } from 'src/app/Core/Services/role.service';
 import { IPermissions, Role } from 'src/app/Core/interfaces/Role';
 import {
@@ -13,28 +13,37 @@ import {
   styleUrls: ['./role-modal.component.css']
 })
 export class RoleModalComponent {
-  roleName : String = '';
-  
-  constructor(private dialogRef: MatDialogRef<RoleModalComponent>,private _roleservice: RoleService){
-    
+  roleName: String = '';
+
+
+  constructor(private dialogRef: MatDialogRef<RoleModalComponent>, private _roleservice: RoleService) {
+
   }
 
-Annuler():void{
-  this.dialogRef.close();
-}
-addrole():void{
- if (this.roleName){
-  var newRole : Role = {
-    id: null,
-    dateOfCreation :null,
-    dateOfModification :null,
-    roleName:this.roleName,
-    permissions :null
+  Annuler(): void {
+    this.dialogRef.close();
+  }
+  addrole(): void {
+    if (this.roleName) {
+      var newRole: Role = {
+        id: null,
+        dateOfCreation: null,
+        dateOfModification: null,
+        roleName: this.roleName,
+        permissions: null
+      };
+      this._roleservice.createRole(newRole).subscribe((res) => {
+        console.log("role ajouté", res);
+        this.dialogRef.close(newRole);
+      },
+
+        (error) => {
+          console.log("error adding role", error);
+        })
+
+    }
+
+
   };
-  this.dialogRef.close(newRole);
-  
- };
 }
 
-
-}

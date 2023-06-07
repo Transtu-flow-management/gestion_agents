@@ -1,6 +1,6 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { switchMap, take } from 'rxjs';
+import { switchMap, of } from 'rxjs';
 import { PermissionService } from 'src/app/Core/Services/permission.service';
 import { RoleService } from 'src/app/Core/Services/role.service';
 import { IPermissions } from 'src/app/Core/interfaces/Role';
@@ -21,6 +21,7 @@ export class UpdateroleComponent {
     this.id = role.id;
     this.roleName = role.roleName;
     this.selectedPerm = role.selected;
+  
   }
  
   selectedPermission(selectedbox: String[]): void {
@@ -35,17 +36,26 @@ export class UpdateroleComponent {
     role.roleName = this.roleName
     
     console.log("new: ",role)
-    this._roleService.updateRole(this.data.role.id,role).pipe(
-      switchMap(() => this._roleService.AssignPermssionsToRole(this.data.role.id, this.selectedPerm))
+    this._roleService.updateRole(this.data.role.id, role).pipe(
+      switchMap(() => {
+        if (!this.selectedPerm ||this.selectedPerm.length > 0) {
+          
+          //console.log("param: "+this.selectedPerm.length );
+          return this._roleService.AssignPermssionsToRole(this.data.role.id, this.selectedPerm);
+          
+        } else {
+          console.log("test2");
+          return of(null);
+        }
+      })
+      
     ).subscribe(
       (res) => {
-        console.log("Role is updated", res);
-       
+        console.log('Role is updated', res);
         this.dialogRef.close();
       },
       (error) => {
-        console.error("Failed to update role", error);
-        
+        console.error('Failed to update role', error);
       }
     );
    }

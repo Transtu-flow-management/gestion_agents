@@ -29,7 +29,7 @@ export class UserServiceService {
   }
  public updateAgent(id:Number,agent) {
   const url = `${this.usersUrl}/update/${id}`;
-    return this.http.put<Agent>(url, agent);
+    return this.http.patch<Agent>(url, agent);
   }
   public deleteAgent(id:Number):Observable<any>{
     const url =`${this.usersUrl}/delete/${id}`;
