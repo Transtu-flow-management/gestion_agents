@@ -1,0 +1,32 @@
+{{data.role | json}}
+<h1 mat-dialog-title>modifier le Role</h1>
+<div mat-dialog-content>
+  <div fxLayout="column">
+    <mat-form-field >
+        
+        <input matInput [readonly]="true" [(ngModel)]="id" />
+      </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>  Saisir le nom du role </mat-label>
+      <input [(ngModel)]="roleName" matInput />
+    </mat-form-field>
+  </div>
+</div>
+<div>
+  <app-permissions [assignedPermissions]="assignedPermissions" (selectedPermissions)="selectedPermission($event)"></app-permissions>
+</div>
+<div fxLayout="row-reverse" fxLayoutGap="10px" mat-dialog-actions>
+  <button cdkFocusInitial mat-dialog-close class="bg-blue-200 px-5 py-3 text-sm shadow-sm font-medium tracking-wider text-green-800 rounded-full hover:shadow-2xl hover:bg-green-300">annuler</button>
+  <button mat-dialog-close
+    mat-raised-button
+    color="primary" class="bg-blue-200 px-5 py-3 text-sm shadow-sm font-medium tracking-wider text-green-800 rounded-full hover:shadow-2xl hover:bg-green-300" (click)="updateRole()"
+  >
+    modifier
+  </button>
+  <button mat-dialog-close
+    mat-raised-button
+    color="primary" class="bg-blue-200 px-5 py-3 text-sm shadow-sm font-medium tracking-wider text-green-800 rounded-full hover:shadow-2xl hover:bg-green-300" (click)="testAssign()"
+  >
+    test
+  </button>
+</div>

@@ -1,0 +1,30 @@
+<!-- component -->
+<div class="leading-loose">
+    <form class="max-w-xl m-4 p-10 bg-white rounded shadow-xl" [formGroup]="addForm">
+      <p class="text-gray-800 font-medium">Add Agent</p>
+      <div class="">
+        <label class="block text-sm text-gray-00" for="ag_nom" >Nom</label>
+        <input class="w-full px-5 py-1 text-gray-700 bg-gray-200 rounded" formControlName="name" id="ag_nom" nom="ag_nom" type="text" required="true"  aria-label="nom">
+      </div>
+      <div class="">
+        <label class="block text-sm text-gray-00" for="ag_prenm" >Prenom</label>
+        <input class="w-full px-5 py-1 text-gray-700 bg-gray-200 rounded"formControlName="prenom" id="ag_prenm" name="ag_prenm" type="text" required="true" aria-label="Name">
+      </div>
+      <div class="mt-2">
+        <label class="block text-sm text-gray-600" for="ag_email" >Email</label>
+        <input class="w-full px-5  py-4 text-gray-700 bg-gray-200 rounded" formControlName="email"id="ag_email" name="ag_email" type="text" required="" placeholder="Votre mail transtu" aria-label="Email">
+      </div>
+      <div class="mt-2">
+        <label class="block text-sm text-gray-600" for="username" >Username</label>
+        <input class="w-full px-5  py-4 text-gray-700 bg-gray-200 rounded" formControlName="username"id="username" name="username" type="text" required="" placeholder="username Unique" aria-label="username">
+      </div>
+      
+      <div class="mt-2">
+        <label class=" block text-sm text-gray-600" for="ag_pass">Mot de passe</label>
+        <input class="w-full px-2 py-2 text-gray-700 bg-gray-200 rounded" formControlName="password" id="ag_password" name="ag_password" type="password" required="" placeholder="Mot de passe" aria-label="Email">
+        <button class="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded" (click)="addUser()">
+          Add agent
+        </button>
+      </div>
+    </form>
+  </div>

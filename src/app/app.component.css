@@ -1,0 +1,36 @@
+
+mat-sidenav {
+  width: 240px;
+  transition: width 1.5s;
+}
+
+mat-sidenav.mat-drawer-opened {
+  width: 240px;
+}
+
+mat-sidenav-content {
+  transition: margin-left 1.5s;
+}
+
+mat-sidenav-container.mat-drawer-opened mat-sidenav-content {
+  margin-left: 240px;
+}
+
+.pushed {
+  margin-left: 240px;
+}
+.arrow {
+  border: solid rgb(92, 89, 47);
+  border-width: 0 3px 3px 0;
+  display: inline-block;
+  padding: 3px;
+}
+
+.right {
+  transform: rotate(-45deg);
+  -webkit-transform: rotate(-45deg);
+}
+.left {
+  transform: rotate(135deg);
+  -webkit-transform: rotate(135deg);
+}

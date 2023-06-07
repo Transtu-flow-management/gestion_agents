@@ -1,0 +1,50 @@
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="/dist/tailwind.css" rel="stylesheet" />
+  <link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.0/font/bootstrap-icons.css"
+  />
+</head>
+<div class="sidebar absolute top-0 bottom-0 lg:left-0 p-2 overflow-y-auto text-center bg-stone-600">
+  <div class="text-gray-100 text-xl">
+    <div class="pt-1 pr-16 mt-1 flex-initial">
+      <h1 class="font-bold text-gray-200 text-[15px] ">Transtu</h1>
+      <h3 class="font-bold text-gray-200 pl-14">suivi de flotte</h3>
+    </div>
+    <div class="my-2 bg-gray-600 h-[1px]"></div>
+  </div>
+  <hr>
+  <div class="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-green-700 text-white">
+    <i class="bi bi-house-door-fill"></i>
+    <span class="text-[15px] ml-4 text-gray-200 font-bold" routerLink="/agents">Home</span>
+  </div>
+  <div class="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-green-600 text-white">
+    <i class="bi bi-envelope-slash"></i>
+    <span class="text-[15px] ml-4 text-gray-200 font-bold" routerLink="/agents">Agents</span>
+  </div>
+  <div class="my-1 bg-red-600 h-[2px]"></div>
+  <div class="p-2.5 mt-3 mr-10 flex items-baseline rounded-md px-4 duration-300 cursor-pointer hover:bg-green-600 text-white"
+    (click)="toggleDropdown()">
+    <i class="bi bi-chat-left-text-fill"></i>
+    <div class="flex justify-between w-full items-center">
+      <span class="text-[16px]  text-gray-200 font-bold">Manage Agent <span class="text-sm rotate-180 cursor-pointer ml-16 " id="arrow">
+        <i class="bi bi-chevron-down pl-16"></i>
+      </span>
+    </span>
+    </div>
+  </div>
+  <div class="text-left text-sm mt-2 w-4/5 mx-auto text-gray-200 font-bold " [ngClass]="{ 'hidden': isSubmenuHidden }" id="submenu">
+  <a routerLink="/roles">  <h1 class="cursor-pointer p-2 hover:bg-blue-600 rounded-md mt-1">
+      Roles
+    </h1></a>
+    <a routerLink="/permissions"><h1 class="cursor-pointer p-2 hover:bg-blue-600 rounded-md mt-1">
+      Permissions
+    </h1></a>
+  </div>
+  <div class="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-blue-600 text-white">
+    <i class="bi bi-box-arrow-in-right"></i>
+    <span class="text-[15px] ml-4 text-gray-200 font-bold">Logout</span>
+  </div>
+</div>

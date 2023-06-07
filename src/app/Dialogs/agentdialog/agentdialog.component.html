@@ -1,0 +1,48 @@
+
+
+{{data.agent | json}}
+<h1 mat-dialog-title>modifier un Agent</h1>
+<div mat-dialog-content>
+  <div [formGroup]="updateForm" fxLayout="column">
+    <mat-form-field >
+        <h3></h3>
+        <input matInput [readonly]="true" formControlName="id" />
+      </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>  Saisir le nom</mat-label>
+      <input formControlName="name" matInput />
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+    <mat-label>prenom</mat-label>
+      <input matInput formControlName="prenom" />
+      <!-- <mat-hint>Hint</mat-hint> -->
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>e-mail</mat-label>
+      <input matInput formControlName="email" />
+      <!-- <mat-hint>Hint</mat-hint> -->
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>username</mat-label>
+      <input matInput formControlName="username" />
+      <!-- <mat-hint>Hint</mat-hint> -->
+    </mat-form-field>
+   
+    <mat-form-field *ngIf="checked" appearance="outline">
+      <mat-label>mot de passe</mat-label>
+      <input matInput formControlName="password" />
+      <!-- <mat-hint>Hint</mat-hint> -->
+    </mat-form-field>
+  </div>
+</div>
+<div fxLayout="row-reverse" fxLayoutGap="10px" mat-dialog-actions>
+  <button mat-raised-button (click)="annuler()" cdkFocusInitial class="bg-blue-200 px-5 py-3 text-sm shadow-sm font-medium tracking-wider text-green-800 rounded-full hover:shadow-2xl hover:bg-green-300">annuler</button>
+  <button
+    mat-raised-button
+    color="primary"
+    [disabled]="updateForm.invalid"
+    (click)="updateUser()" class="bg-blue-200 px-5 py-3 text-sm shadow-sm font-medium tracking-wider text-green-800 rounded-full hover:shadow-2xl hover:bg-green-300"
+  >
+    modifier
+  </button>
+</div>
