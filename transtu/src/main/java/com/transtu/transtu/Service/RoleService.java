@@ -32,7 +32,7 @@ public class RoleService {
             throw new IllegalArgumentException("Role avec le meme nom deja existant");
         }
         role.setDateOfCreation(new Date());
-        role.setPermissionNames(role.getPermissionNames());
+
         Role savedRole = roleRepo.save(role);
         WebMvcLinkBuilder selflink = WebMvcLinkBuilder.linkTo(RoleController.class).slash(savedRole.getId());
      EntityModel<Role> roleentity = EntityModel.of(savedRole);
@@ -42,7 +42,7 @@ public class RoleService {
     public Role updateRole(Integer id,Role role) {
         Role newrole = roleRepo.findById(id).orElseThrow(() -> new NoSuchElementException(("Role introuvable")));
         newrole.setRoleName(role.getRoleName());
-        newrole.setPermissions(role.getPermissions());
+        //newrole.setPermissions(role.getPermissions());
         newrole.setDateOfModification(new Date());
         return roleRepo.save(newrole);
     }

@@ -37,7 +37,7 @@ private BCryptPasswordEncoder passwordEncoder;
         return service.findAllAgents();
     }
 
-    @PutMapping("/update/{agentid}")
+    @PatchMapping("/update/{agentid}")
     private ResponseEntity<AgentDTO> updateagent(@PathVariable Integer agentid,@RequestBody Agent agentDTO){
         Agent updated = service.updateAgent(agentid,agentDTO);
         AgentDTO updatedtDTO = service.convertDTOToDocument(updated);
@@ -52,7 +52,7 @@ private BCryptPasswordEncoder passwordEncoder;
         return ResponseEntity.ok("all agents are gone");
     }
     @DeleteMapping("/delete/{agentid}")
-    public ResponseEntity<String> deleteUserById(@PathVariable("agentid") Integer agentid) {
+    public ResponseEntity<?> deleteUserById(@PathVariable("agentid") Integer agentid) {
         // Check if the user exists
         Optional<Agent> userOptional = agentRepo.findById(agentid);
         if (userOptional.isEmpty()) {
@@ -60,7 +60,7 @@ private BCryptPasswordEncoder passwordEncoder;
         }
         agentRepo.deleteById(agentid);
 
-        return ResponseEntity.ok("Agent deleted successfully");
+        return ResponseEntity.accepted().build();
     }
     @PostMapping("/{agentid}/role/{roleid}")
     public ResponseEntity<String>AssignRoleToAgent(@PathVariable Integer agentid, @PathVariable Integer roleid) throws ChangeSetPersister.NotFoundException {
