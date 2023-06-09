@@ -43,6 +43,7 @@ public class AgentService implements UserDetailsService {
         agent1.setName(agent.getName());
         agent1.setPrenom(agent.getPrenom());
         agent1.setRoles(agent.getRoles());
+        agent1.setImageUrl(agent.getImageUrl());
         agent1.setUsername(agent.getUsername());
         agent1.setPassword(agent.getPassword());
         agent1.setDateOfModification(new Date());
@@ -57,6 +58,7 @@ public class AgentService implements UserDetailsService {
         agentDTO.setId(agent.getId());
         agentDTO.setName(agent.getName());
         agentDTO.setEmail(agent.getEmail());
+        agentDTO.setImageUrl(agent.getImageUrl());
         agentDTO.setPrenom(agent.getPrenom());
         agentDTO.setUsername(agent.getUsername());
         agentDTO.setDateOfModification(agent.getDateOfModification());
@@ -76,6 +78,7 @@ public class AgentService implements UserDetailsService {
             dto.setPrenom(user2.getPrenom());
             dto.setEmail(user2.getEmail());
             dto.setUsername(user2.getUsername());
+            dto.setImageUrl(user2.getImageUrl());
             dto.setDateOfInsertion(user2.getDateOfInsertion());
             dto.setDateOfModification(user2.getDateOfModification());
             if (!user2.getRoles().isEmpty()) {

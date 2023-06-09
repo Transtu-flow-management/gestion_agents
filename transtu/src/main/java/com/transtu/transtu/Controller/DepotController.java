@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 import static com.transtu.transtu.Document.Depots.SEQUENCE_NAME_Depot;
 
@@ -43,6 +44,25 @@ public class DepotController {
     private ResponseEntity<List<Depots>> getAll(){
         List<Depots> depots = entropotService.getAllDepots();
         return ResponseEntity.ok(depots);
+    }
+    @PatchMapping("/update/{id}")
+    private ResponseEntity<Depots> updateDepot(@PathVariable Integer id,@RequestBody Depots depots){
+        Depots updated = entropotService.updateDepot(id,depots);
+        return ResponseEntity.ok(updated);
+    }
+@GetMapping("/{id}")
+    private ResponseEntity<Depots> getcurrent(@PathVariable Integer id){
+    Depots currentDepot = entropotService.getCurrent(id);
+    return ResponseEntity.ok(currentDepot);
+}
+@DeleteMapping("/{id}")
+    private ResponseEntity<Depots> deleteDepot(@PathVariable Integer id){
+        Optional<Depots> removedDepo = entropotRepo.findById(id);
+        if (removedDepo.isEmpty()){
+            return ResponseEntity.notFound().build();
+        }
+        entropotRepo.deleteById(id);
+        return ResponseEntity.status(HttpStatus.ACCEPTED).build();
     }
 
 }

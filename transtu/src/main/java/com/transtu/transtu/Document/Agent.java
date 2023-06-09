@@ -37,6 +37,7 @@ public class Agent implements UserDetails {
     private String email;
     private String username;
     private String password;
+    private String imageUrl;
     private Boolean isEnabled =false;
     @DBRef
     private Set<Role> roles = new HashSet<>();
