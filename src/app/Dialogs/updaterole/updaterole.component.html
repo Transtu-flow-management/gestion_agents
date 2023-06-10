@@ -1,4 +1,5 @@
 {{data.role | json}}
+{{data.assignedPermissions | json}}
 <h1 mat-dialog-title>modifier le Role</h1>
 <div mat-dialog-content>
   <div fxLayout="column">
@@ -13,7 +14,7 @@
   </div>
 </div>
 <div>
-  <app-permissions [assignedPermissions]="assignedPermissions" (selectedPermissions)="selectedPermission($event)"></app-permissions>
+  <app-permissions [assignedPermissions]="data.assignedPermissions" (selectedPermissions)="selectedPermission($event)"></app-permissions>
 </div>
 <div fxLayout="row-reverse" fxLayoutGap="10px" mat-dialog-actions>
   <button cdkFocusInitial mat-dialog-close class="bg-blue-200 px-5 py-3 text-sm shadow-sm font-medium tracking-wider text-green-800 rounded-full hover:shadow-2xl hover:bg-green-300">annuler</button>

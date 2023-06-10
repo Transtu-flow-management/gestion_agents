@@ -15,23 +15,26 @@ export class PermissionsComponent implements OnInit  {
   @Input() assignedPermissions: String[];
   ngOnInit(): void {
       this.fetchpermissions()
+      
   }
 
   public fetchpermissions(): void {
     this._permissionservice.fetchpermissions().subscribe(
       (res) => {
-        this.permissions = res.map((permission) => ({
-          permissionName: permission.permissionName,
-        }));
+        
+        this.permissions = res
+        for (let v of this.permissions){
+          if (this.assignedPermissions.includes(v.TYPE)){
+            v.selected=true;
+          }
+        }
       },
       (error) => {
         console.log('Error fetching permissions', error);
       }
     );
   }
-  isPermissionAssigned(permissionName: string): boolean {
-    return this.assignedPermissions.includes(permissionName);
-  }
+
   
   public onpress():void{
    const selectedbox = this.permissions.filter(permission=>permission.selected);

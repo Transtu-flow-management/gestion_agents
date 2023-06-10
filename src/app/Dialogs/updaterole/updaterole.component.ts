@@ -15,6 +15,7 @@ export class UpdateroleComponent {
   id: Number = null;
   roleName: String = '';
   permissions = Set<String>;
+
   assignedPermissions: String[] = [];
   constructor(@Inject(MAT_DIALOG_DATA) public data: any, public dialogRef: MatDialogRef<UpdateroleComponent>, private _roleService:RoleService,private _permissionservice:PermissionService) {
     const role: any = data.role;
@@ -26,7 +27,6 @@ export class UpdateroleComponent {
  
   selectedPermission(selectedbox: String[]): void {
     this.selectedPerm = selectedbox.map(p => p.toString());
-
   }
   Annuler(): void {
     this.dialogRef.close();

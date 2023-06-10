@@ -1,11 +1,13 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { HomeComponent } from './Core/Pages/home/home.component';
-import { SigninComponent } from './signin/signin.component';
+import { SigninComponent } from './Core/Pages/signin/signin.component';
 import { AddUserComponent } from './Core/Pages/add-user/add-user.component';
 import { AgetsComponent } from './Core/Pages/agets/agets.component';
 import { RolesComponent } from './Core/Pages/roles/roles.component';
 import { PermissionsComponent } from './Core/Pages/permissions/permissions.component';
+import { EntropotComponent } from './Core/Pages/entropot/entropot.component';
+import { ReseauComponent } from './Core/Pages/reseau/reseau.component';
 
 const approute: Routes = [
   {path:'',redirectTo:'home',pathMatch:'full'},
@@ -15,6 +17,8 @@ const approute: Routes = [
   {path:'permissions',component:PermissionsComponent},
   {path:'agents',component:AgetsComponent},
   {path:'roles',component:RolesComponent},
+  {path:'entropot',component:EntropotComponent},
+  {path:'reseau',component:ReseauComponent},
 ]
 @NgModule({
   imports: [RouterModule.forRoot(approute)],

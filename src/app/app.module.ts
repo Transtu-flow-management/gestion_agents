@@ -12,7 +12,7 @@ import { MatListModule } from '@angular/material/list';
 import { MatIconModule } from '@angular/material/icon';
 import { FooterComponent } from './Core/Pages/footer/footer.component';
 import { HttpClientModule } from '@angular/common/http';
-import { SigninComponent } from './signin/signin.component';
+import { SigninComponent } from './Core/Pages/signin/signin.component';
 import { ReactiveFormsModule,FormsModule  } from '@angular/forms';
 import { SidebarComponent } from './sidebar/sidebar.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -35,6 +35,8 @@ import { PermissionsComponent } from './Core/Pages/permissions/permissions.compo
 import { AdduserDialogComponent } from './Dialogs/adduser-dialog/adduser-dialog.component';
 import { AssignRoledialogComponent } from './Dialogs/assign-roledialog/assign-roledialog.component';
 import {MatRadioModule} from '@angular/material/radio';
+import { EntropotComponent } from './Core/Pages/entropot/entropot.component';
+import { ReseauComponent } from './Core/Pages/reseau/reseau.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -54,6 +56,8 @@ import {MatRadioModule} from '@angular/material/radio';
     PermissionsComponent,
     AdduserDialogComponent,
     AssignRoledialogComponent,
+    EntropotComponent,
+    ReseauComponent,
   ],
   imports: [
     MatRadioModule,

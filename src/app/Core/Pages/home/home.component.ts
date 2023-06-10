@@ -10,4 +10,5 @@ import { Agent } from '../../interfaces/Agent';
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent{
+   userPicture : String=''
   }

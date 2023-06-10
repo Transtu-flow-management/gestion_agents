@@ -10,5 +10,6 @@ export interface Role{
 export interface IPermissions {
     permissionName : String;
     selected: boolean;
+    TYPE: String;
 }
 

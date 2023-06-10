@@ -5,8 +5,10 @@ export interface Agent {
     name: String;
     prenom: String;
     email: String;
+    imageUrl:String;
     username: String;
     roleName: String;
+    roles: String[];
     dateOfInsertion : Date;
     dateOfModification : Date;
     //password: String;

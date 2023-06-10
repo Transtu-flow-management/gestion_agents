@@ -1,4 +1,4 @@
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse,HttpHeaders  } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Agent } from '../interfaces/Agent';
 import { Observable } from 'rxjs';
@@ -29,7 +29,11 @@ export class UserServiceService {
   }
  public updateAgent(id:Number,agent) {
   const url = `${this.usersUrl}/update/${id}`;
-    return this.http.patch<Agent>(url, agent);
+    return this.http.put<Agent>(url, agent);
+  }
+  patchAgent(agentId: number, champs: Map<String, any>): Observable<Agent> {
+    const url = `${this.usersUrl}/update/${agentId}`;
+    return this.http.patch<Agent>(url, champs);
   }
   public deleteAgent(id:Number):Observable<any>{
     const url =`${this.usersUrl}/delete/${id}`;
@@ -39,6 +43,12 @@ export class UserServiceService {
   public assignRole(agentid:Number,roleid:Number){
     const url = `${this.usersUrl}/${agentid}/role/${roleid}`;
     return this.http.post<Agent>(url,null)
+  }
+  public uploadimage(id: Number,imagefile :File){
+    const headers = new HttpHeaders();
+    headers.append('Content-Type', 'multipart/form-data'); 
+    const url =`${this.usersUrl}/${id}/uploadimg`;
+    return this.http.post<any>(url,imagefile,{headers});
   }
 
   private handleError(httpError: HttpErrorResponse) {
@@ -58,6 +68,8 @@ export class UserServiceService {
   hashPassword(password: any) {
     return shajs('sha256').update(password).digest('hex');
   }
+  
+
 }
 function throwwError(arg0: string) {
   throw new Error('Function not implemented.');

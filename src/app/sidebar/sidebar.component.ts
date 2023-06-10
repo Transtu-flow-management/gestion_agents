@@ -6,8 +6,13 @@ import { Component } from '@angular/core';
 })
 export class SidebarComponent {
   isSubmenuHidden = true;
+  isSubmenuEntropotHidden = true;
 
   toggleDropdown() {
     this.isSubmenuHidden = !this.isSubmenuHidden;
   }
+  toggleDropdownE(){
+    this.isSubmenuEntropotHidden = !this.isSubmenuEntropotHidden;
+  }
+
 }
