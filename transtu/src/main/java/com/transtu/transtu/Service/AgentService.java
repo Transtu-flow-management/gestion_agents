@@ -12,7 +12,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ReflectionUtils;
 
+import java.lang.reflect.Field;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -42,12 +44,42 @@ public class AgentService implements UserDetailsService {
         Agent agent1 = agentRepo.findById(id).orElseThrow(()->new NoSuchElementException(("Agent introuvable")));
         agent1.setName(agent.getName());
         agent1.setPrenom(agent.getPrenom());
-        agent1.setRoles(agent.getRoles());
+        //agent1.setRoles(agent.getRoles());
+        agent1.setEmail(agent.getEmail());
         agent1.setImageUrl(agent.getImageUrl());
+        agent1.setPhone(agent.getPhone());
         agent1.setUsername(agent.getUsername());
         agent1.setPassword(agent.getPassword());
         agent1.setDateOfModification(new Date());
     return agentRepo.save(agent1);
+    }
+    public Agent patchAgent(int id,Map<String,Object> champs){
+        Optional<Agent> isexisting = agentRepo.findById(id);
+        Agent agent = isexisting.get();
+        if(isexisting.isPresent()){
+            champs.forEach((key,value)->{
+                if (key.equals("dateOfModification")){
+                    agent.setDateOfModification((Date) value);
+                }
+                else if (key.equals("roles") && !value.equals(null) ){
+                    agent.getRoles().clear();
+                    Integer roleid = (Integer) value;
+                    Optional<Role> role = roleRepo.findById(roleid);
+                    if (role.isPresent()){
+                        Role selected = role.get();
+                        agent.getRoles().add(selected);
+                    }
+                   }
+                else{
+                Field champ = ReflectionUtils.findField(Agent.class,key);
+                champ.setAccessible(true);
+                ReflectionUtils.setField(champ,isexisting.get(),value);
+                }
+            });
+            agent.setDateOfModification(new Date());
+            return agentRepo.save(agent);
+        }
+        return null;
     }
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -58,6 +90,11 @@ public class AgentService implements UserDetailsService {
         agentDTO.setId(agent.getId());
         agentDTO.setName(agent.getName());
         agentDTO.setEmail(agent.getEmail());
+        agentDTO.setPhone(agent.getPhone());
+        if (!agent.getRoles().isEmpty()) {
+            Role role = agent.getRoles().iterator().next();
+            agentDTO.setRoleName(role.getRoleName());
+        }
         agentDTO.setImageUrl(agent.getImageUrl());
         agentDTO.setPrenom(agent.getPrenom());
         agentDTO.setUsername(agent.getUsername());

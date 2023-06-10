@@ -50,7 +50,7 @@ private final SequenceGeneratorService mongo;
                 .email(request.getEmail())
                 .username(request.getUsername())
                 .password(passwordEncoder.encode(request.getPassword()))
-                .roles(request.getRoles())
+                //.roles(request.getRoles())
                 .dateOfInsertion(currentDate)
                 .build();
 
@@ -62,8 +62,8 @@ private final SequenceGeneratorService mongo;
         agentDTO.setUsername(savedUser.getUsername());
         agentDTO.setEmail(savedUser.getEmail());
         agentDTO.setDateOfInsertion(savedUser.getDateOfInsertion());
-        String rolename = savedUser.getRoles().stream().findFirst().map(Role::getRoleName).orElse(null);
-        agentDTO.setRoleName(rolename);
+        //String rolename = savedUser.getRoles().stream().findFirst().map(Role::getRoleName).orElse(null);
+       // agentDTO.setRoleName(rolename);
         var jwtToken = jwtService.generateToken(user);
         var refreshToken = jwtService.generateRefreshToken(user);
         saveUserToken(savedUser, jwtToken);

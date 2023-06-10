@@ -17,8 +17,11 @@ public class AgentDTO {
     private String name;
     private String prenom;
     private String email;
+
     private String username;
+    private String phone;
     private String imageUrl;
+
     private String roleName;
     //@JsonFormat(pattern = "yyyy-MM-dd:HH:mm:ss", timezone = "UTC")
     private Date dateOfInsertion;

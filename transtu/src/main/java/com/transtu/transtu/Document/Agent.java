@@ -1,14 +1,12 @@
 package com.transtu.transtu.Document;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.Lob;
 import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Transient;
-import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -25,19 +23,25 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
-
 @Setter
 public class Agent implements UserDetails {
     @Transient
     public static final String SEQUENCE_NAME = "agent_sequence";
     @Id
     private Integer id;
+
     private String name;
     private String prenom;
+    @Lob
+    private byte[] imagedata;
     private String email;
     private String username;
+
     private String password;
+    private String phone;
+
     private String imageUrl;
+    @JsonIgnore
     private Boolean isEnabled =false;
     @DBRef
     private Set<Role> roles = new HashSet<>();
@@ -48,12 +52,14 @@ public class Agent implements UserDetails {
     public void addRole(Role role){
         roles.add(role);
     }
+    public void updateRole(Role role){
+        roles.removeIf(exists ->exists.getId().equals(role.getId()));
+        roles.add(role);
+    }
     public void deleteRole(Role role){
         roles.remove(role);
     }
 
-
-    // private Set<Role> roles;
 
     /* @JsonIgnore
      @Override
@@ -71,21 +77,22 @@ public class Agent implements UserDetails {
         return username;
     }
 
+    @JsonIgnore
     @Override
     public boolean isAccountNonExpired() {
         return true;
     }
-
     @Override
+    @JsonIgnore
     public boolean isAccountNonLocked() {
         return true;
     }
-
+    @JsonIgnore
     @Override
     public boolean isCredentialsNonExpired() {
         return true;
     }
-
+    @JsonIgnore
     @Override
     public boolean isEnabled() {
         return true;

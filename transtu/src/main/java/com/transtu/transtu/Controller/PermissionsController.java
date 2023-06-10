@@ -19,6 +19,7 @@ public class PermissionsController {
         for (Permissions permission : Permissions.values()) {
             Map<String, Object> permissionMap = new HashMap<>();
             permissionMap.put("permissionName", permission.getPermissionName());
+            permissionMap.put("TYPE", permission);
             permissionsList.add(permissionMap);
         }
         return ResponseEntity.ok(permissionsList);
