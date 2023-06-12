@@ -1,6 +1,5 @@
 package com.transtu.transtu.Controller;
 
-import com.transtu.transtu.Auth.AuthenticationResponse;
 import com.transtu.transtu.DTO.AgentDTO;
 import com.transtu.transtu.Document.Agent;
 import com.transtu.transtu.Repositoy.AgentRepo;
@@ -8,6 +7,7 @@ import com.transtu.transtu.Service.AgentService;
 import com.transtu.transtu.Service.AuthenticationService;
 import com.transtu.transtu.Service.SequenceGeneratorService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
 import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,12 +15,10 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.UUID;
 
 import static com.transtu.transtu.Document.Agent.SEQUENCE_NAME;
 
@@ -52,10 +50,10 @@ public class AgentController {
     }
 
     @PatchMapping("/update/{agentid}")
-    private ResponseEntity<Agent> patched(@PathVariable int agentid, @RequestBody Map<String, Object> champs) {
-        Agent patch = service.patchAgent(agentid, champs);
-        //AgentDTO patchedDTO = service.convertDTOToDocument(patch);
-        return ResponseEntity.ok(patch);
+    private ResponseEntity<AgentDTO> patched(@PathVariable int agentid,@RequestParam Map<String, Object> champs, @RequestParam(value = "image",required = false) MultipartFile file) {
+        Agent patch = service.patchAgent(agentid, champs,file);
+        AgentDTO patchedDTO = service.convertDTOToDocument(patch);
+        return ResponseEntity.ok(patchedDTO);
     }
 
 
@@ -100,6 +98,11 @@ public class AgentController {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
+    }
+    @GetMapping("/files/{filename:.+}")
+    @ResponseBody
+    public ResponseEntity<Resource> getFile(@PathVariable String filename) {
+        return service.getFile(filename);
     }
 
 }

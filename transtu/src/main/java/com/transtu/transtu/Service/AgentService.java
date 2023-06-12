@@ -6,13 +6,19 @@ import com.transtu.transtu.Document.Permissions;
 import com.transtu.transtu.Document.Role;
 import com.transtu.transtu.Repositoy.AgentRepo;
 import com.transtu.transtu.Repositoy.RoleRepo;
+import com.transtu.transtu.utils.StoregeService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
 import org.springframework.data.crossstore.ChangeSetPersister;
+import org.springframework.http.ContentDisposition;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ReflectionUtils;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.lang.reflect.Field;
 import java.util.*;
@@ -24,6 +30,8 @@ public class AgentService implements UserDetailsService {
     private AgentRepo agentRepo;
     @Autowired
     private RoleRepo roleRepo;
+    @Autowired
+    private StoregeService storegeService;
 
     public List<AgentDTO> findAllAgents(){
         List<Agent> agents = agentRepo.findAll();
@@ -53,34 +61,34 @@ public class AgentService implements UserDetailsService {
         agent1.setDateOfModification(new Date());
     return agentRepo.save(agent1);
     }
-    public Agent patchAgent(int id,Map<String,Object> champs){
-        Optional<Agent> isexisting = agentRepo.findById(id);
-        Agent agent = isexisting.get();
-        if(isexisting.isPresent()){
-            champs.forEach((key,value)->{
-                if (key.equals("dateOfModification")){
+    public Agent patchAgent(int id, Map<String, Object> champs, MultipartFile file) {
+        Optional<Agent> isExisting = agentRepo.findById(id);
+        if (isExisting.isPresent()) {
+            Agent agent = isExisting.get();
+            champs.forEach((key, value) -> {
+                if (key.equals("dateOfModification")) {
                     agent.setDateOfModification((Date) value);
-                }
-                else if (key.equals("roles") && !value.equals(null) ){
+                } else if (key.equals("roles") && value != null) {
                     agent.getRoles().clear();
-                    Integer roleid = (Integer) value;
-                    Optional<Role> role = roleRepo.findById(roleid);
-                    if (role.isPresent()){
-                        Role selected = role.get();
-                        agent.getRoles().add(selected);
-                    }
-                   }
-                else{
-                Field champ = ReflectionUtils.findField(Agent.class,key);
-                champ.setAccessible(true);
-                ReflectionUtils.setField(champ,isexisting.get(),value);
+                    Integer roleId = (Integer) value;
+                    Optional<Role> role = roleRepo.findById(roleId);
+                    role.ifPresent(agent.getRoles()::add);
+                }else {
+                    Field champ = ReflectionUtils.findField(Agent.class, key);
+                    champ.setAccessible(true);
+                    ReflectionUtils.setField(champ, agent, value);
                 }
             });
+            if (file != null && !file.isEmpty()) {
+                String filename = storegeService.CreateNameImage(file);
+                storegeService.store(file, filename);
+                agent.setImageUrl(filename);}
             agent.setDateOfModification(new Date());
             return agentRepo.save(agent);
         }
         return null;
     }
+
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         return null;
@@ -134,6 +142,15 @@ public class AgentService implements UserDetailsService {
         Role role = roleRepo.findById(roleid).orElseThrow(() -> new ChangeSetPersister.NotFoundException());
         agent.addRole(role);
         agentRepo.save(agent);
+    }
+
+    public ResponseEntity<Resource> getFile(String filename) {
+        Resource file = storegeService.loadFile(filename);
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentDisposition(ContentDisposition.inline().filename(file.getFilename()).build());
+        return ResponseEntity.ok()
+                .headers(headers)
+                .body(file);
     }
 
 

@@ -11,6 +11,7 @@ import com.transtu.transtu.Document.Token;
 import com.transtu.transtu.Document.TokenType;
 import com.transtu.transtu.Repositoy.AgentRepo;
 import com.transtu.transtu.Repositoy.TokenRepository;
+import com.transtu.transtu.utils.StoregeService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +21,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.Date;
@@ -39,12 +41,17 @@ private final SequenceGeneratorService mongo;
     private final TokenRepository tokenRepository;
     private final PasswordEncoder passwordEncoder;
     @Autowired
+    public StoregeService storegeService;
+    @Autowired
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
-    public AuthenticationResponse register(Agent request) {
+    public AuthenticationResponse register(Agent request, MultipartFile file) {
+        String fileName=storegeService.CreateNameImage(file);
+        storegeService.store(file,fileName);
         Date currentDate = new Date();
         Integer signid = mongo.generateSequence(SEQUENCE_NAME);
         var user = Agent.builder().id(signid)
+
                 .name((request.getName()))
                 .prenom(request.getPrenom())
                 .email(request.getEmail())
@@ -53,9 +60,10 @@ private final SequenceGeneratorService mongo;
                 //.roles(request.getRoles())
                 .dateOfInsertion(currentDate)
                 .build();
-
+        user.setImageUrl(fileName);
         var savedUser = agentRepo.save(user);
         AgentDTO agentDTO = new AgentDTO();
+        agentDTO.setImageUrl(savedUser.getImageUrl());
         agentDTO.setId(savedUser.getId());
         agentDTO.setPrenom(savedUser.getPrenom());
         agentDTO.setName(savedUser.getName());
