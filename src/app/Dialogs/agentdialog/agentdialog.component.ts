@@ -16,7 +16,8 @@ export class AgentdialogComponent implements OnInit{
   roleList: Role[] = [];
   updateForm: FormGroup;
   checked: boolean = false;
-  selectedImage: File;
+  imageSizeError: String;
+  selectedImage: File ;
   constructor(
     public dialogRef: MatDialogRef<AgentdialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
@@ -56,10 +57,22 @@ ngOnInit(): void {
   }
 
   onFileChange(event){
-    
-    const file = event.target.files[0];
-    this.selectedImage=file;
+    const files: FileList = event.target.files;
+    if (files && files.length > 0) {
+      this.selectedImage = files[0];
+      const file: File = files[0];
+      const fileSizeInBytes = file.size;
+      const maxSizeInBytes = 1048576;
+      if (fileSizeInBytes > maxSizeInBytes) {
+        this.imageSizeError = 'The selected image exceeds the maximum allowed size.';
+        // Reset the selected image
+        this.selectedImage = null;
+      } else {
+        this.selectedImage = file;
+        this.imageSizeError = null;
+      }
   }
+}
  public updateUser() {
     const agent = this.updateForm.getRawValue();
     this.service.updateAgent(this.data.agent.id,agent).subscribe((res) => {
@@ -72,38 +85,48 @@ ngOnInit(): void {
     });
   
   }
-  uploadImage(){
-    const imagedata = new FormData();
-    imagedata.append('image',this.selectedImage,this.selectedImage.name);
-    this.service.uploadimage(this.data.agent.id,this.selectedImage).subscribe((res)=>{
-      console.log("image uploaded",res);
-    },
-    (error)=>{
-      console.log("failed to upload",error);
+
+
+  public patchAgent(): void {
+    var formdata = new FormData();
+    var patchagent: any = {};
+    const values = this.updateForm.getRawValue();
+    Object.keys(values).forEach((key) => {
+      if (values[key] !== this.data.agent[key] && values[key] !== null && values[key] !== '') {
+        if (key === 'file') {
+          const files = values[key] as File[];
+          if (files && files.length > 0) {
+            files.forEach((file) => {
+              formdata.append('image', file, file.name);
+              console.log('file: ', formdata);
+            });
+          }
+        } else {
+          // Only include modified fields
+          formdata.append(key, values[key]);
+          
+        }
+      }
     });
-
+  
+    formdata.forEach((value, key) => {
+      console.log(key, value);
+    });
+   if(this.selectedImage){
+    this.service.patchAgentimg(this.data.agent.id,formdata, this.selectedImage).subscribe((res) => {
+      console.log("agent patched", res);
+      this.dialogRef.close(res);
+    }, (error) => {
+      console.log("error patching agent", error);
+    });}else
+    this.service.patchAgentimg(this.data.agent.id, formdata).subscribe((res) => {
+      console.log("agent patched sans image", res);
+      this.dialogRef.close(res);
+    }, (error) => {
+      console.log("error patching agent no image", error);
+    });
   }
-
-
-public patchAgent():void{
-  const patchagent :any ={};
-  const values = this.updateForm.getRawValue();
-  Object.keys(values).forEach((key)=>{
-    if (values[key] !== this.data.agent[key] && values[key] !== null && values[key] !== '') {  // Only include modified fields
-      patchagent[key] = values[key];
-    }
-  });
-
-  console.log('Patch agent:', patchagent);
-  this.service.patchAgent(this.data.agent.id,patchagent).subscribe((res)=>{
-    console.log("agent patched",res);
-    this.dialogRef.close(res);
-  },
-  (error)=>{
-    console.log("error patching agent",error);
-  })
-}
- 
+  
 
 
 

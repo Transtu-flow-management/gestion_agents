@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, } from '@angular/core';
 import { UserServiceService } from '../../Services/user-service.service';
 import { MatDialog  } from '@angular/material/dialog';
 
@@ -11,6 +11,7 @@ import { RoleService } from '../../Services/role.service';
 import { AdduserDialogComponent } from '../../../Dialogs/adduser-dialog/adduser-dialog.component';
 import { AddUserComponent } from '../add-user/add-user.component';
 import { AssignRoledialogComponent } from 'src/app/Dialogs/assign-roledialog/assign-roledialog.component';
+import { Observable } from 'rxjs';
 
 
 @Component({
@@ -22,15 +23,19 @@ export class AgetsComponent implements OnInit {
 agents: Agent[] = [];
 agentss : Agent;
 role: Role[] =[]
+imagedata : String='';
+
 constructor(private agentservice : UserServiceService ,private dialog: MatDialog, private roleservice : RoleService){}
 ngOnInit(): void {
     this.fetchAgents();
     this.getRoles();
+
 }
 public fetchAgents(): void {
   this.agentservice.getAgents().subscribe(
     agents => {
       this.agents = agents;
+      this.getAgentImage(this.agents);
     },
     error => {
       console.log('Error retrieving agents:', error);
@@ -110,6 +115,34 @@ this.roleservice.getRoles().subscribe(
   }
 )
 }
+
+public getAgentImage(agents: Agent[]): void {
+  for (let agent of agents) {
+    if (agent.imageUrl) {
+      this.agentservice.getimage(agent.imageUrl).subscribe(
+        (res: Blob) => {
+          this.convertBlobToString(res).then((imageUrl: String) => {
+            agent.imageUrl = imageUrl;
+          });
+        },
+        (error) => {
+          console.log('Error getting agent image:', error);
+        }
+      );
+    }
+  }
+}
+convertBlobToString(blob: Blob): Promise<String> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      resolve(reader.result as String);
+    };
+    reader.onerror = reject;
+    reader.readAsDataURL(blob);
+  });
+}
+
 
 }
 

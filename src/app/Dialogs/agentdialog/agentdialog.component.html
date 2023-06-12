@@ -11,7 +11,7 @@
       <h4>Uploader une Image</h4>
  
         <input type="file" (change)="onFileChange($event)" />
-        <button (click)="uploadImage()">upload</button>
+        <div *ngIf="imageSizeError" class="error-message">{{ imageSizeError }}</div>
         <h4>modifier le Nom</h4>
     <mat-form-field appearance="outline">
       <mat-label>nom</mat-label>

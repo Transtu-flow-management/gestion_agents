@@ -35,6 +35,16 @@ export class UserServiceService {
     const url = `${this.usersUrl}/update/${agentId}`;
     return this.http.patch<Agent>(url, champs);
   }
+  patchAgentimg(agentId: number ,formdata: FormData,file? : File): Observable<Agent> {
+    if (file){
+      formdata.append('image',file,file.name);
+    }
+    const headers = new HttpHeaders().set('enctype', 'multipart/form-data');
+
+    const url = `${this.usersUrl}/update/${agentId}`;
+    return this.http.patch<Agent>(url, formdata,{headers});
+  
+}
   public deleteAgent(id:Number):Observable<any>{
     const url =`${this.usersUrl}/delete/${id}`;
     return this.http.delete(url);
@@ -45,10 +55,12 @@ export class UserServiceService {
     return this.http.post<Agent>(url,null)
   }
   public uploadimage(id: Number,imagefile :File){
-    const headers = new HttpHeaders();
-    headers.append('Content-Type', 'multipart/form-data'); 
-    const url =`${this.usersUrl}/${id}/uploadimg`;
-    return this.http.post<any>(url,imagefile,{headers});
+
+  }
+  public getimage(filename :String):Observable<Blob>{
+    
+    const url =`${this.usersUrl}/files/${filename}`;
+    return this.http.get(url,{ responseType: 'blob' });
   }
 
   private handleError(httpError: HttpErrorResponse) {
