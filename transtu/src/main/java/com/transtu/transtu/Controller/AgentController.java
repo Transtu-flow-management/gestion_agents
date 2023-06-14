@@ -9,6 +9,14 @@ import com.transtu.transtu.Service.SequenceGeneratorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.data.crossstore.ChangeSetPersister;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.mongodb.core.MongoOperations;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -26,7 +34,10 @@ import static com.transtu.transtu.Document.Agent.SEQUENCE_NAME;
 @RestController
 @RequestMapping("/api/agents")
 public class AgentController {
+
     private BCryptPasswordEncoder passwordEncoder;
+    @Autowired
+    private MongoOperations mongoOperations;
     @Autowired
     private AgentService service;
     private AuthenticationService authservice;
@@ -36,10 +47,16 @@ public class AgentController {
     private AgentRepo agentRepo;
 
     @GetMapping
-    private List<AgentDTO> getall() {
+    public Page<Agent> getAgents(@RequestParam(defaultValue = "0") int page,
+                                 @RequestParam(defaultValue = "2") int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return service.getAllagents(pageable);
+    }
+    /*private List<AgentDTO> getall() {
 
         return service.findAllAgents();
-    }
+    }*/
+
 
     @PutMapping("/update/{agentid}")
     private ResponseEntity<AgentDTO> updateagent(@PathVariable Integer agentid, @RequestBody Agent agentDTO) {
@@ -98,6 +115,14 @@ public class AgentController {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
+    }
+
+    @GetMapping("/search")
+    public List<Agent> searchAgents(@RequestParam("query") String query) {
+        Query searchQuery = new Query()
+                .addCriteria(Criteria.where("name").regex(query, "i"));
+
+        return mongoOperations.find(searchQuery,Agent.class);
     }
     @GetMapping("/files/{filename:.+}")
     @ResponseBody

@@ -10,6 +10,8 @@ import com.transtu.transtu.utils.StoregeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.data.crossstore.ChangeSetPersister;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ContentDisposition;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
@@ -37,7 +39,9 @@ public class AgentService implements UserDetailsService {
         List<Agent> agents = agentRepo.findAll();
         return convertDtoToEntity(agents);
     }
-
+    public Page<Agent> getAllagents(Pageable pageable) {
+        return agentRepo.findAll(pageable);
+    }
     /*public Agent createAgent(Agent agent){
         String username = agent.getUsername();
         if (agentRepo.existsByUsername(username)){
