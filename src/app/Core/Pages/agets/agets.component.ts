@@ -24,23 +24,39 @@ agents: Agent[] = [];
 agentss : Agent;
 role: Role[] =[]
 imagedata : String='';
+search :String;
+currentPage =0;
+pageSize = 2;
+totalAgents :number;
+totalPages:number;
+totalElements :number;
 
 constructor(private agentservice : UserServiceService ,private dialog: MatDialog, private roleservice : RoleService){}
 ngOnInit(): void {
-    this.fetchAgents();
+    //this.fetchAgents();
     this.getRoles();
+    this.loadagentspages(this.currentPage,this.pageSize);
 
 }
 public fetchAgents(): void {
   this.agentservice.getAgents().subscribe(
     agents => {
       this.agents = agents;
-      this.getAgentImage(this.agents);
+      //this.getAgentImage(this.agents);
     },
     error => {
       console.log('Error retrieving agents:', error);
     }
   );
+}
+public loadagentspages(page :number,pagesize :number):void{
+  this.agentservice.getAgentsPage(page,pagesize).subscribe((res:any)=>{
+    this.agents =res.content;
+    this.totalElements=res.totalElements;
+    this.totalPages =res.totalPages;
+  },(error)=> {
+    console.log("error getting agent pages",error);
+  })
 }
 openAddUserDialog():void{
   const dialogref = this.dialog.open(AddUserComponent,{
@@ -143,7 +159,19 @@ convertBlobToString(blob: Blob): Promise<String> {
   });
 }
 
+  searchAgent(query: String){
+    this.agentservice.searchagent(query).subscribe((res)=>{
+      this.agents = res;
+    },(error)=>{
+      console.log("error searching for agent",error);
+    })
+  }
 
+  onPageChange(page :number){
+    this.currentPage = page ;
+    this.loadagentspages(this.currentPage-1,this.pageSize);
+    console.log(this.currentPage)
+  }
 }
 
 

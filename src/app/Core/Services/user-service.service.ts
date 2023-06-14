@@ -1,4 +1,4 @@
-import { HttpClient, HttpErrorResponse,HttpHeaders  } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse,HttpHeaders, HttpParams  } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Agent } from '../interfaces/Agent';
 import { Observable } from 'rxjs';
@@ -16,6 +16,14 @@ export class UserServiceService {
     const url = `${this.usersUrl}/${id}`;
     return this.http.get<Agent>(url);
   }
+  getAgentsPage(page: number, size: number): Observable<Agent[]> {
+    let params = new HttpParams()
+      .set('page', page.toString())
+      .set('size', size.toString());
+
+    return this.http.get<Agent[]>(this.usersUrl, { params });
+  }
+
   public createAgent(agent : Agent):Observable<Agent>{
     const url = `${this.usersUrl}/create`;
    return this.http.post<Agent>(url,agent);
@@ -61,6 +69,12 @@ export class UserServiceService {
     
     const url =`${this.usersUrl}/files/${filename}`;
     return this.http.get(url,{ responseType: 'blob' });
+  }
+  public searchagent(query :String){
+    let params = new HttpParams()
+    .set('query', query.toString())
+    const url = `${this.usersUrl}/search`;
+    return this.http.get<Agent[]>(url,{params});
   }
 
   private handleError(httpError: HttpErrorResponse) {

@@ -11,6 +11,8 @@ export interface Agent {
     roles: String[];
     dateOfInsertion : Date;
     dateOfModification : Date;
+    totalPages:number;
+    totalElements:number;
     //password: String;
    
 

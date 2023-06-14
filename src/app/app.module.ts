@@ -37,6 +37,7 @@ import { AssignRoledialogComponent } from './Dialogs/assign-roledialog/assign-ro
 import {MatRadioModule} from '@angular/material/radio';
 import { EntropotComponent } from './Core/Pages/entropot/entropot.component';
 import { ReseauComponent } from './Core/Pages/reseau/reseau.component';
+import{NgxPaginationModule} from 'ngx-pagination'
 @NgModule({
   declarations: [
     AppComponent,
@@ -77,6 +78,7 @@ import { ReseauComponent } from './Core/Pages/reseau/reseau.component';
       MatFormFieldModule,
       MatInputModule,
       MatSnackBarModule
+      ,NgxPaginationModule
   ],
   providers: [],
   bootstrap: [AppComponent]
