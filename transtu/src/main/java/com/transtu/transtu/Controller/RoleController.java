@@ -8,6 +8,9 @@ import com.transtu.transtu.Repositoy.RoleRepo;
 import com.transtu.transtu.Service.RoleService;
 import com.transtu.transtu.Service.SequenceGeneratorService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.IanaLinkRelations;
 import org.springframework.http.ResponseEntity;
@@ -38,10 +41,15 @@ public class RoleController {
        return ResponseEntity.created(createdRole.getRequiredLink(IanaLinkRelations.SELF).toUri()).body(createdRole);
     }
     @GetMapping
-    public ResponseEntity<List<Role>> getAllRoles() {
+    public Page<Role> getRoles(@RequestParam(defaultValue = "0") int page,
+                               @RequestParam(defaultValue = "2") int size){
+        Pageable pageable = PageRequest.of(page,size);
+        return roleService.getAllRoles(pageable);
+    }
+   /* public ResponseEntity<List<Role>> getAllRoles() {
         List<Role> roles = roleService.getAllRoles();
         return ResponseEntity.ok(roles);
-    }
+    }*/
     @DeleteMapping("/deleteall")
     private ResponseEntity<String> deleteAll(){
 

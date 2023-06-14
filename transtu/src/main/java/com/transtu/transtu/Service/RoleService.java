@@ -6,6 +6,8 @@ import com.transtu.transtu.Document.Role;
 import com.transtu.transtu.Handlers.NotFoundExcemptionhandler;
 import com.transtu.transtu.Repositoy.RoleRepo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.stereotype.Service;
@@ -24,8 +26,11 @@ public class RoleService {
         return roleRepo.findById(id).orElseThrow(()->new NoSuchElementException("Role introuvable"));
     }
 
-    public List<Role> getAllRoles() {
+  /*  public List<Role> getAllRoles() {
         return roleRepo.findAll();
+    }*/
+    public Page<Role>getAllRoles(Pageable peg){
+        return roleRepo.findAll(peg);
     }
     public EntityModel<Role> CreateRole(Role role){
         if (roleRepo.existsByRoleName(role.getRoleName())){
