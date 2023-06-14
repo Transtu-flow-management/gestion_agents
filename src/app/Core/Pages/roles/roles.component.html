@@ -27,7 +27,7 @@
         </thead>
         <tbody class="divide-y divide-gray-100 border-t border-gray-100">
 
-            <tr class="hover:bg-gray-50" *ngFor="let role of Roles ">
+            <tr class="hover:bg-gray-50" *ngFor="let role of Roles | paginate:{itemsPerPage:pageSize,currentPage:currentPage,totalItems: totalElements}">
 
 
                 <td class="px-6 py-4 ">
@@ -74,3 +74,4 @@
         </tbody>
     </table>
 </div>
+<pagination-controls (pageChange)="onPageChange($event)" previousLabel="precedent" nextLabel="suivant"></pagination-controls>

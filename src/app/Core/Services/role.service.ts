@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { IPermissions, Role } from '../interfaces/Role';
 import { Observable } from 'rxjs';
@@ -16,6 +16,14 @@ export class RoleService {
   getRole():Role {
     return this.roleselect;
   }
+  getRolesPage(page: number, size: number): Observable<Role[]> {
+    let params = new HttpParams()
+      .set('page', page.toString())
+      .set('size', size.toString());
+
+    return this.http.get<Role[]>(this.roleurl, { params });
+  }
+  
   public createRole(role : Role):Observable<Role>{
     const url = `${this.roleurl}/add`;
    return this.http.post<Role>(url,role);

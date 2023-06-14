@@ -15,6 +15,7 @@ export class UpdateroleComponent {
   id: Number = null;
   roleName: String = '';
   permissions = Set<String>;
+  isDialogOpen: boolean;
 
   assignedPermissions: String[] = [];
   constructor(@Inject(MAT_DIALOG_DATA) public data: any, public dialogRef: MatDialogRef<UpdateroleComponent>, private _roleService:RoleService,private _permissionservice:PermissionService) {
@@ -22,6 +23,7 @@ export class UpdateroleComponent {
     this.id = role.id;
     this.roleName = role.roleName;
     this.selectedPerm = role.selected;
+    this.isDialogOpen = true;
   
   }
  

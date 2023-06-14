@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Depot } from '../../interfaces/depot';
 
 @Component({
   selector: 'app-entropot',
@@ -6,5 +7,5 @@ import { Component } from '@angular/core';
   styleUrls: ['./entropot.component.css']
 })
 export class EntropotComponent {
-
+depots : Depot[] =[];
 }

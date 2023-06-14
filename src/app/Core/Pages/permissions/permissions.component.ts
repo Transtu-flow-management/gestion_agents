@@ -9,10 +9,14 @@ import { PermissionService } from '../../Services/permission.service';
 })
 export class PermissionsComponent implements OnInit  {
   permissions: IPermissions[]=[];
-  selectedPerm : String[]=[]
+  selectedPerm : String[]=[];
+  isButtonDisabled:boolean= false;
+  checkcount: number = 0;
   constructor(private _permissionservice : PermissionService){}
   @Output() selectedPermissions: EventEmitter<String[]> = new EventEmitter<String[]>();
   @Input() assignedPermissions: String[];
+  @Input() isDialogOpen: boolean;
+  
   ngOnInit(): void {
       this.fetchpermissions()
       
@@ -34,12 +38,16 @@ export class PermissionsComponent implements OnInit  {
       }
     );
   }
-
+  public checkboxChanged(): void {
+    this.checkcount = this.permissions.filter(permission => permission.selected).length;
+    this.isButtonDisabled = this.checkcount === 0;
+  }
   
   public onpress():void{
    const selectedbox = this.permissions.filter(permission=>permission.selected);
    this.selectedPerm = selectedbox.map(perm => perm.permissionName);
    this.selectedPermissions.emit(this.selectedPerm)
+   this.isButtonDisabled=true;
     console.log('selected permissions : '+this.selectedPerm);
   }
 

@@ -4,7 +4,7 @@ export interface Role{
     dateOfCreation : Date;
     dateOfModification :Date;
     permissions:String[];
-
+   
 }
 
 export interface IPermissions {

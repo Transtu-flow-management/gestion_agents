@@ -38,7 +38,7 @@ ngOnInit(): void {
     this.loadagentspages(this.currentPage,this.pageSize);
 
 }
-public fetchAgents(): void {
+/*public fetchAgents(): void {
   this.agentservice.getAgents().subscribe(
     agents => {
       this.agents = agents;
@@ -48,7 +48,7 @@ public fetchAgents(): void {
       console.log('Error retrieving agents:', error);
     }
   );
-}
+}*/
 public loadagentspages(page :number,pagesize :number):void{
   this.agentservice.getAgentsPage(page,pagesize).subscribe((res:any)=>{
     this.agents =res.content;
@@ -119,7 +119,7 @@ deleteagent(id:Number):void{
 this.agentservice.deleteAgent(id).subscribe({
   next : (res)=> {
     alert('Agent supprimé');
-    this.fetchAgents();
+   // this.fetchAgents();
   },
 })
 }

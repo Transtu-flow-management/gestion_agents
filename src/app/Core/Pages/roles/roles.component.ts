@@ -12,16 +12,24 @@ import { UpdateroleComponent } from '../../../Dialogs/updaterole/updaterole.comp
 })
 export class RolesComponent implements OnInit{
   isModalOpen = false;
-  Roles :Role[] = []
+  Roles :Role[] = [];
+currentPage =0;
+pageSize = 2;
+totalAgents :number;
+totalPages:number;
+totalElements :number;
+
   constructor(private _roleservice : RoleService , private _dialog :MatDialog){}
 
 ngOnInit(): void {
-  this.getRoles()    
+  this.getRoles(this.currentPage,this.pageSize);    
 }
-getRoles():void{
-  this._roleservice.getRoles().subscribe(
-    Roles => {
-      this.Roles =Roles
+getRoles(page:number,size:number):void{
+  this._roleservice.getRolesPage(page,size).subscribe(
+    (Roles:any) => {
+      this.Roles =Roles.content;
+      this.totalElements=Roles.totalElements;
+      this.totalPages =Roles.totalPages;
     },
     error =>{
       console.log("error getting roles from DB")
@@ -57,9 +65,14 @@ deleteRole(id:Number):void{
  this._roleservice.deleteRole(id).subscribe({
    next : (res)=> {
      alert('Agent supprimé');
-     this.getRoles();
+     //this.getRoles();
    },
    error: console.log
  })
  }
+ onPageChange(page :number){
+  this.currentPage = page ;
+  this.getRoles(this.currentPage-1,this.pageSize);
+  console.log(this.currentPage)
+}
 }
