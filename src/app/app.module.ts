@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { InjectionToken, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
 
@@ -11,7 +11,7 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatListModule } from '@angular/material/list';
 import { MatIconModule } from '@angular/material/icon';
 import { FooterComponent } from './Core/Pages/footer/footer.component';
-import { HttpClientModule } from '@angular/common/http';
+
 import { SigninComponent } from './Core/Pages/signin/signin.component';
 import { ReactiveFormsModule,FormsModule  } from '@angular/forms';
 import { SidebarComponent } from './sidebar/sidebar.component';
@@ -38,6 +38,10 @@ import {MatRadioModule} from '@angular/material/radio';
 import { EntropotComponent } from './Core/Pages/entropot/entropot.component';
 import { ReseauComponent } from './Core/Pages/reseau/reseau.component';
 import{NgxPaginationModule} from 'ngx-pagination'
+import { environment } from './environment';
+import { AddDepoComponent } from './Dialogs/add-depo/add-depo.component';
+import { LeafletModule } from '@asymmetrik/ngx-leaflet';
+export const API_URL = new InjectionToken<String>('API_URL');
 @NgModule({
   declarations: [
     AppComponent,
@@ -59,12 +63,13 @@ import{NgxPaginationModule} from 'ngx-pagination'
     AssignRoledialogComponent,
     EntropotComponent,
     ReseauComponent,
+    AddDepoComponent,
   ],
   imports: [
     MatRadioModule,
     BrowserModule,
     AppRoutingModule,
-    HttpClientModule,
+    LeafletModule,
     ReactiveFormsModule ,
     FormsModule,
     MatToolbarModule,
@@ -77,10 +82,12 @@ import{NgxPaginationModule} from 'ngx-pagination'
       MatDialogModule,
       MatFormFieldModule,
       MatInputModule,
-      MatSnackBarModule
-      ,NgxPaginationModule
+      MatSnackBarModule,
+      NgxPaginationModule,
+
   ],
-  providers: [],
+  
+  providers: [{provide: API_URL, useValue: environment.apiUrl }],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -14,7 +14,7 @@ export class RolesComponent implements OnInit{
   isModalOpen = false;
   Roles :Role[] = [];
 currentPage =0;
-pageSize = 2;
+pageSize = 4;
 totalAgents :number;
 totalPages:number;
 totalElements :number;

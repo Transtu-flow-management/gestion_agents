@@ -35,11 +35,12 @@ constructor(private agentservice : UserServiceService ,private dialog: MatDialog
 ngOnInit(): void {
     //this.fetchAgents();
     this.getRoles();
-    this.loadagentspages(this.currentPage,this.pageSize);
+   this.loadagentspages(this.currentPage,this.pageSize);
+   this.fetchAgents();
 
 }
-/*public fetchAgents(): void {
-  this.agentservice.getAgents().subscribe(
+public fetchAgents(): void {
+  this.agentservice.getAgentsPage(this.currentPage,this.pageSize).subscribe(
     agents => {
       this.agents = agents;
       //this.getAgentImage(this.agents);
@@ -48,7 +49,7 @@ ngOnInit(): void {
       console.log('Error retrieving agents:', error);
     }
   );
-}*/
+}
 public loadagentspages(page :number,pagesize :number):void{
   this.agentservice.getAgentsPage(page,pagesize).subscribe((res:any)=>{
     this.agents =res.content;

@@ -9,6 +9,7 @@ import { Observable } from 'rxjs';
 export class RoleService {
   private roleselect : Role;
   private roleurl ='http://localhost:5300/api/roles';
+  private dockerurl = 'http://springcontainer:5300/api/roles';
   constructor(private http:HttpClient) { }
   setroleselect(role: Role): void {
     this.roleselect = role;
@@ -17,11 +18,12 @@ export class RoleService {
     return this.roleselect;
   }
   getRolesPage(page: number, size: number): Observable<Role[]> {
+    const pRurl =`${this.roleurl}/Pages`;
     let params = new HttpParams()
       .set('page', page.toString())
       .set('size', size.toString());
 
-    return this.http.get<Role[]>(this.roleurl, { params });
+    return this.http.get<Role[]>(pRurl, { params });
   }
   
   public createRole(role : Role):Observable<Role>{

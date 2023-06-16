@@ -8,11 +8,10 @@ export interface Agent {
     imageUrl:String;
     username: String;
     roleName: String;
-    roles: String[];
+    roles: Role[];
     dateOfInsertion : Date;
     dateOfModification : Date;
-    totalPages:number;
-    totalElements:number;
+
     //password: String;
    
 

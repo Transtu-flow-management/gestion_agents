@@ -9,6 +9,7 @@ import * as shajs from 'sha.js';
 })
 export class UserServiceService {
   private usersUrl ='http://localhost:5300/api/agents';  // URL to web api
+  private dockerurl = 'http://springcontainer:5300/api/agents';
 
   constructor(private http: HttpClient) { 
   }
@@ -17,11 +18,12 @@ export class UserServiceService {
     return this.http.get<Agent>(url);
   }
   getAgentsPage(page: number, size: number): Observable<Agent[]> {
+    const url = `${this.usersUrl}/p`;
     let params = new HttpParams()
       .set('page', page.toString())
       .set('size', size.toString());
 
-    return this.http.get<Agent[]>(this.usersUrl, { params });
+    return this.http.get<Agent[]>(url, { params });
   }
 
   public createAgent(agent : Agent):Observable<Agent>{
@@ -32,9 +34,7 @@ export class UserServiceService {
   public sayHello(){
     return this.http.get<String>('${this.usersUrl}/hello');
   }
-  public getAgents(){
-    return this.http.get<Agent[]>(this.usersUrl);
-  }
+ 
  public updateAgent(id:Number,agent) {
   const url = `${this.usersUrl}/update/${id}`;
     return this.http.put<Agent>(url, agent);

@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable,Inject  } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable,BehaviorSubject } from 'rxjs';
 import { loginDTO } from '../../DTO/login';
@@ -10,6 +10,7 @@ import { Agent } from '../interfaces/Agent';
 })
 export class AuthService {
   private loginurl = 'http://localhost:5300/api/auth';
+  private dockerurl = 'http://springcontainer:5300/api/auth'
   private _isLoggedIn$ = new BehaviorSubject<boolean>(false);
   isLoggedIn$ = this._isLoggedIn$.asObservable();
 
@@ -25,7 +26,7 @@ export class AuthService {
   }
 
   public authenticate(credentials: loginDTO): Observable<any> {
-    const url = `${this.loginurl}/authenticate`;
+    const url = `${this.dockerurl}/authenticate`;
     return this.http.post(url, credentials).pipe(
       tap((response: any) => {
         const accessToken = response.access_token;
@@ -50,7 +51,7 @@ export class AuthService {
   }
 
   public register(agent : any): Observable<any>{
-   const url = `${this.loginurl}/register`;
+   const url = `${this.dockerurl}/register`;
    return this.http.post(url,agent).pipe(
     tap((response:any)=>{
       console.log("user registered");
