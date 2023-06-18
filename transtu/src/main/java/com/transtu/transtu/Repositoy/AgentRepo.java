@@ -18,4 +18,5 @@ public interface AgentRepo extends MongoRepository<Agent, Integer> {
     boolean existsByemail(String email);
     List<AgentDTO> findByNameIgnoreCaseContaining(String name);
     Page<AgentDTO> findByNameContaining(String name, Pageable pageable);
+
 }

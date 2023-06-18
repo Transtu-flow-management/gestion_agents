@@ -20,7 +20,7 @@ import static com.transtu.transtu.Document.Depots.SEQUENCE_NAME_Depot;
 import static com.transtu.transtu.Document.Reseau.SEQUENCE_NAME_RES;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin("*")
 @RequestMapping("/api/resx")
 public class ReseauController {
     @Autowired

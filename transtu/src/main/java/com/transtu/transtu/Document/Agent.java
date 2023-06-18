@@ -57,6 +57,7 @@ public class Agent implements UserDetails {
         roles.add(role);
     }
     public void deleteRole(Role role){
+        if (!roles.equals(null))
         roles.remove(role);
     }
 

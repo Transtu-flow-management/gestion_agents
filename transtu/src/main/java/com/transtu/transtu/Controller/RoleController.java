@@ -23,7 +23,7 @@ import java.util.Set;
 
 import static com.transtu.transtu.Document.Role.SEQUENCE_NAME_Role;
 @RestController
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin("*")
 @RequestMapping("/api/roles")
 public class RoleController {
     @Autowired
@@ -40,16 +40,17 @@ public class RoleController {
        EntityModel<Role> createdRole = roleService.CreateRole(role);
        return ResponseEntity.created(createdRole.getRequiredLink(IanaLinkRelations.SELF).toUri()).body(createdRole);
     }
-    @GetMapping
+    @GetMapping("/Pages")
     public Page<Role> getRoles(@RequestParam(defaultValue = "0") int page,
-                               @RequestParam(defaultValue = "2") int size){
+                               @RequestParam(defaultValue = "4") int size){
         Pageable pageable = PageRequest.of(page,size);
-        return roleService.getAllRoles(pageable);
+        return roleService.getAllRolesP(pageable);
     }
-   /* public ResponseEntity<List<Role>> getAllRoles() {
+    @GetMapping
+    public ResponseEntity<List<Role>> getAllRoles() {
         List<Role> roles = roleService.getAllRoles();
         return ResponseEntity.ok(roles);
-    }*/
+    }
     @DeleteMapping("/deleteall")
     private ResponseEntity<String> deleteAll(){
 

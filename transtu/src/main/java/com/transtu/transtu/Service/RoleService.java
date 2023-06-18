@@ -26,10 +26,10 @@ public class RoleService {
         return roleRepo.findById(id).orElseThrow(()->new NoSuchElementException("Role introuvable"));
     }
 
-  /*  public List<Role> getAllRoles() {
+   public List<Role> getAllRoles() {
         return roleRepo.findAll();
-    }*/
-    public Page<Role>getAllRoles(Pageable peg){
+    }
+    public Page<Role>getAllRolesP(Pageable peg){
         return roleRepo.findAll(peg);
     }
     public EntityModel<Role> CreateRole(Role role){

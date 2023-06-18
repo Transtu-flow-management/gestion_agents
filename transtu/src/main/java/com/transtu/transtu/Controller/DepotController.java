@@ -17,7 +17,7 @@ import java.util.Optional;
 import static com.transtu.transtu.Document.Depots.SEQUENCE_NAME_Depot;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin("*")
 @RequestMapping("/api/depot")
 public class DepotController {
     @Autowired

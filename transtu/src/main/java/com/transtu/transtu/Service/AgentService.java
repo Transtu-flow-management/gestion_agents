@@ -4,6 +4,8 @@ import com.transtu.transtu.DTO.AgentDTO;
 import com.transtu.transtu.Document.Agent;
 import com.transtu.transtu.Document.Permissions;
 import com.transtu.transtu.Document.Role;
+import com.transtu.transtu.Handlers.NotFoundExcemptionhandler;
+import com.transtu.transtu.Repositoy.AgentPageRepo;
 import com.transtu.transtu.Repositoy.AgentRepo;
 import com.transtu.transtu.Repositoy.RoleRepo;
 import com.transtu.transtu.utils.StoregeService;
@@ -11,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ContentDisposition;
 import org.springframework.http.HttpHeaders;
@@ -34,14 +37,21 @@ public class AgentService implements UserDetailsService {
     private RoleRepo roleRepo;
     @Autowired
     private StoregeService storegeService;
+    @Autowired
+    private AgentPageRepo agentPageRepo;
 
     public List<AgentDTO> findAllAgents(){
         List<Agent> agents = agentRepo.findAll();
         return convertDtoToEntity(agents);
     }
-    public Page<Agent> getAllagents(Pageable pageable) {
+   /* public Page<AgentDTO> getAllagents(Pageable pageable) {
         return agentRepo.findAll(pageable);
-    }
+    }*/
+   public Page<AgentDTO> getAllagents(Pageable pageable) {
+       Page<Agent> agentPage = agentRepo.findAll(pageable);
+       List<AgentDTO> agentDTOs = convertDtoToEntity(agentPage.getContent());
+       return new PageImpl<>(agentDTOs, pageable, agentPage.getTotalElements());
+   }
     /*public Agent createAgent(Agent agent){
         String username = agent.getUsername();
         if (agentRepo.existsByUsername(username)){
@@ -72,11 +82,22 @@ public class AgentService implements UserDetailsService {
             champs.forEach((key, value) -> {
                 if (key.equals("dateOfModification")) {
                     agent.setDateOfModification((Date) value);
+
                 } else if (key.equals("roles") && value != null) {
                     agent.getRoles().clear();
-                    Integer roleId = (Integer) value;
-                    Optional<Role> role = roleRepo.findById(roleId);
-                    role.ifPresent(agent.getRoles()::add);
+                    Integer roleId;
+                    if (value instanceof String) {
+                        roleId = Integer.parseInt((String) value);
+                    } else if (value instanceof Integer) {
+                        roleId = (Integer) value;
+                    } else {
+
+                        roleId = null;
+                    }
+                    if (roleId != null) {
+                        Optional<Role> role = roleRepo.findById(roleId);
+                        role.ifPresent(agent.getRoles()::add);
+                    }
                 }else {
                     Field champ = ReflectionUtils.findField(Agent.class, key);
                     champ.setAccessible(true);
@@ -145,6 +166,12 @@ public class AgentService implements UserDetailsService {
         Agent agent = agentRepo.findById(agentid).orElseThrow(()-> new ChangeSetPersister.NotFoundException());
         Role role = roleRepo.findById(roleid).orElseThrow(() -> new ChangeSetPersister.NotFoundException());
         agent.addRole(role);
+        agentRepo.save(agent);
+    }
+    public void deleteRoleFromAgenta(Integer agentid,Integer roleid){
+        Agent agent = agentRepo.findById(agentid).orElseThrow(()-> new NotFoundExcemptionhandler(agentid));
+        Role role = roleRepo.findById(roleid).orElseThrow(()-> new NotFoundExcemptionhandler((roleid)));
+        agent.deleteRole(role);
         agentRepo.save(agent);
     }
 

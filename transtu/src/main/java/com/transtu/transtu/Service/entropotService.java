@@ -26,8 +26,9 @@ public EntityModel<Depots>createDepot(Depots depots){
     if(entropotrepo.existsByName(depots.getName())){
         throw new IllegalArgumentException("le nom de l\'entropôt deja existant");
     }
-    Depots savedDepots = entropotrepo.save(depots);
     depots.setDateOfInsertion(new Date());
+    Depots savedDepots = entropotrepo.save(depots);
+
     WebMvcLinkBuilder selflink = WebMvcLinkBuilder.linkTo(DepotController.class).slash(savedDepots.getId());
     EntityModel<Depots> depotsEntityModel = EntityModel.of(savedDepots);
     depotsEntityModel.add(selflink.withSelfRel());

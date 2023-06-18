@@ -2,6 +2,8 @@ package com.transtu.transtu.Controller;
 
 import com.transtu.transtu.DTO.AgentDTO;
 import com.transtu.transtu.Document.Agent;
+import com.transtu.transtu.Document.Role;
+import com.transtu.transtu.Repositoy.AgentPageRepo;
 import com.transtu.transtu.Repositoy.AgentRepo;
 import com.transtu.transtu.Service.AgentService;
 import com.transtu.transtu.Service.AuthenticationService;
@@ -30,7 +32,7 @@ import java.util.Optional;
 
 import static com.transtu.transtu.Document.Agent.SEQUENCE_NAME;
 
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin("*")
 @RestController
 @RequestMapping("/api/agents")
 public class AgentController {
@@ -46,16 +48,18 @@ public class AgentController {
     @Autowired
     private AgentRepo agentRepo;
 
-    @GetMapping
-    public Page<Agent> getAgents(@RequestParam(defaultValue = "0") int page,
+
+    @GetMapping("/p")
+   public Page<AgentDTO> getAgents(@RequestParam(defaultValue = "0") int page,
                                  @RequestParam(defaultValue = "2") int size) {
         Pageable pageable = PageRequest.of(page, size);
         return service.getAllagents(pageable);
     }
-    /*private List<AgentDTO> getall() {
+   @GetMapping
+    private List<AgentDTO> getall() {
 
         return service.findAllAgents();
-    }*/
+    }
 
 
     @PutMapping("/update/{agentid}")
@@ -98,6 +102,11 @@ public class AgentController {
     public ResponseEntity<String> AssignRoleToAgent(@PathVariable Integer agentid, @PathVariable Integer roleid) throws ChangeSetPersister.NotFoundException {
         service.AssignRoleToAgent(agentid, roleid);
         return ResponseEntity.ok("Role is assigned to agent");
+    }
+    @DeleteMapping("/{agentid}/role/{roleid}")
+    public ResponseEntity<?> DeleteRoleFromAgent(@PathVariable Integer agentid, @PathVariable Integer roleid) throws ChangeSetPersister.NotFoundException {
+        service.deleteRoleFromAgenta(agentid, roleid);
+        return ResponseEntity.ok(HttpStatus.ACCEPTED);
     }
 
     @PostMapping("/{agentId}/uploadimg")
