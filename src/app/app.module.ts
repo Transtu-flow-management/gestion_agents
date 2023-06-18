@@ -39,8 +39,8 @@ import { EntropotComponent } from './Core/Pages/entropot/entropot.component';
 import { ReseauComponent } from './Core/Pages/reseau/reseau.component';
 import{NgxPaginationModule} from 'ngx-pagination'
 import { environment } from './environment';
+import { HttpClientModule } from '@angular/common/http';
 import { AddDepoComponent } from './Dialogs/add-depo/add-depo.component';
-import { LeafletModule } from '@asymmetrik/ngx-leaflet';
 export const API_URL = new InjectionToken<String>('API_URL');
 @NgModule({
   declarations: [
@@ -69,9 +69,9 @@ export const API_URL = new InjectionToken<String>('API_URL');
     MatRadioModule,
     BrowserModule,
     AppRoutingModule,
-    LeafletModule,
     ReactiveFormsModule ,
     FormsModule,
+    HttpClientModule,
     MatToolbarModule,
       MatSidenavModule,
       MatListModule,
@@ -84,7 +84,6 @@ export const API_URL = new InjectionToken<String>('API_URL');
       MatInputModule,
       MatSnackBarModule,
       NgxPaginationModule,
-
   ],
   
   providers: [{provide: API_URL, useValue: environment.apiUrl }],

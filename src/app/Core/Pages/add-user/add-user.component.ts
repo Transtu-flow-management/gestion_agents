@@ -53,7 +53,6 @@ export class AddUserComponent{
     if (this.addForm.invalid) {
       return console.log("form invalide");
     }
-    const formValue = this.addForm.value;
     this._service.register(formdata).subscribe((res)=>{
       alert('agent ajouté');
       console.log(res);

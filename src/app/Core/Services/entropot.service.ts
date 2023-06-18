@@ -7,14 +7,21 @@ import { GlobalService } from 'src/app/global.service';
   providedIn: 'root'
 })
 export class EntropotService {
-  private url:string;
+  private url:string ='/depot' ;
 
   constructor(private http :HttpClient,private gs:GlobalService) {
-     this.url = gs.uri +'/depot/create'
      }
 
   public createEntroopot(depot : Depot):Observable<Depot>{
-   
-   return this.http.post<Depot>(this.url,depot);
+    const curl = this.gs.uri +this.url+'/create';
+   return this.http.post<Depot>(curl,depot);
+  }
+  public getAllentrp(){
+    const gurl = this.gs.uri +this.url ;
+    return this.http.get<Depot[]>(gurl);
+  }
+  public deleteEntrp(id:Number):Observable<any>{
+    const surl =this.gs.uri +this.url+`/${id}`;
+    return this.http.delete(surl);
   }
 }

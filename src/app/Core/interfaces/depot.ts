@@ -1,9 +1,10 @@
 export interface Depot{
     id:Number,
     name:String,
-    longitude:Number;
-    lattitude: Number;
-    capacite: Number;
+    longitude:number;
+    lattitude: number;
+    capacite: number;
+    locationName:String;
     adresse: String;
     dateOfInsertion: Date;
     dateOfModification: Date;
