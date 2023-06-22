@@ -1,6 +1,7 @@
 package com.transtu.transtu.Controller;
 
 import com.transtu.transtu.Document.Depots;
+import com.transtu.transtu.Document.Reseaux;
 import com.transtu.transtu.Repositoy.entropotRepo;
 import com.transtu.transtu.Service.SequenceGeneratorService;
 import com.transtu.transtu.Service.entropotService;
@@ -45,7 +46,7 @@ public class DepotController {
         List<Depots> depots = entropotService.getAllDepots();
         return ResponseEntity.ok(depots);
     }
-    @PatchMapping("/update/{id}")
+    @PutMapping("/update/{id}")
     private ResponseEntity<Depots> updateDepot(@PathVariable Integer id,@RequestBody Depots depots){
         Depots updated = entropotService.updateDepot(id,depots);
         return ResponseEntity.ok(updated);
@@ -63,6 +64,11 @@ public class DepotController {
         }
         entropotRepo.deleteById(id);
         return ResponseEntity.status(HttpStatus.ACCEPTED).build();
+    }
+    @PostMapping("/{depid}/assignRes")
+    public ResponseEntity<?> assignRestoDepot(@PathVariable Integer depid, @RequestBody Reseaux reseaux){
+        entropotService.assignRestoDep(depid,reseaux);
+        return ResponseEntity.ok(HttpStatus.OK);
     }
 
 }

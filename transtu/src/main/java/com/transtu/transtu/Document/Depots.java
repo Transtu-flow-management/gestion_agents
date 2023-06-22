@@ -1,5 +1,6 @@
 package com.transtu.transtu.Document;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -8,6 +9,8 @@ import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 
 import java.util.Date;
+import java.util.Set;
+
 @Getter
 @Setter
 @RequiredArgsConstructor
@@ -19,9 +22,10 @@ public class Depots {
     private Double lattitude;
     private Integer capacite;
     private String adresse;
-    @DBRef
-    public Reseau reseau;
     private String Description;
+    @JsonIgnore
+    private Set<Reseaux> Reseaux;
+    private String selectedReseau;
     private Date dateOfInsertion;
     private Date dateOfModification;
 

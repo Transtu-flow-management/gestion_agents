@@ -2,6 +2,9 @@ package com.transtu.transtu.Service;
 
 import com.transtu.transtu.Controller.DepotController;
 import com.transtu.transtu.Document.Depots;
+import com.transtu.transtu.Document.Permissions;
+import com.transtu.transtu.Document.Reseaux;
+import com.transtu.transtu.Document.Role;
 import com.transtu.transtu.Handlers.NotFoundExcemptionhandler;
 import com.transtu.transtu.Repositoy.ReseauRepo;
 import com.transtu.transtu.Repositoy.entropotRepo;
@@ -10,9 +13,8 @@ import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class entropotService {
@@ -49,10 +51,16 @@ public EntityModel<Depots>createDepot(Depots depots){
     newdepot.setDescription(depots.getDescription());
     newdepot.setLattitude(depots.getLattitude());
     newdepot.setLongitude(depots.getLongitude());
-    newdepot.setReseau(depots.getReseau());
     newdepot.setDateOfModification(new Date());
     return entropotrepo.save(newdepot);
 
+    }
+    public Depots assignRestoDep(Integer depid, Reseaux reseaux){
+        Depots depots = entropotrepo.findById(depid).orElseThrow(()-> new NotFoundExcemptionhandler(depid));
+
+               depots.setSelectedReseau(reseaux.name());
+            entropotrepo.save(depots);
+        return depots;
     }
     public Depots getCurrent(Integer id){
        return entropotrepo.findById(id).orElseThrow(()->new NotFoundExcemptionhandler(id));
