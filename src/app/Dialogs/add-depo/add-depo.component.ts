@@ -1,17 +1,30 @@
 import { AfterViewInit, Component, ElementRef } from '@angular/core';
 import * as L from 'leaflet';
 import { HttpClient } from '@angular/common/http';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { AbstractControl,ValidatorFn, FormBuilder, FormControl, FormGroup,ValidationErrors,Validators } from '@angular/forms';
 import { EntropotService } from 'src/app/Core/Services/entropot.service';
 import { Depot } from 'src/app/Core/interfaces/depot';
-
+import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import {
+  MatSnackBarHorizontalPosition,
+  MatSnackBarVerticalPosition,
+} from '@angular/material/snack-bar';
+import { FailedToastComponent } from 'src/app/alerts/failed-toast/failed-toast.component';
+import { UpdateToastComponent } from 'src/app/alerts/update-toast/update-toast.component';
+import { SuccessToastComponent } from 'src/app/alerts/success-toast/success-toast.component';
+import { WarningToastComponent } from 'src/app/alerts/warning-toast/warning-toast.component';
 @Component({
   selector: 'app-add-depo',
   templateUrl: './add-depo.component.html',
   styleUrls: ['./add-depo.component.css']
 })
 export class AddDepoComponent implements AfterViewInit {
-  depot : Depot
+  horizontalPosition: MatSnackBarHorizontalPosition = 'start';
+  verticalPosition: MatSnackBarVerticalPosition = 'bottom';
+  depot : Depot;
+  resaux : String[];
+  showdialg: boolean = true;
   map: L.Map;
   smallIcon: L.Icon;
   marker: L.Marker;
@@ -19,39 +32,84 @@ export class AddDepoComponent implements AfterViewInit {
   public long: number;
   public adresse: string;
   addForm: FormGroup;
-
-  constructor(private elementRef: ElementRef, private http: HttpClient, private fb:FormBuilder,private _entrpserv :EntropotService) {
+  isFormSubmitted = false;
+  constructor(private dialog :MatDialog,private elementRef: ElementRef, private http: HttpClient, private fb:FormBuilder,private _entrpserv :EntropotService,private snackBar: MatSnackBar) {
     this.addForm= this.fb.group({
-      name: [''],
-      longitude: [null],
-      lattitude: [null],
-      capacite: [null],
-      adresse: [''],
+      name: new FormControl('', [Validators.required, Validators.minLength(6)]),
+      Reseaux: [''],
+      longitude: new FormControl(null, [Validators.required]),
+      lattitude:  new FormControl(null, [Validators.required]),
+      capacite: new FormControl(null, [Validators.required, this.capaciteValidator,Validators.pattern('^[0-9]*$')]),
+      adresse: new FormControl('', [Validators.required, Validators.minLength(6)]),
+      selectedReseau :[''], 
     })
   }
-
+  capaciteValidator(control: AbstractControl): ValidationErrors | null {
+    const value = control.value;
+    if (value !== null && (isNaN(value) || value > 999)) {
+      return { maxLength: true };
+    }
+    return null;
+  }
+ 
   ngAfterViewInit(): void {
     this.createMap();
     this.initializeMarkerIcon();
+    this.getReseauxNames();
     this.enableClickToAddMarker();
+    this.dismissdialog();
   }
 
   addEntropot():void{
+    this.isFormSubmitted =true;
 
     if (this.addForm.invalid){
      
-      return console.log("form invalide");
+      return this.openWarningToast('Form invalide');
     }
     const formvalue = this.addForm.value;
-  this._entrpserv.createEntroopot(formvalue).subscribe((res)=>{
-    alert('entropot ajouté');
-    console.log('res : ',res);
+  this._entrpserv.createEntroopot(formvalue).subscribe(()=>{
+    this.openAddToast('Entropot ajoué avec success')
   },(error)=>{
-    console.log("erreur ajout entropot ",error);
+    this.openfailToast('Erreur l\'ors de l\'ajout d\'un entropot')
+    console.log(error);
   })
-
+  }
+  close()
+  {
+     this.dialog.closeAll()
+   }
+  dismissdialog(){
+    this.showdialg = false;    
   }
 
+ openAddToast(message:string){
+  this.snackBar.openFromComponent(SuccessToastComponent,{
+    data :{message:message},
+    duration:5000,
+    horizontalPosition:"end",
+    verticalPosition:"top",
+    panelClass: ['snack-green','snack-size','snack-position']
+  })
+ }
+ openWarningToast(message:string):void{
+  this.snackBar.openFromComponent(WarningToastComponent,{
+    data: {message:message},duration: 5000,
+  horizontalPosition: "center",
+     verticalPosition: "top",
+     panelClass : ['snack-yellow','snack-size']
+});
+ }
+
+
+ openfailToast(message:string):void{
+this.snackBar.openFromComponent(FailedToastComponent,{
+  data: {message:message},duration: 5000,
+  horizontalPosition: "end",
+     verticalPosition: this.verticalPosition,
+     panelClass : ['snack-red','snack-size']
+});
+ }
   createMap(): void {
     const centralLocation = {
       lat: 36.8392,
@@ -66,7 +124,7 @@ export class AddDepoComponent implements AfterViewInit {
     });
 
     const mainLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      minZoom: 4,
+      minZoom: 8,
       maxZoom: 17,
       attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
     });
@@ -128,4 +186,13 @@ export class AddDepoComponent implements AfterViewInit {
       })
       .catch(() => 'Adresse non trouvé');
   }
+  getReseauxNames():void{
+this._entrpserv.retreiveReseaux().subscribe((resx)=>{
+  this.resaux = resx;
+},error =>{
+  this.openfailToast("erreur l\'ors de l\'affichage de liste des réseaux");
+  console.log(error);
+})
+  }
+
 }

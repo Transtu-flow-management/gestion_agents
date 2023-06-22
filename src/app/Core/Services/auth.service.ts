@@ -26,7 +26,7 @@ export class AuthService {
   }
 
   public authenticate(credentials: loginDTO): Observable<any> {
-    const url = `${this.dockerurl}/authenticate`;
+    const url = `${this.loginurl}/authenticate`;
     return this.http.post(url, credentials).pipe(
       tap((response: any) => {
         const accessToken = response.access_token;
@@ -51,7 +51,7 @@ export class AuthService {
   }
 
   public register(agent : any): Observable<any>{
-   const url = `${this.dockerurl}/register`;
+   const url = `${this.loginurl}/register`;
    return this.http.post(url,agent).pipe(
     tap((response:any)=>{
       console.log("user registered");

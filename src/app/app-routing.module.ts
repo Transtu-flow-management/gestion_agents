@@ -9,6 +9,8 @@ import { PermissionsComponent } from './Core/Pages/permissions/permissions.compo
 import { EntropotComponent } from './Core/Pages/entropot/entropot.component';
 import { ReseauComponent } from './Core/Pages/reseau/reseau.component';
 import { AddDepoComponent } from './Dialogs/add-depo/add-depo.component';
+import { AddBrandComponent } from './Dialogs/add-brand/add-brand.component';
+import { BrandsComponent } from './Core/Pages/brands/brands.component';
 
 const approute: Routes = [
   {path:'',redirectTo:'home',pathMatch:'full'},
@@ -20,6 +22,7 @@ const approute: Routes = [
   {path:'roles',component:RolesComponent},
   {path:'entropot',component:EntropotComponent},
   {path:'reseau',component:AddDepoComponent},
+  {path:'marque',component:BrandsComponent}
 ]
 @NgModule({
   imports: [RouterModule.forRoot(approute)],

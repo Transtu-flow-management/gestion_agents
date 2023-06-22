@@ -1,12 +1,12 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, Injector } from '@angular/core';
 
 @Injectable({
   providedIn: 'root'
 })
 export class GlobalService {
 
-  constructor(private http:HttpClient) { }
+  constructor(private injector: Injector) { }
   uri = 'http://localhost:5300/api'
   
 }

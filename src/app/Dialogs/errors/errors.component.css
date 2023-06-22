@@ -1,0 +1,8 @@
+::ng-deep {
+    .error-popup {
+      mat-dialog-container {
+        color: #d8000c;
+        background-color: #ffbaba;
+      }
+    }
+  }

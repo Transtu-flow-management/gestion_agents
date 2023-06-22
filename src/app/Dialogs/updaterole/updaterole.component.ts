@@ -62,18 +62,4 @@ export class UpdateroleComponent {
     );
    }
   
-  testAssign():void{
-    const role =this.data.role
-this._roleService.AssignPermssionsToRole(this.data.role.id,this.selectedPerm).subscribe(
- 
-  (res) => {
-    console.log("selected permissions to roles: "+this.selectedPerm)
-    console.log('Permissions assigned to role:', res);
-  },
-  (error) => {
-    console.log("selected permissions to roles: "+this.selectedPerm)
-    console.error('Failed to assign permissions to role:', error);
-  }
-);
-  }
 }

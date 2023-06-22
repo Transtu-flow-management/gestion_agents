@@ -5,6 +5,8 @@ export interface Depot{
     lattitude: number;
     capacite: number;
     locationName:String;
+    Reseaux : String[];
+    selectedReseau:string;
     adresse: String;
     dateOfInsertion: Date;
     dateOfModification: Date;

@@ -41,7 +41,18 @@ import{NgxPaginationModule} from 'ngx-pagination'
 import { environment } from './environment';
 import { HttpClientModule } from '@angular/common/http';
 import { AddDepoComponent } from './Dialogs/add-depo/add-depo.component';
+import { UpdateDepotComponent } from './Dialogs/update-depot/update-depot.component';
+import { FailedToastComponent } from './alerts/failed-toast/failed-toast.component';
+import { ConfirmationComponent } from './confirmation/confirmation.component';
+import { BrandsComponent } from './Core/Pages/brands/brands.component';
+import { AddBrandComponent } from './Dialogs/add-brand/add-brand.component';
+import {MatAutocompleteModule} from '@angular/material/autocomplete';
+import { UpdateBrandComponent } from './Dialogs/update-brand/update-brand.component';
+import { UpdateToastComponent } from './alerts/update-toast/update-toast.component';
+import { SuccessToastComponent } from './alerts/success-toast/success-toast.component';
+import { WarningToastComponent } from './alerts/warning-toast/warning-toast.component';
 export const API_URL = new InjectionToken<String>('API_URL');
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -64,6 +75,15 @@ export const API_URL = new InjectionToken<String>('API_URL');
     EntropotComponent,
     ReseauComponent,
     AddDepoComponent,
+    UpdateDepotComponent,
+    FailedToastComponent,
+    ConfirmationComponent,
+    BrandsComponent,
+    AddBrandComponent,
+    UpdateBrandComponent,
+    UpdateToastComponent,
+    SuccessToastComponent,
+    WarningToastComponent,
   ],
   imports: [
     MatRadioModule,
@@ -84,6 +104,7 @@ export const API_URL = new InjectionToken<String>('API_URL');
       MatInputModule,
       MatSnackBarModule,
       NgxPaginationModule,
+      MatAutocompleteModule,
   ],
   
   providers: [{provide: API_URL, useValue: environment.apiUrl }],

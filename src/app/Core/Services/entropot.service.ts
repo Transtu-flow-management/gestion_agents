@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Depot } from '../interfaces/depot';
 import { Observable } from 'rxjs';
@@ -23,5 +23,22 @@ export class EntropotService {
   public deleteEntrp(id:Number):Observable<any>{
     const surl =this.gs.uri +this.url+`/${id}`;
     return this.http.delete(surl);
+  }
+  public updateEntropot(id :Number,depot){
+    const upurl = this.gs.uri +this.url +`/update/${id}`;
+    return this.http.put<Depot>(upurl, depot);
+  }
+  public retreiveReseaux():Observable<any>{
+    //const rsurl =`http://localhost:5300/api/resx`
+    const rsurl = this.gs.uri +`/resx`
+    return this.http.get<String[]>(rsurl);
+  }
+ 
+  public assigntoDep (id:Number,reseau :String):Observable<any>{
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json'
+    });
+    return this.http.post<any>(`${this.gs.uri}${this.url}/${id}/assignRes`,JSON.stringify(reseau),{headers});
+
   }
 }

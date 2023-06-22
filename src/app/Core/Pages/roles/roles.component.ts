@@ -4,6 +4,7 @@ import { RoleService } from '../../Services/role.service';
 import { MatDialog,MatDialogConfig } from '@angular/material/dialog';
 import { RoleModalComponent } from '../../../Dialogs/role-modal/role-modal.component';
 import { UpdateroleComponent } from '../../../Dialogs/updaterole/updaterole.component';
+import { ErrorsComponent } from 'src/app/Dialogs/errors/errors.component';
 
 @Component({
   selector: 'app-roles',
@@ -32,7 +33,8 @@ getRoles(page:number,size:number):void{
       this.totalPages =Roles.totalPages;
     },
     error =>{
-      console.log("error getting roles from DB")
+      this.openError('Erreur l\'ors de l\'affichage de liste des Roles','backend Error')
+      console.log(error)
     }
   )
 }
@@ -58,6 +60,12 @@ const dialogref = this._dialog.open(UpdateroleComponent,{
     exitAnimationDuration:'2000ms',
     data: { role: role, assignedPermissions:role.permissions}
 })
+}
+
+openError(message:string,title:string){
+  const dialogrf = this._dialog.open(ErrorsComponent,{
+    data :{message:message,title:title}
+  }) 
 }
 
 deleteRole(id:Number):void{

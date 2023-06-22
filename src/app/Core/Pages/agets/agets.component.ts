@@ -12,6 +12,8 @@ import { AdduserDialogComponent } from '../../../Dialogs/adduser-dialog/adduser-
 import { AddUserComponent } from '../add-user/add-user.component';
 import { AssignRoledialogComponent } from 'src/app/Dialogs/assign-roledialog/assign-roledialog.component';
 import { Observable } from 'rxjs';
+import { Router } from '@angular/router';
+import { ConfirmationComponent } from 'src/app/confirmation/confirmation.component';
 
 
 @Component({
@@ -31,7 +33,7 @@ totalAgents :number;
 totalPages:number;
 totalElements :number;
 
-constructor(private agentservice : UserServiceService ,private dialog: MatDialog, private roleservice : RoleService){}
+constructor(private agentservice : UserServiceService ,private dialog: MatDialog, private roleservice : RoleService,private router:Router){}
 ngOnInit(): void {
     //this.fetchAgents();
     this.getRoles();
@@ -45,8 +47,8 @@ public fetchAgents(): void {
       this.agents = agents;
       //this.getAgentImage(this.agents);
     },
-    error => {
-      console.log('Error retrieving agents:', error);
+    () => {
+      this.openError('erreur lors de l\'affichage de liste des agents','Backend_Error');
     }
   );
 }
@@ -78,9 +80,9 @@ openEditAgentDialog(agent:Agent):void {
   dialogRef.afterClosed().subscribe((updatedAgent) => {
     if (updatedAgent ) {
       if (updatedAgent.err === 'USERNAME_EXIST') {
-        this.openError('nom utlisateur deja existant');
+        this.openError('nom utlisateur deja existant','user_exist');
       } else {
-        this.openError('erreur dans le serveur');
+        this.openError('erreur dans le serveur','internal_Error');
         
       }
     } else if (updatedAgent) {
@@ -102,28 +104,40 @@ openAssignRole(agent:Number):void{
   });
 }
 
-openError(message: any) {
+openError(message: string,title:string) {
+  const currentpage = this.router.url;
+  if (currentpage === '/agents'){
   const dialogRef = this.dialog.open(ErrorsComponent, {
-    width: '350px',
     data: {
-      title: 'erreur',
+      title: title ,
       message: message,
     },
-    panelClass: 'error-popup',
   });
-
-  dialogRef.afterClosed().subscribe(() => {});
+  dialogRef.afterClosed().subscribe((result) => {
+    setTimeout(() => {
+      this.openError(message, title);
+    }, 3000);
+});
+  }
 }
 
+open = false;
 deleteagent(id:Number):void{
- if (confirm('Confirm delete'))
+  const deldialog = this.dialog.open(ConfirmationComponent,{
+    
+  });
+  deldialog.afterClosed().subscribe((res) =>{
+if (res =='confirm')
 this.agentservice.deleteAgent(id).subscribe({
   next : (res)=> {
     alert('Agent supprimé');
    // this.fetchAgents();
   },
 })
+});
 }
+
+
 public getRoles():void{
 this.roleservice.getRoles().subscribe(
   role => {this.role =role},
