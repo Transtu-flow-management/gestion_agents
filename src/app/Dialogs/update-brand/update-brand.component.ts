@@ -22,7 +22,7 @@ import { FailedToastComponent } from 'src/app/alerts/failed-toast/failed-toast.c
 export class UpdateBrandComponent implements OnInit{
   horizontalPosition: MatSnackBarHorizontalPosition
   verticalPosition: MatSnackBarVerticalPosition 
-  fabriquant = new FormControl<string | Maker>('');
+  fabriquant = new FormControl<Maker>(null);
 
   makers : Maker[] =[];
   filteredOptions: Observable<Maker[]>;
@@ -110,7 +110,7 @@ public update():void{
   var brand =this.updateForm.getRawValue();
   const fabriquantValue = this.fabriquant.value;
   if (fabriquantValue !== this.data.brand.fabriquant){ 
-    brand.fabriquant = fabriquantValue;
+    brand.fabriquant = fabriquantValue.name;
   }
     else{
       brand.fabriquant = this.data.brand.fabriquant;

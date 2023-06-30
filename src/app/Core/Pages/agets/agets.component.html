@@ -10,8 +10,8 @@
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
               d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
           </svg>
-          <input class="bg-gray-100 outline-none" type="text" [(ngModel)]="search"
-            placeholder="Chercher un utilisateur." (input)="searchAgent(search)" />
+          <input class="bg-gray-100 outline-none" type="text" [(ngModel)]="term" (input)="searchAgent(term)"
+            placeholder="Chercher un utilisateur."   /> 
         </div>
       </div>
       <button (click)="openAddUserDialog()"
@@ -35,7 +35,7 @@
       </tr>
     </thead>
     <tbody class="divide-y divide-gray-100 border-t border-gray-100">
-      <tr class="hover:bg-gray-50" *ngFor="let agent of agents |paginate:{itemsPerPage:pageSize,currentPage:currentPage,totalItems: totalElements}">
+      <tr class="hover:bg-gray-50" *ngFor="let agent of agents  |paginate:{itemsPerPage:pageSize,currentPage:currentPage,totalItems: totalElements}">
         <th class="flex gap-3 px-6 py-4 font-normal text-gray-900">
           <div class="relative h-10 w-10">
             <div class="font-medium text-gray-700">{{agent.id}}</div>
@@ -56,7 +56,7 @@
         <td class="px-6 py-4">
           <div class="flex gap-2">
             <span class="font-medium text-gray-700">
-              {{agent.prenom}}
+              {{agent.surname}}
             </span>
           </div>
         </td>

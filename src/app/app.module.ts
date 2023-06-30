@@ -11,7 +11,6 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatListModule } from '@angular/material/list';
 import { MatIconModule } from '@angular/material/icon';
 import { FooterComponent } from './Core/Pages/footer/footer.component';
-
 import { SigninComponent } from './Core/Pages/signin/signin.component';
 import { ReactiveFormsModule,FormsModule  } from '@angular/forms';
 import { SidebarComponent } from './sidebar/sidebar.component';
@@ -51,6 +50,12 @@ import { UpdateBrandComponent } from './Dialogs/update-brand/update-brand.compon
 import { UpdateToastComponent } from './alerts/update-toast/update-toast.component';
 import { SuccessToastComponent } from './alerts/success-toast/success-toast.component';
 import { WarningToastComponent } from './alerts/warning-toast/warning-toast.component';
+import { ConductorsComponent } from './Core/Pages/conductors/conductors.component';
+import { AddConductorComponent } from './Dialogs/add-conductor/add-conductor.component';
+import { SearchPipe } from './pipes/search.pipe';
+import {MatDatepickerModule} from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
+
 export const API_URL = new InjectionToken<String>('API_URL');
 
 @NgModule({
@@ -84,6 +89,9 @@ export const API_URL = new InjectionToken<String>('API_URL');
     UpdateToastComponent,
     SuccessToastComponent,
     WarningToastComponent,
+    ConductorsComponent,
+    AddConductorComponent,
+    SearchPipe,
   ],
   imports: [
     MatRadioModule,
@@ -105,9 +113,12 @@ export const API_URL = new InjectionToken<String>('API_URL');
       MatSnackBarModule,
       NgxPaginationModule,
       MatAutocompleteModule,
+      MatDatepickerModule,
+      MatNativeDateModule
   ],
+
   
-  providers: [{provide: API_URL, useValue: environment.apiUrl }],
+  providers: [{provide: API_URL, useValue: environment.apiUrl },SearchPipe],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

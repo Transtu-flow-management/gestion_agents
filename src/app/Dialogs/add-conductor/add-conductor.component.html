@@ -1,0 +1,85 @@
+<div class="flex absolute top-0 right-0 h-16 w-16" >
+    <p class="text-xs text-primary-700"></p>
+    <button
+      type="button"
+      id="dismissButton"
+      class="ml-2 box-content rounded-none border-none opacity-80 hover:no-underline hover:opacity-75 focus:opacity-100 focus:shadow-none focus:outline-none"
+      data-te-toast-dismiss (click)="close()"
+      aria-label="Close">
+      <span (click)="dismissdialog()"
+        class="w-[1em] focus:opacity-100 disabled:pointer-events-none disabled:select-none disabled:opacity-25 [&.disabled]:pointer-events-none [&.disabled]:select-none [&.disabled]:opacity-25">
+        <svg 
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke-width="1.5"
+          stroke="currentColor"
+          class="h-6 w-6">
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </span>
+    </button>
+  </div>
+  <div class="max-w-2xl mx-auto">
+  
+    <p class="text-green-950 pt-20px normal-case text-6xl	 font-sherif antialiased	font-medium	leading-loose">Ajouter un Conducteur</p>
+      
+    <form [formGroup]="addForm">
+      <div class="relative z-0 mt-4 w-full group max-w-s">
+        <input type="text" name="name"
+          class="block py-2 px-0 w-full text-sm text-black-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-black dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+          formControlName="name" placeholder=" " required />
+        <label for="name"
+          class="absolute text-sm text-black-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Nom
+          de Conducteur</label>
+          <ng-container>
+            <div
+              *ngIf="isFormSubmitted && addForm.get('name').errors?.['required']  && addForm.get('name')"
+              class="text-red-500 text-xs italic">Veillez verifier que le champ non vide </div>
+            <div
+              *ngIf="isFormSubmitted && addForm.get('name').errors?.['minlength']  && addForm.get('name').invalid && addForm.get('name')"
+              class="text-red-500 text-xs italic">le nom doit contient minimum 6 lettres</div>
+          </ng-container>
+      </div> 
+      <div class="my-8"></div> <!-- Add spacing  -->
+      <div class="relative z-0 mt-4 w-full group">
+      <input type="text" name="surname"
+      class="block py-2 px-0 w-full text-sm text-black-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-black dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+      formControlName="surname" placeholder=" " required />
+    <label for="surname"
+      class="absolute text-sm text-black-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Prénom
+      de Conducteur</label>
+      <ng-container>
+        <div
+          *ngIf="isFormSubmitted && addForm.get('surname').errors?.['required']  && addForm.get('surname')"
+          class="text-red-500 text-xs italic">Veillez verifier que le champ non vide </div>
+        <div
+          *ngIf="isFormSubmitted && addForm.get('surname').errors?.['minlength']  && addForm.get('surname').invalid && addForm.get('surname')"
+          class="text-red-500 text-xs italic">le nom doit contient minimum 6 lettres</div>
+      </ng-container></div>
+      <div class="my-8"></div> <!-- Add spacing  -->
+      <div class="relative z-0 mt-4 w-full group max-w-xs">
+      <input type="text" name="uid"
+      class="block py-2 px-0 w-full text-sm text-black-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-black dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+      formControlName="uid" placeholder=" " required />
+    <label for="uid"
+      class="absolute text-sm text-black-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Id unique
+      de Conducteur</label>
+      <ng-container>
+        <div
+          *ngIf="isFormSubmitted && addForm.get('uid').errors?.['required']  && addForm.get('uid')"
+          class="text-red-500 text-xs italic">Veillez verifier que le champ non vide </div>
+        <div
+          *ngIf="isFormSubmitted && addForm.get('uid').errors?.['minlength']  && addForm.get('uid').invalid && addForm.get('uid')"
+          class="text-red-500 text-xs italic">le nom doit contient minimum 4 chiffres</div>
+      </ng-container></div>
+      <div class="my-16"></div> <!-- Add spacing  -->
+      <button
+        class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+        (click)="add()">ajouter</button>
+        
+    </form>
+</div>

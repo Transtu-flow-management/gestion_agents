@@ -34,4 +34,14 @@
     &.snack-yellow{
         --mdc-snackbar-container-color: rgb(223, 176, 32);
     }
+   
 }
+
+.mdc-dialog{
+
+    &.dialogbackgroundcolor{
+        background-color: #33e40b;
+    }
+}
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }

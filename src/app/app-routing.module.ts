@@ -11,6 +11,7 @@ import { ReseauComponent } from './Core/Pages/reseau/reseau.component';
 import { AddDepoComponent } from './Dialogs/add-depo/add-depo.component';
 import { AddBrandComponent } from './Dialogs/add-brand/add-brand.component';
 import { BrandsComponent } from './Core/Pages/brands/brands.component';
+import { ConductorsComponent } from './Core/Pages/conductors/conductors.component';
 
 const approute: Routes = [
   {path:'',redirectTo:'home',pathMatch:'full'},
@@ -21,7 +22,7 @@ const approute: Routes = [
   {path:'agents',component:AgetsComponent},
   {path:'roles',component:RolesComponent},
   {path:'entropot',component:EntropotComponent},
-  {path:'reseau',component:AddDepoComponent},
+  {path:'reseau',component:ConductorsComponent},
   {path:'marque',component:BrandsComponent}
 ]
 @NgModule({

@@ -35,7 +35,7 @@ export class UserServiceService {
     return this.http.get<String>('${this.usersUrl}/hello');
   }
  
- public updateAgent(id:Number,agent) {
+ public updateAgent(id:number,agent) {
   const url = `${this.usersUrl}/update/${id}`;
     return this.http.put<Agent>(url, agent);
   }
@@ -53,19 +53,16 @@ export class UserServiceService {
     return this.http.patch<Agent>(url, formdata,{headers});
   
 }
-  public deleteAgent(id:Number):Observable<any>{
+  public deleteAgent(id:number):Observable<any>{
     const url =`${this.usersUrl}/delete/${id}`;
     return this.http.delete(url);
 
   }
-  public assignRole(agentid:Number,roleid:Number){
+  public assignRole(agentid:number,roleid:Number){
     const url = `${this.usersUrl}/${agentid}/role/${roleid}`;
     return this.http.post<Agent>(url,null)
   }
-  public uploadimage(id: Number,imagefile :File){
-
-  }
-  public getimage(filename :String):Observable<Blob>{
+  public getimage(filename :string):Observable<Blob>{
     
     const url =`${this.usersUrl}/files/${filename}`;
     return this.http.get(url,{ responseType: 'blob' });

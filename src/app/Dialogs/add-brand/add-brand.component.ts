@@ -22,7 +22,7 @@ import { Router } from '@angular/router';
 export class AddBrandComponent implements OnInit{
   horizontalPosition: MatSnackBarHorizontalPosition
   verticalPosition: MatSnackBarVerticalPosition 
-  fabriquants = new FormControl<string | Maker>('');
+  fabriquants = new FormControl<Maker>(null);
   makers : Maker[]= [];
   filteredOptions: Observable<Maker[]>;
 
@@ -33,7 +33,7 @@ export class AddBrandComponent implements OnInit{
   constructor(private dialog :MatDialog,private fb:FormBuilder,private snackBar:MatSnackBar,private router:Router ,private _brandservice :BrandService){
      this.addForm = this.fb.group({
       name: new FormControl('', [Validators.required, Validators.minLength(6)]),
-      fabriquant: this.fabriquants,
+      maker: this.fabriquants,
     });
     this._brandservice.getAllmakers().subscribe(makers => {
       this.makers = makers;
@@ -89,15 +89,16 @@ add(): void {
   if (this.addForm.valid) {
     
     const selectedMaker = this.fabriquants.value;
-      formValue.fabriquant = selectedMaker;
-
-    this._brandservice.createBrand(formValue).subscribe(() => {
+      formValue.fabriquant = selectedMaker.name;
+      console.log(selectedMaker)
+   /* this._brandservice.createBrand(formValue).subscribe(() => {
       this.openAddToast('Marque ajoutée avec succès');
+     
       this.router.navigate(['/marque']);
     }, (error) => {
       this.openfailToast('Erreur lors de l\'ajout d\'une Marque');
       console.log(error);
-    });
+    });*/
   }
 }
 }

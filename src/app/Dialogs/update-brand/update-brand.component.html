@@ -50,7 +50,7 @@
             <mat-label>{{data.brand.fabriquant}}</mat-label>
             <input type="text" matInput required [formControl]="fabriquant" [matAutocomplete]="auto">
             <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
-              <mat-option *ngFor="let brand of filteredOptions | async" [value]="brand.name">
+              <mat-option *ngFor="let brand of filteredOptions | async" [value]="brand">
                {{brand.name}}
               </mat-option>
             </mat-autocomplete>

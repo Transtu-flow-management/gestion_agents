@@ -5,6 +5,8 @@ import { UserServiceService } from 'src/app/Core/Services/user-service.service';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { RoleService } from 'src/app/Core/Services/role.service';
 import { Role } from 'src/app/Core/interfaces/Role';
+import { UpdateToastComponent } from 'src/app/alerts/update-toast/update-toast.component';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-agentdialog',
@@ -23,7 +25,8 @@ export class AgentdialogComponent implements OnInit {
     public dialogRef: MatDialogRef<AgentdialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
     private fb: FormBuilder,
-    private service: UserServiceService, private _roleservice: RoleService
+    private service: UserServiceService, private _roleservice: RoleService,
+    private snackBar:MatSnackBar
 
   ) {
     const agent: any = data.agent;
@@ -32,7 +35,7 @@ export class AgentdialogComponent implements OnInit {
       imageUrl: [agent.imageUrl],
       id: [agent.id],
       name: [agent.name],
-      prenom: [agent.prenom],
+      surname: [agent.surname],
       email: [agent.email],
       username: [agent.username],
       roleName: [agent.roleName],
@@ -92,6 +95,17 @@ export class AgentdialogComponent implements OnInit {
     const selectedRole = this.roleList.find(role => role.id === selectedRoleId);
     return selectedRole ? selectedRole.roleName : '';
   }
+
+  openToast(message: string): void {
+    this.snackBar.openFromComponent(UpdateToastComponent,{
+      data :{message:message},
+      duration:3000,
+      horizontalPosition:"end",
+      verticalPosition:"top",
+      panelClass: ['snack-green','snack-size','snack-position']
+    })
+ }
+
   public patchAgent(): void {
     var formdata = new FormData();
     var patchagent: any = {};
@@ -137,11 +151,12 @@ export class AgentdialogComponent implements OnInit {
       });
     } else
       this.service.patchAgentimg(this.data.agent.id, formdata).subscribe((res) => {
-        console.log("agent patched sans image", res);
+       this.openToast("agent a été mis à jour");
         this.dialogRef.close(res);
       }, (error) => {
         console.log("error patching agent sans image", error);
       });
+
   }
 
 

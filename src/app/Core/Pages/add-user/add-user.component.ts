@@ -29,7 +29,7 @@ export class AddUserComponent{
      private router : Router,private snackbar :MatSnackBar){
     this.addForm = this.fb.group({
       name: [''],
-      prenom: [''],
+      surname: [''],
       email: [''],
       username:[''],
       password: ['']
@@ -50,7 +50,7 @@ export class AddUserComponent{
   addUser(): void {
     let formdata = new FormData();
     formdata.append('name',this.addForm.value.name);
-    formdata.append('prenom',this.addForm.value.prenom);
+    formdata.append('surname',this.addForm.value.surname);
     formdata.append('email',this.addForm.value.email);
     formdata.append('username',this.addForm.value.username);
     formdata.append('password',this.addForm.value.password);

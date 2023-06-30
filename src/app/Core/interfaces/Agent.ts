@@ -1,13 +1,13 @@
 import { Role } from "./Role";
 
 export interface Agent {
-    id: Number;
-    name: String;
-    prenom: String;
-    email: String;
-    imageUrl:String;
-    username: String;
-    roleName: String;
+    id: number;
+    name: string;
+    surname: string;
+    email: string;
+    imageUrl:string;
+    username: string;
+    roleName: string;
     roles: Role[];
     dateOfInsertion : Date;
     dateOfModification : Date;
