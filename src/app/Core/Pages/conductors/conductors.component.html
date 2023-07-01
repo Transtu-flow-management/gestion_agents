@@ -13,13 +13,24 @@
             <input class="bg-gray-100 outline-none" type="text" [(ngModel)]="term" 
               placeholder="Chercher un Conducteur."   /> 
           </div>
-          <mat-form-field>
-            <input matInput [matDatepicker]="dateFilterPicker" placeholder="Filter by Date" [formControl]="dateFilterControl">
+        
+        </div>
+        <div class="flex space-x-2 justify-between pr-64">
+          <div class="flex space-x-4">
+            <ng-container>
+                <mat-form-field class="mr-1">
+            <input matInput [matDatepicker]="dateFilterPicker" placeholder="Filtrer par Date" [formControl]="dateFilter">
             <mat-datepicker-toggle matSuffix [for]="dateFilterPicker"></mat-datepicker-toggle>
+            <div *ngIf="isfilterclicked &&dateFilter.value ===null" class="text-red-500 text-xs italic">Date vide</div>
             <mat-datepicker #dateFilterPicker></mat-datepicker>
           </mat-form-field>
+          </ng-container>
         </div>
-        <button (click)="getDatePickerValue()">Get Date Picker Value</button>
+        <div class="relative h-16 w-16">
+          <button class="bg-neutral-100 px-3 py-5 text-sm shadow-sm font-small tracking-wider text-blue-600 square-full hover:shadow-2xl hover:bg-neutral-200" (click)="getDatePickerValue()">filtrer</button>
+        </div>
+         </div>
+       
         <button (click)="openAddConductorDialog()"
           class="bg-green-200 px-5 py-3 text-sm shadow-sm font-medium tracking-wider text-green-600 rounded-full hover:shadow-2xl hover:bg-green-300"><span>Ajouter
             une marque</span></button>
@@ -29,7 +40,7 @@
       <thead class="bg-gray-50">
         <tr>
           <th scope="col" class="px-6 py-4 font-medium text-gray-900">Id</th>
-          <th scope="col" class="px-6 py-4 font-medium text-gray-900">Nom</th>
+          <th scope="col" class="px-6 py-4 font-medium text-gray-900">Nom Complet</th>
           <th scope="col" class="px-6 py-4 font-medium text-gray-900">UID</th>
           <th scope="col" class="px-12 py-4 font-medium text-gray-900">Date de Creation</th>
           <th scope="col" class="px-12 py-4 font-medium text-gray-900">Date de Modification</th>
@@ -37,7 +48,7 @@
         </tr>
       </thead>
       <tbody class="divide-y divide-gray-100 border-t border-gray-100">
-        <tr class="hover:bg-gray-50" *ngFor="let conductor of filteredconductor |paginate:{itemsPerPage:pageSize,currentPage:currentPage,totalItems: totalElements}">
+        <tr class="hover:bg-gray-50" *ngFor="let conductor of conductors |paginate:{itemsPerPage:pageSize,currentPage:currentPage,totalItems: totalElements}">
           <th class="flex gap-3 px-6 py-4 font-normal text-gray-900">
             <div class="relative h-10 w-10">
               <div class="font-medium text-gray-700">{{conductor.id}}</div>
@@ -45,7 +56,7 @@
           </th>
           <td class="px-6 py-4">
             <span class="font-medium text-gray-700">
-              {{conductor.name}}
+              {{conductor.name}} {{conductor.surname}}
             </span>
           </td>
           <td class="px-6 py-4">

@@ -55,6 +55,7 @@ import { AddConductorComponent } from './Dialogs/add-conductor/add-conductor.com
 import { SearchPipe } from './pipes/search.pipe';
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
+import { UpdateConductorComponent } from './Dialogs/update-conductor/update-conductor.component';
 
 export const API_URL = new InjectionToken<String>('API_URL');
 
@@ -92,6 +93,7 @@ export const API_URL = new InjectionToken<String>('API_URL');
     ConductorsComponent,
     AddConductorComponent,
     SearchPipe,
+    UpdateConductorComponent,
   ],
   imports: [
     MatRadioModule,

@@ -22,7 +22,7 @@
         --mdc-snackbar-container-color: rgb(21, 193, 118);
     }
     &.snack-sizeF{
-        max-width : 160px;
+        max-width : 180px;
         height: auto;
         margin-right: 100px;
     }
@@ -32,10 +32,11 @@
         padding-top: 10px;
     }
     &.snack-yellow{
-        --mdc-snackbar-container-color: rgb(223, 176, 32);
+        --mdc-snackbar-container-color: rgb(199, 141, 15);
     }
-   
+ 
 }
+
 
 .mdc-dialog{
 
