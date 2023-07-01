@@ -1,17 +1,14 @@
 package com.transtu.transtu.Repositoy;
 
-import com.transtu.transtu.Document.Marque;
-import com.transtu.transtu.Document.fabriquant;
+import com.transtu.transtu.Document.Brand;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.Optional;
-
 @Repository
-public interface BrandRepo extends MongoRepository<Marque,String> {
+public interface BrandRepo extends MongoRepository<Brand,String> {
     boolean existsByName(String name);
 
-    Marque findByFabriquant (String fabriquant);
-    boolean existsByFabriquant(String fabriquant);
+    Brand findBymaker (String maker);
+    boolean existsBymaker(String maker);
 
 }

@@ -1,22 +1,17 @@
 package com.transtu.transtu.Service;
 
-import com.transtu.transtu.Controller.DepotController;
 import com.transtu.transtu.Controller.brandController;
-import com.transtu.transtu.Document.Depots;
-import com.transtu.transtu.Document.Marque;
-import com.transtu.transtu.Document.Reseaux;
-import com.transtu.transtu.Document.fabriquant;
-import com.transtu.transtu.Handlers.NotFoundExcemptionhandler;
+import com.transtu.transtu.Document.Brand;
+import com.transtu.transtu.Document.CarBuilder;
 import com.transtu.transtu.Handlers.NotFoundHandler;
 import com.transtu.transtu.Repositoy.BrandRepo;
-import com.transtu.transtu.Repositoy.fabriquantRepo;
+import com.transtu.transtu.Repositoy.makerRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.Date;
 import java.util.List;
@@ -27,34 +22,34 @@ public class brandService {
 @Autowired
    private BrandRepo brandRepo;
 @Autowired
-private fabriquantRepo fabriquantRepo;
-    public List<Marque> getAllbrands(){
+private makerRepo fabriquantRepo;
+    public List<Brand> getAllbrands(){
         return brandRepo.findAll();
     }
-    public List<fabriquant> getallfabriquants(){
+    public List<CarBuilder> getallfabriquants(){
         return fabriquantRepo.findAll();
     }
-    public EntityModel<Marque> createMarque(Marque marque) {
+    public EntityModel<Brand> createMarque(Brand brand) {
 
-        if (brandRepo.existsByName(marque.getName())) {
+        if (brandRepo.existsByName(brand.getName())) {
             throw new IllegalArgumentException("le nom de l'entrepôt déjà existant");
         }
 
-        fabriquant existingFabriquant = fabriquantRepo.findByName(marque.getFabriquant());
-        if (existingFabriquant != null) {
-            marque.setFabriquant(existingFabriquant.getName());
+        CarBuilder existingCarBuilder = fabriquantRepo.findByName(brand.getMaker());
+        if (existingCarBuilder != null) {
+            brand.setMaker(existingCarBuilder.getName());
         } else {
-            fabriquant fabriquant = new fabriquant();
-            fabriquant.setName(marque.getFabriquant());
-            fabriquant = fabriquantRepo.save(fabriquant);
-            marque.setFabriquant(fabriquant.getName());
+            CarBuilder CarBuilder = new CarBuilder();
+            CarBuilder.setName(brand.getMaker());
+            CarBuilder = fabriquantRepo.save(CarBuilder);
+            brand.setMaker(CarBuilder.getName());
         }
 
-        marque.setDateOfInsertion(new Date());
-        Marque savedMarque = brandRepo.save(marque);
+        brand.setDateOfInsertion(new Date());
+        Brand savedBrand = brandRepo.save(brand);
 
-        WebMvcLinkBuilder selfLink = WebMvcLinkBuilder.linkTo(brandController.class).slash(savedMarque.getId());
-        EntityModel<Marque> marqueEntityModel = EntityModel.of(savedMarque);
+        WebMvcLinkBuilder selfLink = WebMvcLinkBuilder.linkTo(brandController.class).slash(savedBrand.getId());
+        EntityModel<Brand> marqueEntityModel = EntityModel.of(savedBrand);
         marqueEntityModel.add(selfLink.withSelfRel());
         return marqueEntityModel;
     }
@@ -62,31 +57,31 @@ private fabriquantRepo fabriquantRepo;
     public void Deleteall(){
         brandRepo.deleteAll();
     }
-    public Marque updatebrand(String id, Marque marque) {
-        Marque newbrand = brandRepo.findById(id).orElseThrow(() -> new NotFoundHandler(id));
+    public Brand updatebrand(String id, Brand brand) {
+        Brand newbrand = brandRepo.findById(id).orElseThrow(() -> new NotFoundHandler(id));
 
-        if (!marque.getFabriquant().equals(newbrand.getFabriquant())) {
-            if (marque.getFabriquant() != null && !marque.getFabriquant().isEmpty()) {
-                fabriquant existingFabriquant = fabriquantRepo.findByName(marque.getFabriquant());
-                if (existingFabriquant != null) {
-                    newbrand.setFabriquant(marque.getFabriquant());
+        if (!brand.getMaker().equals(newbrand.getMaker())) {
+            if (brand.getMaker() != null && !brand.getMaker().isEmpty()) {
+                CarBuilder existingCarBuilder = fabriquantRepo.findByName(brand.getMaker());
+                if (existingCarBuilder != null) {
+                    newbrand.setMaker(brand.getMaker());
                 } else {
-                    fabriquant fabriquant = new fabriquant();
-                    fabriquant.setName(marque.getFabriquant());
-                    fabriquant = fabriquantRepo.save(fabriquant);
-                    newbrand.setFabriquant(fabriquant.getName());
+                    CarBuilder CarBuilder = new CarBuilder();
+                    CarBuilder.setName(brand.getMaker());
+                    CarBuilder = fabriquantRepo.save(CarBuilder);
+                    newbrand.setMaker(CarBuilder.getName());
                 }
             }
         }
-        newbrand.setName(marque.getName());
+        newbrand.setName(brand.getName());
         newbrand.setDateOfModification(new Date());
         return brandRepo.save(newbrand);
     }
 
 
 
-    public ResponseEntity<Marque> deleteMarque(String id){
-        Optional<Marque> removedbrand = brandRepo.findById(id);
+    public ResponseEntity<Brand> deleteMarque(String id){
+        Optional<Brand> removedbrand = brandRepo.findById(id);
         if (removedbrand.isEmpty()){
             return ResponseEntity.notFound().build();
         }
@@ -94,7 +89,7 @@ private fabriquantRepo fabriquantRepo;
         return ResponseEntity.status(HttpStatus.ACCEPTED).build();
     }
 
-    public Marque getCurrent(String id){
+    public Brand getCurrent(String id){
         return brandRepo.findById(id).orElseThrow(()->new NotFoundHandler(id));
     }
 

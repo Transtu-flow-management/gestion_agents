@@ -2,7 +2,6 @@ package com.transtu.transtu.Service;
 
 import com.transtu.transtu.DTO.AgentDTO;
 import com.transtu.transtu.Document.Agent;
-import com.transtu.transtu.Document.Permissions;
 import com.transtu.transtu.Document.Role;
 import com.transtu.transtu.Handlers.NotFoundExcemptionhandler;
 import com.transtu.transtu.Repositoy.AgentPageRepo;
@@ -40,6 +39,9 @@ public class AgentService implements UserDetailsService {
     @Autowired
     private AgentPageRepo agentPageRepo;
 
+    public AgentService() {
+    }
+
     public List<AgentDTO> findAllAgents(){
         List<Agent> agents = agentRepo.findAll();
         return convertDtoToEntity(agents);
@@ -65,7 +67,7 @@ public class AgentService implements UserDetailsService {
     public Agent updateAgent(Integer id,Agent agent){
         Agent agent1 = agentRepo.findById(id).orElseThrow(()->new NoSuchElementException(("Agent introuvable")));
         agent1.setName(agent.getName());
-        agent1.setPrenom(agent.getPrenom());
+        agent1.setSurname(agent.getSurname());
         //agent1.setRoles(agent.getRoles());
         agent1.setEmail(agent.getEmail());
         agent1.setImageUrl(agent.getImageUrl());
@@ -129,14 +131,14 @@ public class AgentService implements UserDetailsService {
             agentDTO.setRoleName(role.getRoleName());
         }
         agentDTO.setImageUrl(agent.getImageUrl());
-        agentDTO.setPrenom(agent.getPrenom());
+        agentDTO.setSurname(agent.getSurname());
         agentDTO.setUsername(agent.getUsername());
         agentDTO.setDateOfModification(agent.getDateOfModification());
         return agentDTO;
     }
 
 // convertion de DTO vers entité normale sur la methode GET seulement
-    private static List<AgentDTO> convertDtoToEntity(List<Agent> userList) {
+    public static List<AgentDTO> convertDtoToEntity(List<Agent> userList) {
         List<AgentDTO> dtoList = new ArrayList<>();
 
         for(Agent user2 : userList)
@@ -145,7 +147,7 @@ public class AgentService implements UserDetailsService {
 
             dto.setId(user2.getId());
             dto.setName(user2.getName());
-            dto.setPrenom(user2.getPrenom());
+            dto.setSurname(user2.getSurname());
             dto.setEmail(user2.getEmail());
             dto.setUsername(user2.getUsername());
             dto.setImageUrl(user2.getImageUrl());
@@ -183,7 +185,22 @@ public class AgentService implements UserDetailsService {
                 .headers(headers)
                 .body(file);
     }
-
-
+public Page <AgentDTO> searchAgents(String searchterm, Pageable p){
+        List<Agent> allagents = agentRepo.findAll();
+        List<Agent> filteredagents = allagents.stream().filter(agent ->containssearchterm(agent,searchterm)).collect(Collectors.toList());
+        int startindex = p.getPageNumber() * p.getPageSize();
+        int endIndex = Math.min(startindex + p.getPageSize(), filteredagents.size());
+    List<Agent> agentsPage = filteredagents.subList(startindex, endIndex);
+    List<AgentDTO> agentsDtoPage = convertDtoToEntity(agentsPage);
+    long totalCount = filteredagents.size();
+    return new PageImpl<>(agentsDtoPage, p, totalCount);
+}
+    private boolean containssearchterm(Agent agent, String searchTerm) {
+        String lowercaseSearchTerm = searchTerm.toLowerCase();
+        return agent.getName().toLowerCase().contains(lowercaseSearchTerm)
+                || agent.getSurname().toLowerCase().contains(lowercaseSearchTerm)
+                || agent.getEmail().toLowerCase().contains(lowercaseSearchTerm)
+                || agent.getUsername().toLowerCase().contains(lowercaseSearchTerm);
+    }
 
 }

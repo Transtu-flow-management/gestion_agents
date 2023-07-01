@@ -6,7 +6,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Transient;
-import org.springframework.data.mongodb.core.mapping.DBRef;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.Date;
 import java.util.Set;
@@ -14,7 +14,8 @@ import java.util.Set;
 @Getter
 @Setter
 @RequiredArgsConstructor
-public class Depots {
+@Document(collection = "depots")
+public class Warehouse {
     @Id
     private Integer id;
     private String name;
@@ -24,7 +25,7 @@ public class Depots {
     private String adresse;
     private String Description;
     @JsonIgnore
-    private Set<Reseaux> Reseaux;
+    private Set<Networks> Networks;
     private String selectedReseau;
     private Date dateOfInsertion;
     private Date dateOfModification;

@@ -32,6 +32,7 @@ import java.util.Optional;
 
 import static com.transtu.transtu.Document.Agent.SEQUENCE_NAME;
 
+
 @CrossOrigin("*")
 @RestController
 @RequestMapping("/api/agents")
@@ -51,9 +52,10 @@ public class AgentController {
 
     @GetMapping("/p")
    public Page<AgentDTO> getAgents(@RequestParam(defaultValue = "0") int page,
-                                 @RequestParam(defaultValue = "2") int size) {
+                                 @RequestParam(defaultValue = "2") int size
+                                  ) {
         Pageable pageable = PageRequest.of(page, size);
-        return service.getAllagents(pageable);
+            return service.getAllagents(pageable);
     }
    @GetMapping
     private List<AgentDTO> getall() {
@@ -83,7 +85,7 @@ public class AgentController {
 
         service.DeleteAgents();
         mongo.resetSequence(SEQUENCE_NAME);
-        return ResponseEntity.ok("all agents are gone");
+        return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/delete/{agentid}")
@@ -108,30 +110,13 @@ public class AgentController {
         service.deleteRoleFromAgenta(agentid, roleid);
         return ResponseEntity.ok(HttpStatus.ACCEPTED);
     }
-
-    @PostMapping("/{agentId}/uploadimg")
-    public ResponseEntity<?> uploadImage(@PathVariable Integer agentId, @RequestParam("imageFile") MultipartFile imageFile) {
-        Optional<Agent> optionalAgent = agentRepo.findById(agentId);
-        if (!optionalAgent.isPresent()) {
-            return ResponseEntity.notFound().build();
-        }
-        Agent agent = optionalAgent.get();
-        try {
-            agent.setImagedata(imageFile.getBytes());
-            agentRepo.save(agent);
-            return ResponseEntity.ok().build();
-        } catch (IOException e) {
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
-    }
-
     @GetMapping("/search")
-    public List<Agent> searchAgents(@RequestParam("query") String query) {
+    public List<AgentDTO> searchAgents(@RequestParam("query") String query) {
         Query searchQuery = new Query()
                 .addCriteria(Criteria.where("name").regex(query, "i"));
-
-        return mongoOperations.find(searchQuery,Agent.class);
+        List<Agent> agents = mongoOperations.find(searchQuery, Agent.class);
+        List<AgentDTO> agentDTOs = service.convertDtoToEntity(agents);
+        return  agentDTOs;
     }
     @GetMapping("/files/{filename:.+}")
     @ResponseBody

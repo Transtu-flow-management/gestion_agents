@@ -53,7 +53,7 @@ private final SequenceGeneratorService mongo;
         var user = Agent.builder().id(signid)
 
                 .name((request.getName()))
-                .prenom(request.getPrenom())
+                .surname(request.getSurname())
                 .email(request.getEmail())
                 .username(request.getUsername())
                 .password(passwordEncoder.encode(request.getPassword()))
@@ -65,7 +65,7 @@ private final SequenceGeneratorService mongo;
         AgentDTO agentDTO = new AgentDTO();
         agentDTO.setImageUrl(savedUser.getImageUrl());
         agentDTO.setId(savedUser.getId());
-        agentDTO.setPrenom(savedUser.getPrenom());
+        agentDTO.setSurname(savedUser.getSurname());
         agentDTO.setName(savedUser.getName());
         agentDTO.setUsername(savedUser.getUsername());
         agentDTO.setEmail(savedUser.getEmail());

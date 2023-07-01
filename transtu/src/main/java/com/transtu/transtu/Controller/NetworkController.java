@@ -1,7 +1,7 @@
 package com.transtu.transtu.Controller;
 
 import com.transtu.transtu.Document.Reseau;
-import com.transtu.transtu.Document.Reseaux;
+import com.transtu.transtu.Document.Networks;
 import com.transtu.transtu.Repositoy.ReseauRepo;
 import com.transtu.transtu.Service.ReseauService;
 import com.transtu.transtu.Service.SequenceGeneratorService;
@@ -19,7 +19,7 @@ import static com.transtu.transtu.Document.Reseau.SEQUENCE_NAME_RES;
 @RestController
 @CrossOrigin("*")
 @RequestMapping("/api/resx")
-public class ReseauController {
+public class NetworkController {
     @Autowired
     SequenceGeneratorService mongogen;
     @Autowired
@@ -41,9 +41,9 @@ public class ReseauController {
         return ResponseEntity.status(HttpStatus.GONE).build();
     }
     @GetMapping
-    public ResponseEntity<List<Reseaux>> getAllResx() {
-        List<Reseaux> resxlist = new ArrayList<>();
-        for (Reseaux resx : Reseaux.values()) {
+    public ResponseEntity<List<Networks>> getAllResx() {
+        List<Networks> resxlist = new ArrayList<>();
+        for (Networks resx : Networks.values()) {
             resxlist.add(resx);
         }
         return ResponseEntity.ok(resxlist);

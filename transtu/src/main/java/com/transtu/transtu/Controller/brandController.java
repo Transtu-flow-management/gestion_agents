@@ -1,8 +1,7 @@
 package com.transtu.transtu.Controller;
 
-import com.transtu.transtu.Document.Marque;
-import com.transtu.transtu.Document.Reseaux;
-import com.transtu.transtu.Document.fabriquant;
+import com.transtu.transtu.Document.Brand;
+import com.transtu.transtu.Document.CarBuilder;
 import com.transtu.transtu.Repositoy.BrandRepo;
 import com.transtu.transtu.Service.brandService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,9 +25,9 @@ public class brandController {
 
 
     @PostMapping("/create")
-    private ResponseEntity<EntityModel<Marque>> addDepot(@RequestBody Marque marque){
+    private ResponseEntity<EntityModel<Brand>> addDepot(@RequestBody Brand brand){
 
-        EntityModel<Marque> createdbrand = brandService.createMarque(marque);
+        EntityModel<Brand> createdbrand = brandService.createMarque(brand);
         return ResponseEntity.created(createdbrand.getRequiredLink(IanaLinkRelations.SELF).toUri()).body(createdbrand);
     }
     @DeleteMapping
@@ -37,28 +36,28 @@ public class brandController {
         return ResponseEntity.status(HttpStatus.GONE).build();
     }
     @GetMapping
-    private ResponseEntity<List<Marque>> getAll(){
-        List<Marque> marques = brandService.getAllbrands();
-        return ResponseEntity.ok(marques);
+    private ResponseEntity<List<Brand>> getAll(){
+        List<Brand> brands = brandService.getAllbrands();
+        return ResponseEntity.ok(brands);
     }
     @PutMapping("/update/{id}")
-    private ResponseEntity<Marque> updatebrand(@PathVariable String id,@RequestBody Marque marque){
-        Marque updated = brandService.updatebrand(id,marque);
+    private ResponseEntity<Brand> updatebrand(@PathVariable String id, @RequestBody Brand brand){
+        Brand updated = brandService.updatebrand(id, brand);
         return ResponseEntity.ok(updated);
     }
     @GetMapping("/{id}")
-    private ResponseEntity<Marque> getcurrent(@PathVariable String id){
-        Marque currentDepot = brandService.getCurrent(id);
-        return ResponseEntity.ok(currentDepot);
+    private ResponseEntity<Brand> getcurrent(@PathVariable String id){
+        Brand currentbrand = brandService.getCurrent(id);
+        return ResponseEntity.ok(currentbrand);
     }
     @DeleteMapping("/{id}")
-    private ResponseEntity<Marque> deletebrand(@PathVariable String id){
+    private ResponseEntity<Brand> deletebrand(@PathVariable String id){
         return brandService.deleteMarque(id);
     }
 
     @GetMapping("/fabriquants")
-    private ResponseEntity<List<fabriquant>> getAllfab(){
-        List<fabriquant> fabriquants = brandService.getallfabriquants();
-        return ResponseEntity.ok(fabriquants);
+    private ResponseEntity<List<CarBuilder>> getAllfab(){
+        List<CarBuilder> CarBuilders = brandService.getallfabriquants();
+        return ResponseEntity.ok(CarBuilders);
     }
 }

@@ -1,8 +1,7 @@
 package com.transtu.transtu.Controller;
 
-import com.transtu.transtu.Document.Depots;
-import com.transtu.transtu.Document.Reseaux;
-import com.transtu.transtu.Repositoy.entropotRepo;
+import com.transtu.transtu.Document.Warehouse;
+import com.transtu.transtu.Document.Networks;
 import com.transtu.transtu.Service.SequenceGeneratorService;
 import com.transtu.transtu.Service.entropotService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,12 +14,12 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
 
-import static com.transtu.transtu.Document.Depots.SEQUENCE_NAME_Depot;
+import static com.transtu.transtu.Document.Warehouse.SEQUENCE_NAME_Depot;
 
 @RestController
 @CrossOrigin("*")
 @RequestMapping("/api/depot")
-public class DepotController {
+public class WarehouseController {
     @Autowired
    private entropotService entropotService;
     @Autowired
@@ -29,10 +28,10 @@ public class DepotController {
     private com.transtu.transtu.Repositoy.entropotRepo entropotRepo;
 
     @PostMapping("/create")
-    private ResponseEntity<EntityModel<Depots>> addDepot(@RequestBody Depots depots){
-    if(!entropotRepo.existsByName(depots.getName())){
-    depots.setId(mongogen.generateSequence(SEQUENCE_NAME_Depot));}
-    EntityModel<Depots> createdDepot = entropotService.createDepot(depots);
+    private ResponseEntity<EntityModel<Warehouse>> addDepot(@RequestBody Warehouse warehouse){
+    if(!entropotRepo.existsByName(warehouse.getName())){
+    warehouse.setId(mongogen.generateSequence(SEQUENCE_NAME_Depot));}
+    EntityModel<Warehouse> createdDepot = entropotService.createDepot(warehouse);
     return ResponseEntity.created(createdDepot.getRequiredLink(IanaLinkRelations.SELF).toUri()).body(createdDepot);
 }
 @DeleteMapping
@@ -42,23 +41,23 @@ public class DepotController {
     return ResponseEntity.status(HttpStatus.GONE).build();
 }
 @GetMapping
-    private ResponseEntity<List<Depots>> getAll(){
-        List<Depots> depots = entropotService.getAllDepots();
+    private ResponseEntity<List<Warehouse>> getAll(){
+        List<Warehouse> depots = entropotService.getAllDepots();
         return ResponseEntity.ok(depots);
     }
     @PutMapping("/update/{id}")
-    private ResponseEntity<Depots> updateDepot(@PathVariable Integer id,@RequestBody Depots depots){
-        Depots updated = entropotService.updateDepot(id,depots);
+    private ResponseEntity<Warehouse> updateDepot(@PathVariable Integer id, @RequestBody Warehouse warehouse){
+        Warehouse updated = entropotService.updateDepot(id, warehouse);
         return ResponseEntity.ok(updated);
     }
 @GetMapping("/{id}")
-    private ResponseEntity<Depots> getcurrent(@PathVariable Integer id){
-    Depots currentDepot = entropotService.getCurrent(id);
+    private ResponseEntity<Warehouse> getcurrent(@PathVariable Integer id){
+    Warehouse currentDepot = entropotService.getCurrent(id);
     return ResponseEntity.ok(currentDepot);
 }
 @DeleteMapping("/{id}")
-    private ResponseEntity<Depots> deleteDepot(@PathVariable Integer id){
-        Optional<Depots> removedDepo = entropotRepo.findById(id);
+    private ResponseEntity<Warehouse> deleteDepot(@PathVariable Integer id){
+        Optional<Warehouse> removedDepo = entropotRepo.findById(id);
         if (removedDepo.isEmpty()){
             return ResponseEntity.notFound().build();
         }
@@ -66,8 +65,8 @@ public class DepotController {
         return ResponseEntity.status(HttpStatus.ACCEPTED).build();
     }
     @PostMapping("/{depid}/assignRes")
-    public ResponseEntity<?> assignRestoDepot(@PathVariable Integer depid, @RequestBody Reseaux reseaux){
-        entropotService.assignRestoDep(depid,reseaux);
+    public ResponseEntity<?> assignRestoDepot(@PathVariable Integer depid, @RequestBody Networks networks){
+        entropotService.assignRestoDep(depid, networks);
         return ResponseEntity.ok(HttpStatus.OK);
     }
 

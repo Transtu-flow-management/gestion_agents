@@ -1,8 +1,6 @@
 package com.transtu.transtu.Service;
 
-import com.transtu.transtu.Controller.DepotController;
-import com.transtu.transtu.Controller.ReseauController;
-import com.transtu.transtu.Document.Depots;
+import com.transtu.transtu.Controller.NetworkController;
 import com.transtu.transtu.Document.Reseau;
 import com.transtu.transtu.Handlers.NotFoundExcemptionhandler;
 import com.transtu.transtu.Repositoy.ReseauRepo;
@@ -27,7 +25,7 @@ public class ReseauService {
         }
         Reseau savedDepots = resxrepo.save(reseau);
         reseau.setDateOfInsertion(new Date());
-        WebMvcLinkBuilder selflink = WebMvcLinkBuilder.linkTo(ReseauController.class).slash(savedDepots.getId());
+        WebMvcLinkBuilder selflink = WebMvcLinkBuilder.linkTo(NetworkController.class).slash(savedDepots.getId());
         EntityModel<Reseau> depotsEntityModel = EntityModel.of(savedDepots);
         depotsEntityModel.add(selflink.withSelfRel());
         return depotsEntityModel;

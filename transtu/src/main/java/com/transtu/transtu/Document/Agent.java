@@ -1,7 +1,6 @@
 package com.transtu.transtu.Document;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.persistence.Lob;
 import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Transient;
@@ -31,9 +30,7 @@ public class Agent implements UserDetails {
     private Integer id;
 
     private String name;
-    private String prenom;
-    @Lob
-    private byte[] imagedata;
+    private String surname;
     private String email;
     private String username;
 
@@ -50,10 +47,6 @@ public class Agent implements UserDetails {
    // @JsonFormat(pattern = "yyyy-MM-dd:HH:mm:ss", timezone = "UTC")
     private Date dateOfModification;
     public void addRole(Role role){
-        roles.add(role);
-    }
-    public void updateRole(Role role){
-        roles.removeIf(exists ->exists.getId().equals(role.getId()));
         roles.add(role);
     }
     public void deleteRole(Role role){
