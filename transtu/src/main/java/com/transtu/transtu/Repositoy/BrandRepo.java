@@ -8,7 +8,5 @@ import org.springframework.stereotype.Repository;
 public interface BrandRepo extends MongoRepository<Brand,String> {
     boolean existsByName(String name);
 
-    Brand findBymaker (String maker);
-    boolean existsBymaker(String maker);
 
 }

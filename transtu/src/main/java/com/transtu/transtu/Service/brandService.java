@@ -22,29 +22,34 @@ public class brandService {
 @Autowired
    private BrandRepo brandRepo;
 @Autowired
-private makerRepo fabriquantRepo;
+private makerRepo builderRepo;
     public List<Brand> getAllbrands(){
         return brandRepo.findAll();
     }
     public List<CarBuilder> getallfabriquants(){
-        return fabriquantRepo.findAll();
+        return builderRepo.findAll();
     }
     public EntityModel<Brand> createMarque(Brand brand) {
 
         if (brandRepo.existsByName(brand.getName())) {
             throw new IllegalArgumentException("le nom de l'entrepôt déjà existant");
         }
-
-        CarBuilder existingCarBuilder = fabriquantRepo.findByName(brand.getMaker());
-        if (existingCarBuilder != null) {
-            brand.setMaker(existingCarBuilder.getName());
-        } else {
-            CarBuilder CarBuilder = new CarBuilder();
-            CarBuilder.setName(brand.getMaker());
-            CarBuilder = fabriquantRepo.save(CarBuilder);
-            brand.setMaker(CarBuilder.getName());
+        String namebuilder = brand.getBuilder();
+        if (!namebuilder.equals(null)) {
+            CarBuilder existingCarBuilder = builderRepo.findByName(brand.getBuilder());
+            if (existingCarBuilder != null) {
+                brand.setBuilder(existingCarBuilder.getName());
+            } else {
+                CarBuilder CarBuilder = new CarBuilder();
+                CarBuilder.setName(brand.getBuilder());
+                CarBuilder = builderRepo.save(CarBuilder);
+                brand.setBuilder(CarBuilder.getName());
+                System.out.println("The else block is executed");
+            }
+        }else
+        {
+            throw new IllegalArgumentException("builderName cannot be null");
         }
-
         brand.setDateOfInsertion(new Date());
         Brand savedBrand = brandRepo.save(brand);
 
@@ -57,19 +62,21 @@ private makerRepo fabriquantRepo;
     public void Deleteall(){
         brandRepo.deleteAll();
     }
+    public void Deleteallmakers(){
+        builderRepo.deleteAll();}
     public Brand updatebrand(String id, Brand brand) {
         Brand newbrand = brandRepo.findById(id).orElseThrow(() -> new NotFoundHandler(id));
 
-        if (!brand.getMaker().equals(newbrand.getMaker())) {
-            if (brand.getMaker() != null && !brand.getMaker().isEmpty()) {
-                CarBuilder existingCarBuilder = fabriquantRepo.findByName(brand.getMaker());
+        if (!brand.getBuilder().equals(newbrand.getBuilder())) {
+            if (brand.getBuilder() != null && !brand.getBuilder().isEmpty()) {
+                CarBuilder existingCarBuilder = builderRepo.findByName(brand.getBuilder());
                 if (existingCarBuilder != null) {
-                    newbrand.setMaker(brand.getMaker());
+                    newbrand.setBuilder(brand.getBuilder());
                 } else {
                     CarBuilder CarBuilder = new CarBuilder();
-                    CarBuilder.setName(brand.getMaker());
-                    CarBuilder = fabriquantRepo.save(CarBuilder);
-                    newbrand.setMaker(CarBuilder.getName());
+                    CarBuilder.setName(brand.getBuilder());
+                    CarBuilder = builderRepo.save(CarBuilder);
+                    newbrand.setBuilder(CarBuilder.getName());
                 }
             }
         }

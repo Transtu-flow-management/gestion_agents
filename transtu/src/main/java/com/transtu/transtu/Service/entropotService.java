@@ -43,6 +43,7 @@ public EntityModel<Warehouse>createDepot(Warehouse warehouse){
     Warehouse newdepot = entropotrepo.findById(id).orElseThrow(()-> new NotFoundExcemptionhandler(id));
     newdepot.setName(warehouse.getName());
     newdepot.setCapacite(warehouse.getCapacite());
+    newdepot.setSelectedReseau(warehouse.getSelectedReseau());
     newdepot.setAdresse(warehouse.getAdresse());
     newdepot.setDescription(warehouse.getDescription());
     newdepot.setLattitude(warehouse.getLattitude());

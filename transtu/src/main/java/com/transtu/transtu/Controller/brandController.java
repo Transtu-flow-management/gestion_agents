@@ -35,6 +35,11 @@ public class brandController {
         brandService.Deleteall();
         return ResponseEntity.status(HttpStatus.GONE).build();
     }
+    @DeleteMapping("/all")
+    private ResponseEntity<?>DeleteAllmakers(){
+        brandService.Deleteallmakers();
+        return ResponseEntity.status(HttpStatus.GONE).build();
+    }
     @GetMapping
     private ResponseEntity<List<Brand>> getAll(){
         List<Brand> brands = brandService.getAllbrands();
@@ -60,4 +65,5 @@ public class brandController {
         List<CarBuilder> CarBuilders = brandService.getallfabriquants();
         return ResponseEntity.ok(CarBuilders);
     }
+
 }

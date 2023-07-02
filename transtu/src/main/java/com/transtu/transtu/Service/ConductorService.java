@@ -44,6 +44,9 @@ public class ConductorService {
     public Page<Conductor> getAllConductors(Pageable pageable){
        return conductorRepo.findAll(pageable);
     }
+    public List<Conductor> getall(){
+        return conductorRepo.findAll();
+    }
     public List<Conductor> getAllConductorsWithDateFilter(Date date) {
         Calendar startOfDay = Calendar.getInstance();
         startOfDay.setTime(date);

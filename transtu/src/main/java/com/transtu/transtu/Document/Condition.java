@@ -10,12 +10,14 @@ import java.util.Date;
 @Getter
 @Setter
 @NoArgsConstructor
-@Document(collection = "marque")
-public class Brand {
+@AllArgsConstructor
+@Document(collection = "condition")
+public class Condition {
     @Id
     private String id;
     private String name;
-    private String builder;
+    private Byte tracking;
+    private Byte visibility;
     private Date dateOfInsertion;
     private Date dateOfModification;
 

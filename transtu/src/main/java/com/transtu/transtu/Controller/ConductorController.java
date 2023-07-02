@@ -34,6 +34,11 @@ public class ConductorController {
         Pageable pageable = PageRequest.of(page,size);
             return conductorService.getAllConductors(pageable);
     }
+    @GetMapping("/all")
+    private ResponseEntity<List<Conductor>> getall(){
+       List<Conductor> all = this.conductorService.getall();
+        return ResponseEntity.ok(all);
+    }
     @PostMapping("/add")
     private ResponseEntity<EntityModel<Conductor>> addConductor(@RequestBody Conductor conductor){
         EntityModel<Conductor> createdConductor = conductorService.create(conductor);
