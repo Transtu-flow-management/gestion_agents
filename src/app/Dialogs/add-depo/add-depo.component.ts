@@ -36,7 +36,7 @@ export class AddDepoComponent implements AfterViewInit {
   constructor(private dialog :MatDialog,private elementRef: ElementRef, private http: HttpClient, private fb:FormBuilder,private _entrpserv :EntropotService,private snackBar: MatSnackBar) {
     this.addForm= this.fb.group({
       name: new FormControl('', [Validators.required, Validators.minLength(6)]),
-      Reseaux: [''],
+
       longitude: new FormControl(null, [Validators.required]),
       lattitude:  new FormControl(null, [Validators.required]),
       capacite: new FormControl(null, [Validators.required, this.capaciteValidator,Validators.pattern('^[0-9]*$')]),

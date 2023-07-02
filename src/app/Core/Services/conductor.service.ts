@@ -25,7 +25,10 @@ export class ConductorService {
     const params = new HttpParams().set('dateFilter', date.toISOString());
     return this.http.get<Conductor[]>(furl,{params});
   }
-
+public getall():Observable<Conductor[]>{
+  const gurl= this.gs.uri + this.url +`/all`;
+  return this.http.get<Conductor[]>(gurl);
+}
   public deleteConductor(id:number):Observable<any>{
     const durl = this.gs.uri +this.url + `/${id}`;
     return this.http.delete(durl);

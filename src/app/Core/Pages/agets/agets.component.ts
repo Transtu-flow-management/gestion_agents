@@ -9,7 +9,7 @@ import { CoreService } from '../../Services/core.service';
 import { Role } from '../../interfaces/Role';
 import { RoleService } from '../../Services/role.service';
 import { AdduserDialogComponent } from '../../../Dialogs/adduser-dialog/adduser-dialog.component';
-import { AddUserComponent } from '../add-user/add-user.component';
+import { AddUserComponent } from '../../../Dialogs/add-user/add-user.component';
 import { AssignRoledialogComponent } from 'src/app/Dialogs/assign-roledialog/assign-roledialog.component';
 import { Observable, Subject } from 'rxjs';
 import { Router } from '@angular/router';

@@ -2,7 +2,7 @@ export interface Brand{
 
     id:string;
     name:string;
-    maker:string;
+    builder:string;
     dateOfInsertion: Date;
     dateOfModification: Date;
 }

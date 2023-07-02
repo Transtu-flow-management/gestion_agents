@@ -22,7 +22,7 @@ import { Router } from '@angular/router';
 export class AddBrandComponent implements OnInit{
   horizontalPosition: MatSnackBarHorizontalPosition
   verticalPosition: MatSnackBarVerticalPosition 
-  fabriquants = new FormControl<Maker>(null);
+  fabriquant = new FormControl<Maker>(null);
   makers : Maker[]= [];
   filteredOptions: Observable<Maker[]>;
 
@@ -33,14 +33,14 @@ export class AddBrandComponent implements OnInit{
   constructor(private dialog :MatDialog,private fb:FormBuilder,private snackBar:MatSnackBar,private router:Router ,private _brandservice :BrandService){
      this.addForm = this.fb.group({
       name: new FormControl('', [Validators.required, Validators.minLength(6)]),
-      maker: this.fabriquants,
+      builder:  new FormControl(this.fabriquant, [Validators.required])
     });
     this._brandservice.getAllmakers().subscribe(makers => {
       this.makers = makers;
     });
   }
   ngOnInit() {
-    this.filteredOptions = this.fabriquants.valueChanges.pipe(
+    this.filteredOptions = this.fabriquant.valueChanges.pipe(
       startWith(''),
       map(value => {
         const name = typeof value === 'string' ? value : value?.name;
@@ -56,6 +56,7 @@ export class AddBrandComponent implements OnInit{
 
     return this.makers.filter(option => option.name.toLowerCase().includes(filterValue));
   }
+
 
   close()
   {
@@ -79,26 +80,26 @@ export class AddBrandComponent implements OnInit{
    duration: 3000,
    horizontalPosition: "end",
    verticalPosition: "bottom",
+   panelClass: ['snack-red','snack-size']
  });
 }
 
 add(): void {
   this.isFormSubmitted = true;
   const formValue = this.addForm.value;
-  
+  const selectedMaker = this.fabriquant.value;
+  formValue.builder = selectedMaker;
+
   if (this.addForm.valid) {
-    
-    const selectedMaker = this.fabriquants.value;
-      formValue.fabriquant = selectedMaker.name;
-      console.log(selectedMaker)
-   /* this._brandservice.createBrand(formValue).subscribe(() => {
+    console.log(formValue);
+    this._brandservice.createBrand(formValue).subscribe(() => {
       this.openAddToast('Marque ajoutée avec succès');
      
-      this.router.navigate(['/marque']);
+      this.router.navigate(['/brands']);
     }, (error) => {
       this.openfailToast('Erreur lors de l\'ajout d\'une Marque');
       console.log(error);
-    });*/
+    });
   }
 }
 }

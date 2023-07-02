@@ -22,11 +22,10 @@ import { FailedToastComponent } from 'src/app/alerts/failed-toast/failed-toast.c
 export class UpdateBrandComponent implements OnInit{
   horizontalPosition: MatSnackBarHorizontalPosition
   verticalPosition: MatSnackBarVerticalPosition 
-  fabriquant = new FormControl<Maker>(null);
+  fabriquants = new FormControl<Maker>(null);
 
-  makers : Maker[] =[];
+  makers : Maker[]= [];
   filteredOptions: Observable<Maker[]>;
-
   updateForm: FormGroup;
   isFormSubmitted = false;
   showdialg: boolean = true;
@@ -35,42 +34,38 @@ export class UpdateBrandComponent implements OnInit{
     private fb:FormBuilder,private snackBar:MatSnackBar ,
     private _brandservice :BrandService,
     public dialogRef: MatDialogRef<UpdateBrandComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: any,){
+    @Inject(MAT_DIALOG_DATA) public data: any){
   
       const brand :any = data.brand;  
       
     this.updateForm = this.fb.group({
 
       name: new FormControl(brand.name, [Validators.required, Validators.minLength(6)]),
-      fabriquant: new FormControl(brand.fabriquant,[Validators.required]),
+      builder:   new FormControl(this.fabriquants, [Validators.required])
     });
    
 
   }
 ngOnInit(): void {
 
-  this.filteredOptions = this.fabriquant.valueChanges.pipe(
+  this.filteredOptions = this.fabriquants.valueChanges.pipe(
     startWith(''),
     map(value => {
       const name = typeof value === 'string' ? value : value?.name;
       return name ? this._filter(name as string) : this.makers.slice();
     })
   );
-this.fetchbrands()
-  
-}
-fetchbrands(){
-  this._brandservice.getAllmakers().subscribe(makers => {
-    this.makers = makers;
+  this._brandservice.getAllmakers().subscribe(maker => {
+    this.makers = maker;
   });
 }
 
-  displayFn(brand: Maker): string {
-    return brand && brand.name ? brand.name : '';
+
+  displayFn(maker: Maker): string {
+    return maker && maker.name ? maker.name : '';
   }
   private _filter(name: string): Maker[] {
     const filterValue = name.toLowerCase();
-
     return this.makers.filter(option => option.name.toLowerCase().includes(filterValue));
   }
 
@@ -104,17 +99,20 @@ openErrorToast(message:string){
   var brand = this.updateForm.getRawValue();
   const checkvalues = this.data.brand;
 
-  return brand.name === checkvalues.name && brand.fabriquant === checkvalues.fabriquant;
+  return brand.name === checkvalues.name && brand.builder === checkvalues.builder;
  }
 public update():void{
   var brand =this.updateForm.getRawValue();
-  const fabriquantValue = this.fabriquant.value;
-  if (fabriquantValue !== this.data.brand.fabriquant){ 
-    brand.fabriquant = fabriquantValue.name;
+  const fabriquantValue = this.fabriquants.value;
+  console.log(fabriquantValue);
+  console.log(brand);
+  if (fabriquantValue !== this.data.brand.builder){ 
+    brand.builder = fabriquantValue;
   }
     else{
-      brand.fabriquant = this.data.brand.fabriquant;
+      brand.builder = this.data.brand.builder;
     }
+    console.log(brand);
   this._brandservice.updatebrand(this.data.brand.id,brand).subscribe(()=>{
     this.openToast('La marque a été mis à jour')
     this.dialogRef.close();

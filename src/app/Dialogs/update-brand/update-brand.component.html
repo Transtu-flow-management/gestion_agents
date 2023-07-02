@@ -47,8 +47,8 @@
       <div class="my-4"></div> <!-- Add spacing here -->
       <div class="max-w-2xl mx-auto">
         <mat-form-field class="block py-2 px-0 w-full text-sm text-black-900 bg-transparent border-gray-300 appearance-none dark:text-black dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer">
-            <mat-label>{{data.brand.fabriquant}}</mat-label>
-            <input type="text" matInput required [formControl]="fabriquant" [matAutocomplete]="auto">
+            <mat-label>{{data.brand.builder}}</mat-label>
+            <input type="text" matInput required [formControl]="fabriquants" [matAutocomplete]="auto">
             <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
               <mat-option *ngFor="let brand of filteredOptions | async" [value]="brand">
                {{brand.name}}
@@ -57,6 +57,13 @@
           </mat-form-field>
           <div *ngIf="isFormUnchanged() && isFormSubmitted" class="text-red-500 text-xs italic pb-3">
             Les valeurs sont les mêmes
+          </div>
+          <div *ngFor="let conductor of makers">
+            <select>
+                <option>
+                    {{conductor.name}}
+                </option>
+            </select>
           </div>
      </div>
     

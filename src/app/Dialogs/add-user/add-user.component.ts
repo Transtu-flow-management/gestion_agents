@@ -1,12 +1,12 @@
 import { Component, Inject, ViewEncapsulation  } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { UserServiceService } from '../../Services/user-service.service';
-import { AuthService } from '../../Services/auth.service';
-import { Agent } from '../../interfaces/Agent';
-import { Role } from '../../interfaces/Role';
-import { RoleService } from '../../Services/role.service';
-import { registerDTO } from '../../../DTO/registerDTO';
+import { UserServiceService } from '../../Core/Services/user-service.service';
+import { AuthService } from '../../Core/Services/auth.service';
+import { Agent } from '../../Core/interfaces/Agent';
+import { Role } from '../../Core/interfaces/Role';
+import { RoleService } from '../../Core/Services/role.service';
+import { registerDTO } from '../../DTO/registerDTO';
 import { Router } from '@angular/router';
 import { MatSnackBar, MatSnackBarConfig } from '@angular/material/snack-bar';
 

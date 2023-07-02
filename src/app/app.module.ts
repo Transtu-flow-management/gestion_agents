@@ -15,7 +15,7 @@ import { SigninComponent } from './Core/Pages/signin/signin.component';
 import { ReactiveFormsModule,FormsModule  } from '@angular/forms';
 import { SidebarComponent } from './sidebar/sidebar.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { AddUserComponent } from './Core/Pages/add-user/add-user.component';
+import { AddUserComponent } from './Dialogs/add-user/add-user.component';
 import { MatSelectModule } from '@angular/material/select';
 import { AgetsComponent } from './Core/Pages/agets/agets.component';
 import {MatTableModule} from '@angular/material/table';
@@ -56,6 +56,8 @@ import { SearchPipe } from './pipes/search.pipe';
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { UpdateConductorComponent } from './Dialogs/update-conductor/update-conductor.component';
+import { ConditionsComponent } from './Core/Pages/conditions/conditions.component';
+import { TestComponent } from './Core/Pages/test/test.component';
 
 export const API_URL = new InjectionToken<String>('API_URL');
 
@@ -94,6 +96,8 @@ export const API_URL = new InjectionToken<String>('API_URL');
     AddConductorComponent,
     SearchPipe,
     UpdateConductorComponent,
+    ConditionsComponent,
+    TestComponent,
   ],
   imports: [
     MatRadioModule,
