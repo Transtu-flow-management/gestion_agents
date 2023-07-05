@@ -6,6 +6,7 @@ import { ConductorService } from 'src/app/Core/Services/conductor.service';
 import { Conductor } from 'src/app/Core/interfaces/Conductor';
 import { FailedToastComponent } from 'src/app/alerts/failed-toast/failed-toast.component';
 import { UpdateToastComponent } from 'src/app/alerts/update-toast/update-toast.component';
+import { WarningToastComponent } from 'src/app/alerts/warning-toast/warning-toast.component';
 
 @Component({
   selector: 'app-update-conductor',
@@ -37,7 +38,7 @@ export class UpdateConductorComponent {
     this.showdialg = false;
   }
   close() {
-    this.dialog.closeAll()
+    this.dialog.closeAll();
   }
 
   isFormUnchanged(){
@@ -63,6 +64,14 @@ openErrorToast(message:string){
     panelClass : ['snack-red','snack-size']
 });
 }
+openWarningToast(message:string):void{
+  this.snackBar.openFromComponent(WarningToastComponent,{
+    data: {message:message},duration: 5000,
+  horizontalPosition: "center",
+     verticalPosition: "top",
+     panelClass : ['snack-yellow','snack-size']
+ });
+ }
 
    public update():void{
     this.isFormSubmitted = true;

@@ -19,8 +19,11 @@ pageSize = 4;
 totalAgents :number;
 totalPages:number;
 totalElements :number;
+pageSizeOptions: number[] = [5, 10, 20];
 
-  constructor(private _roleservice : RoleService , private _dialog :MatDialog){}
+  constructor(private _roleservice : RoleService , private _dialog :MatDialog){
+this.pageSize = this.pageSizeOptions[0]
+  }
 
 ngOnInit(): void {
   this.getRoles(this.currentPage,this.pageSize);    
@@ -81,6 +84,11 @@ deleteRole(id:Number):void{
  onPageChange(page :number){
   this.currentPage = page ;
   this.getRoles(this.currentPage-1,this.pageSize);
+
   console.log(this.currentPage)
+}
+onPageSizeChange(value :number):void{
+  this.pageSize = value;
+  this.getRoles(this.currentPage,this.pageSize);
 }
 }

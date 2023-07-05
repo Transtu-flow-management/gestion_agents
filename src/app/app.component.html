@@ -6,10 +6,10 @@
        <app-sidebar></app-sidebar>
       </mat-sidenav>
   
-      <mat-sidenav-content class="flex-1" [ngClass]="{ 'pushed': sidenav.opened }">
+      <mat-sidenav-content class="flex-1" style="background-color: #EEEEEE;" [ngClass]="{ 'pushed': sidenav.opened }">
         <div class="relative left-0 top-1/2 transform -translate-y-1/2">
-        <button class="py-2 px-4 bg-green-300 text-white rounded-lg" (click)="toggleSidenav()"><div [ngClass]="{ 'arrow': true, 'right': !sidenav.opened, 'left': sidenav.opened }"></div></button></div>
-        <div class="ml-4"><router-outlet></router-outlet></div>
+        <button class="py-2 px-4 bg-amber-600 text-white rounded-lg" (click)="toggleSidenav()"><div [ngClass]="{ 'arrow': true, 'right': !sidenav.opened, 'left': sidenav.opened }"></div></button></div>
+        <div class="ml-4" ><router-outlet></router-outlet></div>
       </mat-sidenav-content>
     </mat-sidenav-container>
   </div>

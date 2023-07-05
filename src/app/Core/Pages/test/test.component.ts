@@ -19,23 +19,5 @@ export class TestComponent implements OnInit{
   
   ngOnInit(): void {
 
-    this.filteredOptions = this.fabriquants.valueChanges.pipe(
-      startWith(''),
-      map(value => {
-        const name = typeof value === 'string' ? value : value?.name;
-        return name ? this._filter(name as string) : this.condcutors.slice();
-      }),
-    );
-    this._service.getall().subscribe(conductor=> this.condcutors = conductor);
   }
-  displayFn(user: Conductor): string {
-    return user && user.name ? user.name : '';
-  }
-
-  private _filter(name: string): Conductor[] {
-    const filterValue = name.toLowerCase();
-
-    return this.condcutors.filter(option => option.name.toLowerCase().includes(filterValue));
-  }
-
 }

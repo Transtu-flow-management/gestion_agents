@@ -105,31 +105,59 @@
 </div>
 <div class="text-left text-sm mt-2 w-4/5 mx-auto text-gray-200 font-bold "
   [ngClass]="{ 'hidden': isSubmenuvehiculeHidden }" id="submenu">
-  <a routerLink="/entropots">
+  <a routerLink="/conditions">
     <h1 class="cursor-pointer p-2 hover:bg-blue-600 rounded-md mt-1">
-      Depots
+      Conditions
     </h1>
   </a>
   <a routerLink="/brands">
     <h1 class="cursor-pointer p-2 hover:bg-blue-600 rounded-md mt-1">
-      marques
+      ...
     </h1>
   </a>
-  <a routerLink="/conductors">
-    <h1 class="cursor-pointer p-2 hover:bg-blue-600 rounded-md mt-1">
-      conducteurs
-    </h1>
-  </a>
-  <a routerLink="/test">
-    <h1 class="cursor-pointer p-2 hover:bg-blue-600 rounded-md mt-1">
-      test
-    </h1>
-  </a>
+ 
+
+</div>
+<div class="my-1 bg-red-600 h-[2px]"></div>
+<div
+class="p-2.5 mt-3 mr-10 flex items-baseline rounded-md px-4 duration-300 cursor-pointer hover:bg-green-600 text-white">
+<i class="bi bi-buildings-fill"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+    class="bi bi-buildings-fill" viewBox="0 0 16 16">
+    <path
+      d="M15 .5a.5.5 0 0 0-.724-.447l-8 4A.5.5 0 0 0 6 4.5v3.14L.342 9.526A.5.5 0 0 0 0 10v5.5a.5.5 0 0 0 .5.5h9a.5.5 0 0 0 .5-.5V14h1v1.5a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5V.5ZM2 11h1v1H2v-1Zm2 0h1v1H4v-1Zm-1 2v1H2v-1h1Zm1 0h1v1H4v-1Zm9-10v1h-1V3h1ZM8 5h1v1H8V5Zm1 2v1H8V7h1ZM8 9h1v1H8V9Zm2 0h1v1h-1V9Zm-1 2v1H8v-1h1Zm1 0h1v1h-1v-1Zm3-2v1h-1V9h1Zm-1 2h1v1h-1v-1Zm-2-4h1v1h-1V7Zm3 0v1h-1V7h1Zm-2-2v1h-1V5h1Zm1 0h1v1h-1V5Z" />
+  </svg></i>
+<div class="flex justify-between w-full items-center border-dashed border-2 border-sky-500"
+  (click)="toggleDropdownL()">
+  <span class="text-[16px]  text-gray-200 font-bold">Line management <span class="text-sm rotate-180 cursor-pointer ml-16 "
+      id="arrow">
+      <i class="bi bi-chevron-down pl-16"></i>
+    </span>
+  </span>
+</div>
+</div>
+<div class="text-left text-sm mt-2 w-4/5 mx-auto text-gray-200 font-bold "
+[ngClass]="{ 'hidden': isSubmenulineHidden }" id="submenu">
+<a routerLink="/lines">
+  <h1 class="cursor-pointer p-2 hover:bg-blue-600 rounded-md mt-1">
+    lignes
+  </h1>
+</a>
+<a routerLink="/brands">
+  <h1 class="cursor-pointer p-2 hover:bg-blue-600 rounded-md mt-1">
+    ...
+  </h1>
+</a>
+
+
 </div>
   <div class="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-blue-600 text-white">
     <i class="bi bi-gear-fill"></i>
     <span class="text-[15px] ml-4 text-gray-200 font-bold">Parametres</span>
   </div>
-  
+  <a routerLink="/test">
+    <h1 class="cursor-pointer p-2 hover:bg-blue-600 rounded-md mt-1">
+      test
+    </h1>
+  </a>
 
 </div>

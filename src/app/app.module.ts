@@ -58,6 +58,14 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { UpdateConductorComponent } from './Dialogs/update-conductor/update-conductor.component';
 import { ConditionsComponent } from './Core/Pages/conditions/conditions.component';
 import { TestComponent } from './Core/Pages/test/test.component';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import {MatButtonModule} from '@angular/material/button';
+import { UpdateconditionComponent } from './Dialogs/updatecondition/updatecondition.component';
+import { NotfoundComponent } from './Core/Pages/errors/notfound/notfound.component';
+import { AddConditionComponent } from './Dialogs/add-condition/add-condition.component';
+import { LinesComponent } from './Core/Pages/lines/lines.component';
+import { AddLineComponent } from './Dialogs/add-line/add-line.component';
+import { UpdateLineComponent } from './Dialogs/update-line/update-line.component';
 
 export const API_URL = new InjectionToken<String>('API_URL');
 
@@ -98,6 +106,12 @@ export const API_URL = new InjectionToken<String>('API_URL');
     UpdateConductorComponent,
     ConditionsComponent,
     TestComponent,
+    UpdateconditionComponent,
+    NotfoundComponent,
+    AddConditionComponent,
+    LinesComponent,
+    AddLineComponent,
+    UpdateLineComponent,
   ],
   imports: [
     MatRadioModule,
@@ -120,7 +134,9 @@ export const API_URL = new InjectionToken<String>('API_URL');
       NgxPaginationModule,
       MatAutocompleteModule,
       MatDatepickerModule,
-      MatNativeDateModule
+      MatNativeDateModule,
+      MatPaginatorModule ,
+      MatButtonModule
   ],
 
   

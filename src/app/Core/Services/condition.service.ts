@@ -1,7 +1,8 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { GlobalService } from 'src/app/global.service';
+import { Condition } from '../interfaces/condition';
 
 @Injectable({
   providedIn: 'root'
@@ -10,20 +11,23 @@ export class ConditionService {
   private url:string ='/conditions' ;
   constructor(private http: HttpClient,private gs:GlobalService) { }
 
-  public createEntroopot(depot : any):Observable<any>{
-    const curl = this.gs.uri +this.url+'/create';
-   return this.http.post<any>(curl,depot);
+  public createCondition(condition : Condition):Observable<Condition>{
+    const curl = this.gs.uri +this.url+'/add';
+   return this.http.post<any>(curl,condition);
   }
-  public getAllentrp(){
+  public getAllConditions(page:number,pagesize:number):Observable<Condition[]>{
     const gurl = this.gs.uri +this.url ;
-    return this.http.get<any[]>(gurl);
+    let params = new HttpParams()
+    .set('page',page.toString())
+    .set('size',pagesize.toString())
+    return this.http.get<Condition[]>(gurl,{params});
   }
-  public deleteEntrp(id:string):Observable<any>{
+  public deleteCondition(id:string):Observable<any>{
     const surl =this.gs.uri +this.url+`/${id}`;
     return this.http.delete(surl);
   }
-  public updateEntropot(id :string,depot){
+  public updateCondition(id :string,condition : Condition){
     const upurl = this.gs.uri +this.url +`/update/${id}`;
-    return this.http.put<any>(upurl, depot);
+    return this.http.put<any>(upurl, condition);
   }
 }

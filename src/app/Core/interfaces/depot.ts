@@ -1,6 +1,6 @@
 export interface Depot{
     id:Number,
-    name:String,
+    name:string,
     longitude:number;
     lattitude: number;
     capacite: number;

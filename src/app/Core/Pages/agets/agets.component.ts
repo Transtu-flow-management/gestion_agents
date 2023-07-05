@@ -31,7 +31,7 @@ export class AgetsComponent implements OnInit, AfterViewInit {
   imagedata: string = '';
   search: string;
   currentPage = 0;
-  pageSize = 2;
+  pageSize = 5;
   totalAgents: number;
   totalPages: number;
   totalElements: number;

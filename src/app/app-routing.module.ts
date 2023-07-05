@@ -14,6 +14,8 @@ import { BrandsComponent } from './Core/Pages/brands/brands.component';
 import { ConductorsComponent } from './Core/Pages/conductors/conductors.component';
 import { ConditionsComponent } from './Core/Pages/conditions/conditions.component';
 import { TestComponent } from './Core/Pages/test/test.component';
+import { NotfoundComponent } from './Core/Pages/errors/notfound/notfound.component';
+import { LinesComponent } from './Core/Pages/lines/lines.component';
 
 const approute: Routes = [
   {path:'',redirectTo:'home',pathMatch:'full'},
@@ -28,6 +30,8 @@ const approute: Routes = [
   {path:'brands',component:BrandsComponent},
   {path:'conditions',component:ConditionsComponent},
   {path:'test',component:TestComponent},
+  {path:'lines',component:LinesComponent},
+  {path:'**',component:NotfoundComponent},
 ]
 @NgModule({
   imports: [RouterModule.forRoot(approute)],

@@ -1,33 +1,31 @@
 <!-- component -->
-<div class="overflow-hidden rounded-lg pt-24 pl-16 ">
-    <p class="text-5xl italic hover:not-italic font-normal tracking-wide text-justify dark:text-orange-600">Roles</p>
+<div class="overflow-hidden rounded-lg pt-28 -mb-12 pl-32">
+    <p class="text-6xl not-italic font-serif font-normal tracking-wide text-justify dark:text-[#658864]">Roles</p>
 </div>
-<div class="overflow-hidden rounded-lg border border-gray-200 shadow-xl m-16 w-auto">
+<div class="overflow-hidden rounded-lg border shadow-x1 m-24 w-auto pb-6">
 
-    <div class="bg-white py-4 md:py-7 px-4 md:px-8 xl:px-10">
+    <div class="bg-lime py-4 md:py-7 px-4 md:px-8 xl:px-10">
         <div class="sm:flex items-center justify-between">
         
             <button (click)="openRoleDialog()"
-                class="bg-blue-200 px-5 py-3 text-sm shadow-sm font-medium tracking-wider text-green-800 rounded-full hover:shadow-2xl hover:bg-green-300"><span>Ajouter
+                class="bg-[#B7B78A] px-5 py-3 text-sm shadow-sm font-medium tracking-wider text-gray-100 rounded-full hover:shadow-2xl hover:bg-amber-700"><span class="flex items-center"> <mat-icon>add</mat-icon>Ajouter
                     un Role</span></button>
                     
         </div>
     </div>
     <table class="w-full border-collapse bg-white text-center text- text-gray-600 ">
-        <thead class="bg-gray-50">
+        <thead class="bg-[#DDDDDD]">
             <tr>
                 <th scope="col" class="px-6 py-4 font-medium text-gray-900">RoleName</th>
                 <th scope="col" class="px-12 py-4 font-medium text-gray-900">Date de Creation</th>
                 <th scope="col" class="px-12 py-4 font-medium text-gray-900">Date de Modification</th>
                 <th scope="col" class="px-12 py-4 font-medium text-gray-900">Actions</th>
 
-
-
             </tr>
         </thead>
         <tbody class="divide-y divide-gray-100 border-t border-gray-100">
 
-            <tr class="hover:bg-gray-50" *ngFor="let role of Roles | paginate:{itemsPerPage:pageSize,currentPage:currentPage,totalItems: totalElements}">
+            <tr class="bg-zinc-25 hover:bg-[#F7F5EB]" *ngFor="let role of Roles | paginate:{itemsPerPage:pageSize,currentPage:currentPage,totalItems: totalElements}">
 
 
                 <td class="px-6 py-4 ">
@@ -73,5 +71,14 @@
 
         </tbody>
     </table>
+    <div class="flex items-end pt-8 ">
+        <div class="flex items-center">
+          <pagination-controls (pageChange)="onPageChange($event)" previousLabel="precedent" nextLabel="suivant"></pagination-controls>
+          <div class="overflow-hidden border border-gray-400 relative ml-7 rounded-lg bg-zinc-25 w-16 mb-4 p-1">
+            <mat-select [(ngModel)]="pageSize" (selectionChange)="onPageSizeChange($event.value)" class="text-base font-mono text-center ">
+              <mat-option class="bg-blue-50 font-mono " *ngFor="let option of pageSizeOptions" [value]="option">{{ option }}</mat-option>
+            </mat-select>
+          </div>
+        </div>
+      </div>
 </div>
-<pagination-controls (pageChange)="onPageChange($event)" previousLabel="precedent" nextLabel="suivant"></pagination-controls>   

@@ -1,4 +1,4 @@
-import { Component,ViewChild  } from '@angular/core';
+import { AfterViewInit, Component,ElementRef,ViewChild  } from '@angular/core';
 
 import { MatSidenav } from '@angular/material/sidenav';
 @Component({
@@ -6,9 +6,9 @@ import { MatSidenav } from '@angular/material/sidenav';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent {
+export class AppComponent   {
   title = 'transtu';
-  @ViewChild('sidenav', { static: true }) sidenav!: MatSidenav;
+  @ViewChild('sidenav', { static: true }) sidenav!: MatSidenav;  
 
   toggleSidenav() {
     this.sidenav.toggle();

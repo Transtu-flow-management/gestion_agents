@@ -8,6 +8,7 @@ export class SidebarComponent {
   isSubmenuHidden = true;
   isSubmenuEntropotHidden = true;
   isSubmenuvehiculeHidden = true;
+  isSubmenulineHidden = true;
 
   toggleDropdown() {
     this.isSubmenuHidden = !this.isSubmenuHidden;
@@ -18,5 +19,7 @@ export class SidebarComponent {
   toggleDropdownV(){
     this.isSubmenuvehiculeHidden = !this.isSubmenuvehiculeHidden;
   }
-
+  toggleDropdownL(){
+this.isSubmenulineHidden = !this.isSubmenulineHidden;
+  }
 }
