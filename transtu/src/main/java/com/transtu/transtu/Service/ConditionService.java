@@ -1,22 +1,22 @@
 package com.transtu.transtu.Service;
 
 import com.transtu.transtu.Document.Condition;
-import com.transtu.transtu.Document.Conductor;
-import com.transtu.transtu.Handlers.NotFoundExcemptionhandler;
 import com.transtu.transtu.Handlers.NotFoundHandler;
 import com.transtu.transtu.Repositoy.ConditionRepo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
-import java.util.List;
 import java.util.Optional;
 
 @Service
 public class ConditionService {
     @Autowired private ConditionRepo conditionRepo;
-    public List<Condition> getAll(){
-        return conditionRepo.findAll();
+    public Page<Condition> getAll(Pageable p){
+        return conditionRepo.findAll(p);
     }
     public Condition addCondition(Condition condition){
         if (conditionRepo.existsByName(condition.getName())){

@@ -24,8 +24,6 @@ public class Warehouse {
     private Integer capacite;
     private String adresse;
     private String Description;
-
-   // private Set<Networks> Networks;
     private String selectedReseau;
     private Date dateOfInsertion;
     private Date dateOfModification;
