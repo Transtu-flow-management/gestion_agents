@@ -1,19 +1,19 @@
 <!-- component -->
-<div class="overflow-hidden rounded-lg pt-28 -mb-12 pl-16">
-  <p class="text-6xl not-italic font-serif font-normal tracking-wide text-justify dark:text-[#658864] capitalize">conducteurs</p>
+<div class="overflow-hidden rounded-lg pt-28 -mb-14 pl-24">
+  <p class="text-5xl not-italic font-sans font-bold tracking-wide text-justify dark:text-[#111827] capitalize">conducteurs</p>
 </div>
-  <div class="overflow-hidden rounded-lg border shadow-x1 mt-24 ml-24 mr-24 w-auto">
+  <div class="overflow-hidden rounded-lg mt-24 ml-24 mr-24 w-auto">
 
-    <div class="py-4 md:py-7 px-4 md:px-8 xl:px-10 ">
+    <div class="py-4 ">
       <div class="sm:flex items-center justify-between">
         <div class="flex items-center ">
-          <div class="flex bg-orange-50 p-4 w-80 space-x-4 rounded-lg">
+          <div class="flex bg-[#DDDDDD] p-4 w-80 space-x-4 rounded-lg">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 opacity-30" fill="none" viewBox="0 0 24 24"
               stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                 d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
             </svg>
-            <input class="bg-orange-50 outline-none w-80" type="text" [(ngModel)]="term" 
+            <input class="bg-[#DDDDDD] outline-none w-80" type="text" [(ngModel)]="term" 
               placeholder="Chercher un Conducteur."   /> 
           </div>
         
@@ -35,11 +35,11 @@
          </div>
        
         <button (click)="openAddConductorDialog()"
-          class="bg-[#B7B78A] px-3 py-2 text-sm shadow-sm font-medium tracking-wider text-gray-100 rounded-full hover:shadow-2xl hover:bg-amber-700"><span class="flex items-center"> <mat-icon>add</mat-icon>Ajouter
+          class="bg-[#F8AF26] px-3 py-4 text-sm shadow-sm font-medium tracking-wider text-black-100 rounded-full hover:shadow-2xl hover:bg-amber-700"><span class="flex items-center font-medium"> <mat-icon>add</mat-icon>Ajouter
             un Conduteur</span></button>
       </div>
     </div>
-    <table  class="w-full border-collapse bg-white text-center text- text-gray-600 ">
+    <table  class="w-full border-collapse bg-white text-center text- text-gray-600">
       <thead class="bg-[#DDDDDD]">
         <tr>
           <th scope="col" class="px-6 py-4 font-medium text-gray-900">Id</th>
@@ -50,10 +50,10 @@
           <th scope="col" class="px-12 py-4 font-medium text-gray-900">Actions</th>
         </tr>
       </thead>
-      <tbody class="divide-y divide-gray-100 border-t border-gray-100">
-        <tr class="hover:bg-gray-50" *ngFor="let conductor of conductors |paginate:{itemsPerPage:pageSize,currentPage:currentPage,totalItems: totalElements}">
-          <th class="flex gap-3 px-6 py-4 font-normal text-gray-900">
-            <div class="relative h-10 w-10">
+      <tbody class="divide-y divide-gray-100 border-t border-gray-100 ">
+        <tr class="hover:bg-gray-50 leading-none"*ngFor="let conductor of conductors |paginate:{itemsPerPage:pageSize,currentPage:currentPage,totalItems: totalElements}">
+          <th class="flex px-6 py-4 font-normal text-gray-900">
+            <div class="relative h-7 w-10">
               <div class="font-medium text-gray-700">{{conductor.id}}</div>
             </div>
           </th>
@@ -80,7 +80,7 @@
               {{conductor.dateOfModification | date :'medium'}}
             </span>
           </td>
-          <td class="px-8 py-2">
+          <td class="px-8 py-4">
             <div class="flex justify-end gap-5">
               <button x-data="{ tooltip: 'Edit' }" (click)="openEditConductorDialog(conductor)" >
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"

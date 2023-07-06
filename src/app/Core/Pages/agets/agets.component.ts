@@ -15,6 +15,7 @@ import { Observable, Subject } from 'rxjs';
 import { Router } from '@angular/router';
 import { ConfirmationComponent } from 'src/app/confirmation/confirmation.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { FormControl } from '@angular/forms';
 
 @Component({
   selector: 'app-agets',
@@ -27,7 +28,8 @@ export class AgetsComponent implements OnInit, AfterViewInit {
   searchResults: Agent[] = [];
   agentss: Agent;
   term: string = '';
-  role: Role[] = []
+  role: Role[] = [];
+  filteredAgents: Agent[] = [];
   imagedata: string = '';
   search: string;
   currentPage = 0;
@@ -35,9 +37,10 @@ export class AgetsComponent implements OnInit, AfterViewInit {
   totalAgents: number;
   totalPages: number;
   totalElements: number;
-
-
-
+  isButtonDisabled= false;
+  dateFilter = new FormControl(null);
+  isfilterclicked=false;
+  pageSizeOptions: number[] = [5, 10, 20];
 
   constructor(private agentservice: UserServiceService,
     private dialog: MatDialog,
@@ -67,6 +70,11 @@ export class AgetsComponent implements OnInit, AfterViewInit {
     );
   }
   public loadagentspages(page: number, pagesize: number): void {
+    if (this.filteredAgents && this.filteredAgents.length > 0) {
+      this.agents = this.filteredAgents.slice(page * this.pageSize, (page + 1) * this.pageSize);
+      this.totalElements = this.filteredAgents.length;
+      this.totalPages = Math.ceil(this.totalElements / this.pageSize);
+    } else
     if (this.searchResults && this.searchResults.length > 0) {
       this.agents = this.searchResults.slice(page * this.pageSize, (page + 1) * this.pageSize);
       this.totalElements = this.searchResults.length;
@@ -189,6 +197,7 @@ export class AgetsComponent implements OnInit, AfterViewInit {
       }
     }
   }
+
   convertBlobToString(blob: Blob): Promise<String> {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
@@ -211,11 +220,46 @@ export class AgetsComponent implements OnInit, AfterViewInit {
       console.log("error searching for agent", error);
     })
   }
+  applyDateFilter() {
+    const filterDate: Date = this.dateFilter.value;
+    const year: number = filterDate.getFullYear();
+    const month: number = filterDate.getMonth() + 1;
+    const day: number = filterDate.getDate();
+    const formattedDate: string = `${year}-${month.toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`;
+
+    this.agentservice.getfilteredDate(new Date(formattedDate)).subscribe((res) => {
+      this.filteredAgents = res;
+      this.currentPage = 0;
+      this.totalElements = this.filteredAgents.length;
+      this.totalPages = Math.ceil(this.totalElements / this.pageSize);
+      this.loadagentspages(this.currentPage, this.pageSize);
+    })
+    console.log(new Date(formattedDate))
+  }
+  enableButton(){
+    this.isButtonDisabled = false;
+  }
+
+
+  getDatePickerValue(): void { 
+    this.isButtonDisabled = false;
+    this.isfilterclicked=true;
+    if (this.dateFilter.value=== null){
+    console.log(null);
+    }else{
+    this.applyDateFilter();
+    this.isButtonDisabled= true;
+  }
+   
+  }
+  onPageSizeChange(value :number):void{
+    this.pageSize = value;
+    this.loadagentspages(this.currentPage,this.pageSize);
+  }
 
   onPageChange(page: number) {
     this.currentPage = page;
-    this.loadagentspages(this.currentPage - 1, this.pageSize);
-    console.log(this.currentPage);
+    this.loadagentspages(this.currentPage -1 , this.pageSize);
   }
 }
 

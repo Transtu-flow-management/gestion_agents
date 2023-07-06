@@ -1,11 +1,11 @@
 
 mat-sidenav {
-  width: 240px;
+  width: 260px;
   transition: width 1.5s;
 }
 
 mat-sidenav.mat-drawer-opened {
-  width: 240px;
+  width: 260px;
 }
 
 mat-sidenav-content {
@@ -13,15 +13,15 @@ mat-sidenav-content {
 }
 
 mat-sidenav-container.mat-drawer-opened mat-sidenav-content {
-  margin-left: 240px;
+  margin-left: 260px;
 }
 
 .pushed {
-  margin-left: 240px;
+  margin-left: 260px;
 }
 .arrow {
-  border: solid rgb(92, 89, 47);
-  border-width: 0 3px 3px 0;
+  border: solid rgb(4, 20, 121);
+  border-width: 0 5px 5px 0;
   display: inline-block;
   padding: 3px;
 }

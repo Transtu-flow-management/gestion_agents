@@ -66,6 +66,7 @@ import { AddConditionComponent } from './Dialogs/add-condition/add-condition.com
 import { LinesComponent } from './Core/Pages/lines/lines.component';
 import { AddLineComponent } from './Dialogs/add-line/add-line.component';
 import { UpdateLineComponent } from './Dialogs/update-line/update-line.component';
+import {MatExpansionModule} from '@angular/material/expansion';
 
 export const API_URL = new InjectionToken<String>('API_URL');
 
@@ -136,7 +137,8 @@ export const API_URL = new InjectionToken<String>('API_URL');
       MatDatepickerModule,
       MatNativeDateModule,
       MatPaginatorModule ,
-      MatButtonModule
+      MatButtonModule,
+      MatExpansionModule
   ],
 
   

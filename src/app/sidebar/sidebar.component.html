@@ -4,160 +4,146 @@
   <link href="/dist/tailwind.css" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.0/font/bootstrap-icons.css" />
 </head>
-<div class="sidebar absolute top-0 bottom-0 lg:left-0 p-2 overflow-y-auto text-center bg-stone-600">
+
+<div class="sidebar absolute top-0 bottom-0 lg:left-0 right-0 p-2.5 overflow-y-auto text-center bg-[#001449]">
   <div class="text-gray-100 text-xl">
     <div class="pt-1 pr-16 mt-1 flex-initial">
-      <h1 class="font-bold text-gray-200 text-[15px] ">Transtu</h1>
-      <h3 class="font-bold text-gray-200 pl-14">suivi de flotte</h3>
+
+      <p class="font-medium text-gray-300 text-[24px] ">Transtu</p>
+      <h4 class="font-bold text-gray-200 pl-16">suivi de flotte</h4>
     </div>
-    <div class="my-2 bg-gray-600 h-[1px]"></div>
+
   </div>
   <hr>
-  <div class="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-green-700 text-white">
+
+  <div class="pt-2.5 pb-2.5 ml-6 mt-3 flex items-end rounded-md px-4 duration-300 cursor-pointer hover:bg-[#001470] text-white" routerLinkActive="text-[15px] ml-3 text-gray-200 font-bold bg-[#001499]">
     <i class="bi bi-house-door-fill"></i>
-    <span class="text-[15px] ml-4 text-gray-200 font-bold" routerLink="/home">Home</span>
+    <span class="text-[15px] ml-3 text-gray-200 font-bold" routerLink="/home" [routerLinkActiveOptions]={exact:true} routerLinkActive="">Home</span>
   </div>
-  <div class="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-green-600 text-white">
+  <div class="pt-2.5 pb-2.5 ml-6 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-[#001470] text-white" routerLinkActive="text-[15px] ml-3 text-gray-200 font-bold bg-[#001499]">
     <i class="bi bi-people-fill"></i>
-    <span class="text-[15px] ml-4 text-gray-200 font-bold" routerLink="/agents">Agents</span>
+    <span class="text-[15px] ml-3 text-gray-200 font-bold" routerLink="/agents" routerLinkActive="">Agents</span>
   </div>
-  <div class="my-1 bg-red-600 h-[2px]"></div>
-  <div
-    class="p-2.5 mt-3 mr-10 flex items-baseline rounded-md px-4 duration-300 cursor-pointer hover:bg-green-600 text-white">
-    <i class="bi bi-person-fill-gear"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-        class="bi bi-person-fill-gear" viewBox="0 0 16 16">
-        <path
-          d="M11 5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm-9 8c0 1 1 1 1 1h5.256A4.493 4.493 0 0 1 8 12.5a4.49 4.49 0 0 1 1.544-3.393C9.077 9.038 8.564 9 8 9c-5 0-6 3-6 4Zm9.886-3.54c.18-.613 1.048-.613 1.229 0l.043.148a.64.64 0 0 0 .921.382l.136-.074c.561-.306 1.175.308.87.869l-.075.136a.64.64 0 0 0 .382.92l.149.045c.612.18.612 1.048 0 1.229l-.15.043a.64.64 0 0 0-.38.921l.074.136c.305.561-.309 1.175-.87.87l-.136-.075a.64.64 0 0 0-.92.382l-.045.149c-.18.612-1.048.612-1.229 0l-.043-.15a.64.64 0 0 0-.921-.38l-.136.074c-.561.305-1.175-.309-.87-.87l.075-.136a.64.64 0 0 0-.382-.92l-.148-.045c-.613-.18-.613-1.048 0-1.229l.148-.043a.64.64 0 0 0 .382-.921l-.074-.136c-.306-.561.308-1.175.869-.87l.136.075a.64.64 0 0 0 .92-.382l.045-.148ZM14 12.5a1.5 1.5 0 1 0-3 0 1.5 1.5 0 0 0 3 0Z" />
-      </svg></i>
-    <div class="flex justify-between w-full items-center border-dashed border-2 border-sky-500"
-      (click)="toggleDropdown()">
-      <span class="text-[16px]  text-gray-200 font-bold">Manage Agent <span
-          class="text-sm rotate-180 cursor-pointer ml-16 " id="arrow">
-          <i class="bi bi-chevron-down pl-16"></i>
-        </span>
-      </span>
-    </div>
-  </div>
-  <div class="text-left text-sm mt-2 w-4/5 mx-auto text-gray-200 font-bold " [ngClass]="{ 'hidden': isSubmenuHidden }"
-    id="submenu">
-    <a routerLink="/roles">
-      <h1 class="cursor-pointer p-2 hover:bg-blue-600 rounded-md mt-1">
-        Roles
-      </h1>
-    </a>
-    <a routerLink="/permissions">
-      <h1 class="cursor-pointer p-2 hover:bg-blue-600 rounded-md mt-1">
-        Permissions
-      </h1>
-    </a>
-  </div>
-  <div class="my-1 bg-red-600 h-[2px]"></div>
-  <div
-    class="p-2.5 mt-3 mr-10 flex items-baseline rounded-md px-4 duration-300 cursor-pointer hover:bg-green-600 text-white">
-    <i class="bi bi-buildings-fill"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-        class="bi bi-buildings-fill" viewBox="0 0 16 16">
-        <path
-          d="M15 .5a.5.5 0 0 0-.724-.447l-8 4A.5.5 0 0 0 6 4.5v3.14L.342 9.526A.5.5 0 0 0 0 10v5.5a.5.5 0 0 0 .5.5h9a.5.5 0 0 0 .5-.5V14h1v1.5a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5V.5ZM2 11h1v1H2v-1Zm2 0h1v1H4v-1Zm-1 2v1H2v-1h1Zm1 0h1v1H4v-1Zm9-10v1h-1V3h1ZM8 5h1v1H8V5Zm1 2v1H8V7h1ZM8 9h1v1H8V9Zm2 0h1v1h-1V9Zm-1 2v1H8v-1h1Zm1 0h1v1h-1v-1Zm3-2v1h-1V9h1Zm-1 2h1v1h-1v-1Zm-2-4h1v1h-1V7Zm3 0v1h-1V7h1Zm-2-2v1h-1V5h1Zm1 0h1v1h-1V5Z" />
-      </svg></i>
-    <div class="flex justify-between w-full items-center border-dashed border-2 border-sky-500"
-      (click)="toggleDropdownE()">
-      <span class="text-[16px]  text-gray-200 font-bold">Entropôt <span class="text-sm rotate-180 cursor-pointer ml-16 "
-          id="arrow">
-          <i class="bi bi-chevron-down pl-16"></i>
-        </span>
-      </span>
-    </div>
-  </div>
-  <div class="text-left text-sm mt-2 w-4/5 mx-auto text-gray-200 font-bold "
-    [ngClass]="{ 'hidden': isSubmenuEntropotHidden }" id="submenu">
-    <a routerLink="/entropots">
-      <h1 class="cursor-pointer p-2 hover:bg-blue-600 rounded-md mt-1">
-        Depots
-      </h1>
-    </a>
-    <a routerLink="/brands">
-      <h1 class="cursor-pointer p-2 hover:bg-blue-600 rounded-md mt-1">
-        marques
-      </h1>
-    </a>
-    <a routerLink="/conductors">
-      <h1 class="cursor-pointer p-2 hover:bg-blue-600 rounded-md mt-1">
-        conducteurs
-      </h1>
-    </a>
-  </div>
-  <div class="my-1 bg-red-600 h-[2px]"></div>
-  <div
-  class="p-2.5 mt-3 mr-10 flex items-baseline rounded-md px-4 duration-300 cursor-pointer hover:bg-green-600 text-white">
-  <i class="bi bi-buildings-fill"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-      class="bi bi-buildings-fill" viewBox="0 0 16 16">
-      <path
-        d="M15 .5a.5.5 0 0 0-.724-.447l-8 4A.5.5 0 0 0 6 4.5v3.14L.342 9.526A.5.5 0 0 0 0 10v5.5a.5.5 0 0 0 .5.5h9a.5.5 0 0 0 .5-.5V14h1v1.5a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5V.5ZM2 11h1v1H2v-1Zm2 0h1v1H4v-1Zm-1 2v1H2v-1h1Zm1 0h1v1H4v-1Zm9-10v1h-1V3h1ZM8 5h1v1H8V5Zm1 2v1H8V7h1ZM8 9h1v1H8V9Zm2 0h1v1h-1V9Zm-1 2v1H8v-1h1Zm1 0h1v1h-1v-1Zm3-2v1h-1V9h1Zm-1 2h1v1h-1v-1Zm-2-4h1v1h-1V7Zm3 0v1h-1V7h1Zm-2-2v1h-1V5h1Zm1 0h1v1h-1V5Z" />
-    </svg></i>
-  <div class="flex justify-between w-full items-center border-dashed border-2 border-sky-500"
-    (click)="toggleDropdownV()">
-    <span class="text-[16px]  text-gray-200 font-bold">Vehicules <span class="text-sm rotate-180 cursor-pointer ml-16 "
-        id="arrow">
-        <i class="bi bi-chevron-down pl-16"></i>
-      </span>
-    </span>
-  </div>
-</div>
-<div class="text-left text-sm mt-2 w-4/5 mx-auto text-gray-200 font-bold "
-  [ngClass]="{ 'hidden': isSubmenuvehiculeHidden }" id="submenu">
-  <a routerLink="/conditions">
-    <h1 class="cursor-pointer p-2 hover:bg-blue-600 rounded-md mt-1">
-      Conditions
-    </h1>
-  </a>
-  <a routerLink="/brands">
-    <h1 class="cursor-pointer p-2 hover:bg-blue-600 rounded-md mt-1">
-      ...
-    </h1>
-  </a>
+  <div class="my-4 bg-gray-500 h-[2px]"></div>
+  <mat-accordion multi >
+    <mat-expansion-panel class="mt-2 flex items-start rounded-md px-4 duration-300 cursor-pointer  text-white bg-[#001449] pl-3.5"
+    [@expandedState]="isExpanded1 ? 'expanded' : 'collapsed'"
+                     (opened)="isExpanded1 = true"
+                     (closed)="isExpanded1 = false"
+    >
+      <mat-expansion-panel-header>
+        <mat-panel-title class="text-white flex items-start ">
+          <div class="mr-2">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-fill-gear" viewBox="0 0 16 16">
+              <path d="M11 5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm-9 8c0 1 1 1 1 1h5.256A4.493 4.493 0 0 1 8 12.5a4.49 4.49 0 0 1 1.544-3.393C9.077 9.038 8.564 9 8 9c-5 0-6 3-6 4Zm9.886-3.54c.18-.613 1.048-.613 1.229 0l.043.148a.64.64 0 0 0 .921.382l.136-.074c.561-.306 1.175.308.87.869l-.075.136a.64.64 0 0 0 .382.92l.149.045c.612.18.612 1.048 0 1.229l-.15.043a.64.64 0 0 0-.38.921l.074.136c.305.561-.309 1.175-.87.87l-.136-.075a.64.64 0 0 0-.92.382l-.045.149c-.18.612-1.048.612-1.229 0l-.043-.15a.64.64 0 0 0-.921-.38l-.136.074c-.561.305-1.175-.309-.87-.87l.075-.136a.64.64 0 0 0-.382-.92l-.148-.045c-.613-.18-.613-1.048 0-1.229l.148-.043a.64.64 0 0 0 .382-.921l-.074-.136c-.306-.561.308-1.175.869-.87l.136.075a.64.64 0 0 0 .92-.382l.045-.148ZM14 12.5a1.5 1.5 0 1 0-3 0 1.5 1.5 0 0 0 3 0Z" />
+            </svg>
+          </div>
+          <div>
+            <span class="text-[16px] text-gray-200 font-bold">Manage Agent</span>
+          </div>
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      <div class="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-[#001469] text-white"routerLinkActive="text-[15px] ml-3 text-gray-200 font-bold bg-[#001499]">
+        <i class="bi bi-people-fill"></i>
+        <span class="text-[15px] ml-4 text-gray-200 font-bold" routerLink="/roles">Roles</span>
+      </div>
+      <div class="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-[#001469] text-white"routerLinkActive="text-[15px] ml-3 text-gray-200 font-bold bg-[#001499]">
+        <i class="bi bi-people-fill"></i>
+        <span class="text-[15px] ml-4 text-gray-200 font-bold" routerLink="/permissions">Permissions</span>
+      </div>
+    </mat-expansion-panel>
+  </mat-accordion>
+  <div class="my-4 bg-gray-500 h-[2px]"></div>
+  <mat-accordion multi >
+    <mat-expansion-panel class="mt-2 flex items-start rounded-md px-4 duration-300 cursor-pointer text-white bg-[#001449] pl-3.5"
+    [@expandedState]="isExpanded2 ? 'expanded' : 'collapsed'"
+                     (opened)="isExpanded2 = true"
+                     (closed)="isExpanded2 = false"
+    >
+      <mat-expansion-panel-header>
+        <mat-panel-title class="text-white flex items-start">
+          <div class="mr-2">
+            <i class="bi bi-buildings-fill"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+              class="bi bi-buildings-fill" viewBox="0 0 16 16">
+              <path
+                d="M15 .5a.5.5 0 0 0-.724-.447l-8 4A.5.5 0 0 0 6 4.5v3.14L.342 9.526A.5.5 0 0 0 0 10v5.5a.5.5 0 0 0 .5.5h9a.5.5 0 0 0 .5-.5V14h1v1.5a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5V.5ZM2 11h1v1H2v-1Zm2 0h1v1H4v-1Zm-1 2v1H2v-1h1Zm1 0h1v1H4v-1Zm9-10v1h-1V3h1ZM8 5h1v1H8V5Zm1 2v1H8V7h1ZM8 9h1v1H8V9Zm2 0h1v1h-1V9Zm-1 2v1H8v-1h1Zm1 0h1v1h-1v-1Zm3-2v1h-1V9h1Zm-1 2h1v1h-1v-1Zm-2-4h1v1h-1V7Zm3 0v1h-1V7h1Zm-2-2v1h-1V5h1Zm1 0h1v1h-1V5Z" />
+            </svg></i>
+          </div>
+          <div>
+            <span class="text-[16px] text-gray-200 font-bold">Entropôt </span>
+          </div>
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      <div class="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-[#001469] text-white"routerLinkActive="text-[15px] ml-3 text-gray-200 font-bold bg-[#001499]">
+        <i class="bi bi-building"></i>
+        <span class="text-[15px] ml-4 text-gray-200 font-bold" routerLink="/entropots">Depots</span>
+      </div>
+      <div class="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-[#001469] text-white"routerLinkActive="text-[15px] ml-3 text-gray-200 font-bold bg-[#001499]">
+        <i class="bi bi-tags-fill"></i>
+        <span class="text-[15px] ml-4 text-gray-200 font-bold" routerLink="/brands">marques</span>
+      </div>
+      <div class="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-[#001469] text-white"routerLinkActive="text-[15px] ml-3 text-gray-200 font-bold bg-[#001499]">
+        <i class="bi bi-file-earmark-person-fill"></i>
+        <span class="text-[15px] ml-4 text-gray-200 font-bold" routerLink="/conductors">Conduteurs</span>
+      </div>
+    </mat-expansion-panel>
+  </mat-accordion>
  
+  <div class="my-4 bg-gray-500 h-[2px]"></div> 
+   <mat-accordion multi >
+    <mat-expansion-panel class="mt-2 flex items-start rounded-md px-4 duration-300 cursor-pointer text-white bg-[#001449] pl-3.5"
+    [@expandedState]="isExpanded3 ? 'expanded' : 'collapsed'"
+                     (opened)="isExpanded3 = true"
+                     (closed)="isExpanded3 = false"
+    >
+      <mat-expansion-panel-header>
+        <mat-panel-title class="text-white flex items-start ">
+          <div class="mr-2">
+            <i class="bi bi-truck-front-fill"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-truck-front-fill" viewBox="0 0 16 16">
+              <path d="M3.5 0A2.5 2.5 0 0 0 1 2.5v9c0 .818.393 1.544 1 2v2a.5.5 0 0 0 .5.5h2a.5.5 0 0 0 .5-.5V14h6v1.5a.5.5 0 0 0 .5.5h2a.5.5 0 0 0 .5-.5v-2c.607-.456 1-1.182 1-2v-9A2.5 2.5 0 0 0 12.5 0h-9ZM3 3a1 1 0 0 1 1-1h8a1 1 0 0 1 1 1v3.9c0 .625-.562 1.092-1.17.994C10.925 7.747 9.208 7.5 8 7.5c-1.208 0-2.925.247-3.83.394A1.008 1.008 0 0 1 3 6.9V3Zm1 9a1 1 0 1 1 0-2 1 1 0 0 1 0 2Zm8 0a1 1 0 1 1 0-2 1 1 0 0 1 0 2Zm-5-2h2a1 1 0 1 1 0 2H7a1 1 0 1 1 0-2Z"/>
+            </svg></i>
+          </div>
+          <div>
+            <span class="text-[16px] text-gray-200 font-bold">Vehicules </span>
+          </div>
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      <div class="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-[#001469] text-white"routerLinkActive="text-[15px] ml-3 text-gray-200 font-bold bg-[#001499]">
+        <i class="bi bi-gear-wide-connected"></i>
+        <span class="text-[15px] ml-4 text-gray-200 font-bold capitalize" routerLink="/conditions">Conditions</span>
+      </div>
+    
+    </mat-expansion-panel>
+  </mat-accordion>
 
-</div>
-<div class="my-1 bg-red-600 h-[2px]"></div>
-<div
-class="p-2.5 mt-3 mr-10 flex items-baseline rounded-md px-4 duration-300 cursor-pointer hover:bg-green-600 text-white">
-<i class="bi bi-buildings-fill"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-    class="bi bi-buildings-fill" viewBox="0 0 16 16">
-    <path
-      d="M15 .5a.5.5 0 0 0-.724-.447l-8 4A.5.5 0 0 0 6 4.5v3.14L.342 9.526A.5.5 0 0 0 0 10v5.5a.5.5 0 0 0 .5.5h9a.5.5 0 0 0 .5-.5V14h1v1.5a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5V.5ZM2 11h1v1H2v-1Zm2 0h1v1H4v-1Zm-1 2v1H2v-1h1Zm1 0h1v1H4v-1Zm9-10v1h-1V3h1ZM8 5h1v1H8V5Zm1 2v1H8V7h1ZM8 9h1v1H8V9Zm2 0h1v1h-1V9Zm-1 2v1H8v-1h1Zm1 0h1v1h-1v-1Zm3-2v1h-1V9h1Zm-1 2h1v1h-1v-1Zm-2-4h1v1h-1V7Zm3 0v1h-1V7h1Zm-2-2v1h-1V5h1Zm1 0h1v1h-1V5Z" />
-  </svg></i>
-<div class="flex justify-between w-full items-center border-dashed border-2 border-sky-500"
-  (click)="toggleDropdownL()">
-  <span class="text-[16px]  text-gray-200 font-bold">Line management <span class="text-sm rotate-180 cursor-pointer ml-16 "
-      id="arrow">
-      <i class="bi bi-chevron-down pl-16"></i>
-    </span>
-  </span>
-</div>
-</div>
-<div class="text-left text-sm mt-2 w-4/5 mx-auto text-gray-200 font-bold "
-[ngClass]="{ 'hidden': isSubmenulineHidden }" id="submenu">
-<a routerLink="/lines">
-  <h1 class="cursor-pointer p-2 hover:bg-blue-600 rounded-md mt-1">
-    lignes
-  </h1>
-</a>
-<a routerLink="/brands">
-  <h1 class="cursor-pointer p-2 hover:bg-blue-600 rounded-md mt-1">
-    ...
-  </h1>
-</a>
-
-
-</div>
+  <div class="my-4 bg-gray-500 h-[2px]"></div> 
+   <mat-accordion multi >
+    <mat-expansion-panel class="mt-2 flex items-start rounded-md px-4 duration-300 cursor-pointer text-white bg-[#001449] pl-3.5"
+    [@expandedState]="isExpanded4 ? 'expanded' : 'collapsed'"
+                     (opened)="isExpanded4 = true"
+                     (closed)="isExpanded4 = false"
+    >
+      <mat-expansion-panel-header>
+        <mat-panel-title class="text-white flex items-start ">
+          <div class="mr-2">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-map-fill" viewBox="0 0 16 16">
+              <path fill-rule="evenodd" d="M16 .5a.5.5 0 0 0-.598-.49L10.5.99 5.598.01a.5.5 0 0 0-.196 0l-5 1A.5.5 0 0 0 0 1.5v14a.5.5 0 0 0 .598.49l4.902-.98 4.902.98a.502.502 0 0 0 .196 0l5-1A.5.5 0 0 0 16 14.5V.5zM5 14.09V1.11l.5-.1.5.1v12.98l-.402-.08a.498.498 0 0 0-.196 0L5 14.09zm5 .8V1.91l.402.08a.5.5 0 0 0 .196 0L11 1.91v12.98l-.5.1-.5-.1z"/>
+            </svg>
+          </div>
+          <div>
+            <span class="text-[16px] text-gray-200 font-bold">Line management </span>
+          </div>
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      <div class="p-2.5 mt-3 flex items-center w-full rounded-md duration-300 cursor-pointer hover:bg-[#001469] text-white"routerLinkActive="text-[15px] ml-3 text-gray-200 font-bold bg-[#001499]">
+        <i class="bi bi-arrow-left-right"></i>
+        <span class="text-[15px] ml-4 text-gray-200 font-bold capitalize" routerLink="/lines">lignes</span>
+      </div>
+    
+    </mat-expansion-panel>
+  </mat-accordion>
   <div class="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-blue-600 text-white">
     <i class="bi bi-gear-fill"></i>
     <span class="text-[15px] ml-4 text-gray-200 font-bold">Parametres</span>
   </div>
-  <a routerLink="/test">
-    <h1 class="cursor-pointer p-2 hover:bg-blue-600 rounded-md mt-1">
-      test
-    </h1>
-  </a>
-
 </div>

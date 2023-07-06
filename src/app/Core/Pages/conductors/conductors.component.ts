@@ -31,6 +31,8 @@ export class ConductorsComponent implements OnInit {
   pageSizeOptions: number[] = [5, 10, 20];
   isfilterclicked=false;
   filterValue: string = ''
+  dateFilter = new FormControl(null);
+  
   constructor(private _conductorservice: ConductorService, 
     private dialog: MatDialog,
     private snackBar:MatSnackBar) {
@@ -41,7 +43,7 @@ export class ConductorsComponent implements OnInit {
   ngOnInit(): void {
     this.fetchConductors(this.currentPage, this.pageSize)
   }
-  dateFilter = new FormControl(null);
+ 
   fetchConductors(page: number, pageSize: number) {
     if (this.filteredconductor && this.filteredconductor.length > 0) {
       this.conductors = this.filteredconductor.slice(page * this.pageSize, (page + 1) * this.pageSize);

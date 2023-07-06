@@ -1,28 +1,48 @@
 <!-- component -->
+<div class="overflow-hidden rounded-lg pt-12 -mb-14 pl-24">
+  <p class="text-5xl not-italic font-sans font-bold tracking-wide text-justify dark:text-[#111827] capitalize">Agents</p>
+</div>
+  <div class="overflow-hidden rounded-lg mt-24 ml-24 mr-24 w-auto">
 
-<div class="overflow-hidden rounded-lg border border-gray-200 shadow-md m-5">
-  <div class="bg-white py-4 md:py-7 px-4 md:px-8 xl:px-10">
-    <div class="sm:flex items-center justify-between">
-      <div class="flex items-center">
-        <div class="flex bg-gray-100 p-4 w-72 space-x-4 rounded-lg">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 opacity-30" fill="none" viewBox="0 0 24 24"
-            stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-              d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-          </svg>
-          <input class="bg-gray-100 outline-none" type="text" [(ngModel)]="term" (input)="searchAgent(term)"
+    <div class="py-4 ">
+      <div class="sm:flex items-center justify-between">
+        <div class="flex items-center ">
+          <div class="flex bg-[#DDDDDD] p-4 w-80 space-x-4 rounded-lg">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 opacity-30" fill="none" viewBox="0 0 24 24"
+              stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+            <input class="bg-[#DDDDDD] outline-none" type="text" [(ngModel)]="term" (input)="searchAgent(term)"
             placeholder="Chercher un utilisateur."   /> 
+          </div>
+        
         </div>
+        <div class="flex space-x-2 justify-between pr-64 px-10 mt-5 ">
+          <div>
+            <ng-container>
+                <mat-form-field class="mr-1">
+            <input matInput [matDatepicker]="dateFilterPicker" placeholder="Filtrer par Date" [formControl]="dateFilter" (dateChange)="enableButton()">
+            <mat-datepicker-toggle matSuffix [for]="dateFilterPicker"></mat-datepicker-toggle>
+            <div *ngIf="isfilterclicked &&dateFilter.value ===null" class="text-red-500 text-xs italic">Date vide</div>
+            <mat-datepicker #dateFilterPicker></mat-datepicker>
+          </mat-form-field>
+          </ng-container>
+        </div>
+        <div class="relative h-16 w-16">
+          <button [disabled]="isButtonDisabled" [ngClass]="{'bg-red-50 hover:bg-red-100': isButtonDisabled}" class= "bg-[#B7B78A] px-3 py-4 text-sm shadow-sm font-small tracking-wider text-gray-100 rounded-md hover:shadow-2xl hover:bg-amber-700" (click)="getDatePickerValue()">filtrer</button>
+        </div>
+         </div>
+       
+        <button (click)="openAddUserDialog()"
+          class="bg-[#F8AF26] px-3 py-4 text-sm shadow-sm font-medium tracking-wider text-black-100 rounded-full hover:shadow-2xl hover:bg-amber-700"><span class="flex items-center font-medium"> <mat-icon>add</mat-icon>Ajouter
+            un Agent</span></button>
       </div>
-      <button (click)="openAddUserDialog()"
-        class="bg-green-200 px-5 py-3 text-sm shadow-sm font-medium tracking-wider text-green-600 rounded-full hover:shadow-2xl hover:bg-green-300"><span>Ajouter
-          un utilisateur</span></button>
     </div>
-  </div>
-  <table class="w-full border-collapse bg-white text-left text-sm text-gray-500">
-    <thead class="bg-gray-50">
-      <tr>
-        <th scope="col" class="px-6 py-4 font-medium text-gray-900">Id</th>
+    <table  class="w-full border-collapse bg-white text-center text- text-gray-600">
+      <thead class="bg-[#DDDDDD]">
+        <tr>
+          <th scope="col" class="px-6 py-4 font-medium text-gray-900">Id</th>
         <th scope="col" class="px-6 py-4 font-medium text-gray-900">Image</th>
         <th scope="col" class="px-6 py-4 font-medium text-gray-900">Nom</th>
         <th scope="col" class="px-6 py-4 font-medium text-gray-900">prenom</th>
@@ -32,99 +52,111 @@
         <th scope="col" class="px-12 py-4 font-medium text-gray-900">Date de Creation</th>
         <th scope="col" class="px-12 py-4 font-medium text-gray-900">Date de Modification</th>
         <th scope="col" class="px-12 py-4 font-medium text-gray-900">Actions</th>
-      </tr>
-    </thead>
-    <tbody class="divide-y divide-gray-100 border-t border-gray-100">
-      <tr class="hover:bg-gray-50" *ngFor="let agent of agents  |paginate:{itemsPerPage:pageSize,currentPage:currentPage,totalItems: totalElements}">
-        <th class="flex gap-3 px-6 py-4 font-normal text-gray-900">
-          <div class="relative h-10 w-10">
-            <div class="font-medium text-gray-700">{{agent.id}}</div>
-          </div>
-        </th>
-        <td class="px-6 py-4">
-          <div class="flex-shrink-0">
-
-            <img class="w-16 h-16 rounded-full" src="http://localhost:5300/api/agents/files/{{agent.imageUrl}}">
-            <!--<img  class="w-16 h-16 rounded-full" [src]="agent.imageUrl ">-->
-          </div>
-        </td>
-        <td class="px-6 py-4">
-          <span class="font-medium text-gray-700">
-            {{agent.name}}
-          </span>
-        </td>
-        <td class="px-6 py-4">
-          <div class="flex gap-2">
-            <span class="font-medium text-gray-700">
-              {{agent.surname}}
-            </span>
-          </div>
-        </td>
-        <td class="px-6 py-4">
-          <div class="flex gap-2">
-            <span class="font-medium text-gray-700">
-              {{agent.email}}
-            </span>
-          </div>
-        </td>
-        <td class="px-6 py-4">
-          <span class="font-medium text-gray-700">
-            {{agent.username}}
-          </span>
-        </td>
-        <td class="px-6 py-4">
-          <ng-container *ngIf="agent.roleName && agent.roleName.length > 0; else assignRoleBtn">
-
-            <div>{{agent.roleName}}</div>
-
-            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
-              <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
-              </svg>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-gray-100 border-t border-gray-100 ">
+        <tr class="hover:bg-gray-50" *ngFor="let agent of agents  |paginate:{itemsPerPage:pageSize,currentPage:currentPage,totalItems: totalElements}">
+          <th class="flex gap-3 px-6 py-4 font-normal text-gray-900">
+            <div class="relative h-10 w-10">
+              <div class="font-medium text-gray-700">{{agent.id}}</div>
             </div>
-          </ng-container>
-          <ng-template #assignRoleBtn>
-            <button (click)="openAssignRole(agent.id)"
-              class="bg-blue-200 px-5 py-3 text-sm shadow-sm font-medium tracking-wider text-blue-600 rounded-full hover:shadow-2xl hover:bg-blue-300">
-              <span>Assign Role</span>
-            </button>
-          </ng-template>
-        </td>
-        <td class="px-6 py-4">
-          <span
-            class="inline-flex items-center gap-1 rounded-full bg-blue-50 px-2 py-1 text-xs font-semibold text-blue-600">
-            {{agent.dateOfInsertion | date :'medium'}}
-          </span>
-        </td>
-        <td class="px-6 py-4">
-          <span
-            class="inline-flex items-center gap-1 rounded-full bg-blue-50 px-2 py-1 text-xs font-semibold text-red-600">
-            {{agent.dateOfModification | date :'medium'}}
-          </span>
-        </td>
-        <td class="px-8 py-2">
-          <div class="flex justify-end gap-5">
-            <button x-data="{ tooltip: 'Edit' }" (click)="openEditAgentDialog(agent)">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                stroke="currentColor" class="h-6 w-6" x-tooltip="tooltip">
-                <path stroke-linecap="round" stroke-linejoin="round"
-                  d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L6.832 19.82a4.5 4.5 0 01-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 011.13-1.897L16.863 4.487zm0 0L19.5 7.125" />
-              </svg>
-              <p>Modify</p>
-            </button>
-            <button x-data="{ tooltip: 'Delete' }" (click)="deleteagent(agent.id)">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                stroke="currentColor" class="h-6 w-6" x-tooltip="tooltip">
-                <path stroke-linecap="round" stroke-linejoin="round"
-                  d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
-              </svg>
-              <p>Delete</p>
-            </button>
-          </div>
-        </td>
-      </tr>
-    </tbody>
-
-  </table>
-</div>
-<pagination-controls (pageChange)="onPageChange($event)" previousLabel="precedent" nextLabel="suivant"></pagination-controls>
+          </th>
+          <td class="px-6 py-4">
+            <div class="flex-shrink-0">
+  
+              <img class="w-16 h-16 rounded-full" src="http://localhost:5300/api/agents/files/{{agent.imageUrl}}">
+              <!--<img  class="w-16 h-16 rounded-full" [src]="agent.imageUrl ">-->
+            </div>
+          </td>
+          <td class="px-6 py-4">
+            <span class="font-medium text-gray-700">
+              {{agent.name}}
+            </span>
+          </td>
+          <td class="px-6 py-4">
+            <div class="flex gap-2">
+              <span class="font-medium text-gray-700">
+                {{agent.surname}}
+              </span>
+            </div>
+          </td>
+          <td class="px-6 py-4">
+            <div class="flex gap-2">
+              <span class="font-medium text-gray-700">
+                {{agent.email}}
+              </span>
+            </div>
+          </td>
+          <td class="px-6 py-4">
+            <span class="font-medium text-gray-700">
+              {{agent.username}}
+            </span>
+          </td>
+          <td class="px-6 py-4">
+            <ng-container *ngIf="agent.roleName && agent.roleName.length > 0; else assignRoleBtn">
+  
+              <div>{{agent.roleName}}</div>
+  
+              <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                  <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
+                </svg>
+              </div>
+            </ng-container>
+            <ng-template #assignRoleBtn>
+              <button (click)="openAssignRole(agent.id)"
+                class="bg-blue-200 px-5 py-3 text-sm shadow-sm font-medium tracking-wider text-blue-600 rounded-full hover:shadow-2xl hover:bg-blue-300">
+                <span>Assign Role</span>
+              </button>
+            </ng-template>
+          </td>
+          <td class="px-6 py-4">
+            <span
+              class="inline-flex items-center gap-1 rounded-full bg-blue-50 px-2 py-1 text-xs font-semibold text-blue-600">
+              {{agent.dateOfInsertion | date :'medium'}}
+            </span>
+          </td>
+          <td class="px-6 py-4">
+            <span
+              class="inline-flex items-center gap-1 rounded-full bg-blue-50 px-2 py-1 text-xs font-semibold text-red-600">
+              {{agent.dateOfModification | date :'medium'}}
+            </span>
+          </td>
+          <td class="px-8 py-2">
+            <div class="flex justify-end gap-5">
+              <button x-data="{ tooltip: 'Edit' }" (click)="openEditAgentDialog(agent)">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                  stroke="currentColor" class="h-6 w-6" x-tooltip="tooltip">
+                  <path stroke-linecap="round" stroke-linejoin="round"
+                    d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L6.832 19.82a4.5 4.5 0 01-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 011.13-1.897L16.863 4.487zm0 0L19.5 7.125" />
+                </svg>
+                <p>Modify</p>
+              </button>
+              <button x-data="{ tooltip: 'Delete' }" (click)="deleteagent(agent.id)">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                  stroke="currentColor" class="h-6 w-6" x-tooltip="tooltip">
+                  <path stroke-linecap="round" stroke-linejoin="round"
+                    d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
+                </svg>
+                <p>Delete</p>
+              </button>
+            </div>
+          </td>
+        </tr>
+        
+      </tbody>
+    </table>
+  </div>
+    <div class="flex justify-center relative mt-4">
+      <div class="flex items-center mr-64">
+        <pagination-controls (pageChange)="onPageChange($event)" previousLabel="precedent" nextLabel="suivant"></pagination-controls>
+      </div>
+        <div class="flex mt-3">
+        <span class="flex justify-between mt-1 ml-16">items per page :</span><div class="overflow-hidden border border-gray-400 relative ml-7 rounded-lg bg-zinc-25 w-16 mb-4 p-1">
+          <mat-select [(ngModel)]="pageSize" (selectionChange)="onPageSizeChange($event.value)" class="text-base font-mono text-center ">
+            <mat-option class="bg-blue-50 font-mono " *ngFor="let option of pageSizeOptions" [value]="option">{{ option }}</mat-option>
+          </mat-select>
+        </div>
+        </div>
+      
+  

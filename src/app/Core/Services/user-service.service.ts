@@ -30,6 +30,12 @@ export class UserServiceService {
     const url = `${this.usersUrl}/create`;
    return this.http.post<Agent>(url,agent);
   }
+  public getfilteredDate(date:Date):Observable<Agent[]>{
+    const furl = `${this.usersUrl}/datesearch`;
+    const params = new HttpParams().set('dateFilter', date.toISOString());
+    return this.http.get<Agent[]>(furl,{params});
+  }
+
 
   public sayHello(){
     return this.http.get<String>('${this.usersUrl}/hello');
