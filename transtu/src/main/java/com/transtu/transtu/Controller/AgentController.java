@@ -2,6 +2,7 @@ package com.transtu.transtu.Controller;
 
 import com.transtu.transtu.DTO.AgentDTO;
 import com.transtu.transtu.Document.Agent;
+import com.transtu.transtu.Document.Conductor;
 import com.transtu.transtu.Document.Role;
 import com.transtu.transtu.Repositoy.AgentPageRepo;
 import com.transtu.transtu.Repositoy.AgentRepo;
@@ -19,6 +20,7 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -26,6 +28,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -122,6 +125,13 @@ public class AgentController {
     @ResponseBody
     public ResponseEntity<Resource> getFile(@PathVariable String filename) {
         return service.getFile(filename);
+    }
+
+    @GetMapping("/datesearch")
+    private List<AgentDTO>filterbydate(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date dateFilter){
+        List<Agent> savefiltered = service.getAllConductorsWithDateFilter(dateFilter);
+        List<AgentDTO> getfiltered = service.convertDtoToEntity(savefiltered);
+        return getfiltered;
     }
 
 }

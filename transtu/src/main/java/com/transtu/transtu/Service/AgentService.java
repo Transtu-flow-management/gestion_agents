@@ -2,6 +2,7 @@ package com.transtu.transtu.Service;
 
 import com.transtu.transtu.DTO.AgentDTO;
 import com.transtu.transtu.Document.Agent;
+import com.transtu.transtu.Document.Conductor;
 import com.transtu.transtu.Document.Role;
 import com.transtu.transtu.Handlers.NotFoundExcemptionhandler;
 import com.transtu.transtu.Repositoy.AgentPageRepo;
@@ -138,7 +139,7 @@ public class AgentService implements UserDetailsService {
     }
 
 // convertion de DTO vers entité normale sur la methode GET seulement
-    public static List<AgentDTO> convertDtoToEntity(List<Agent> userList) {
+    public  List<AgentDTO> convertDtoToEntity(List<Agent> userList) {
         List<AgentDTO> dtoList = new ArrayList<>();
 
         for(Agent user2 : userList)
@@ -162,7 +163,20 @@ public class AgentService implements UserDetailsService {
 
         return dtoList;
     }
+    public List<Agent> getAllConductorsWithDateFilter(Date date) {
+        Calendar startOfDay = Calendar.getInstance();
+        startOfDay.setTime(date);
+        startOfDay.set(Calendar.HOUR_OF_DAY, 0);
+        startOfDay.set(Calendar.MINUTE, 0);
+        startOfDay.set(Calendar.SECOND, 0);
 
+        Calendar endOfDay = Calendar.getInstance();
+        endOfDay.setTime(date);
+        endOfDay.set(Calendar.HOUR_OF_DAY, 23);
+        endOfDay.set(Calendar.MINUTE, 59);
+        endOfDay.set(Calendar.SECOND, 59);
+        return agentRepo.findBydateOfInsertionBetween(startOfDay.getTime(), endOfDay.getTime());
+    }
 
     public void AssignRoleToAgent(Integer agentid, Integer roleid) throws ChangeSetPersister.NotFoundException {
         Agent agent = agentRepo.findById(agentid).orElseThrow(()-> new ChangeSetPersister.NotFoundException());

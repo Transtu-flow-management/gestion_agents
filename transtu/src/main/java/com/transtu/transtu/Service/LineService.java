@@ -43,7 +43,7 @@ public class LineService {
         }
         line.setDateOfInsertion(new Date());
         Line newLine = lineRepo.save(line);
-        return line;
+        return newLine;
     }
     public Line updateLine(String id,Line newline){
     Line line = lineRepo.findById(id).orElseThrow(()-> new NotFoundHandler(id));
