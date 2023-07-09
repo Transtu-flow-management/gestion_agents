@@ -7,6 +7,8 @@ import com.transtu.transtu.Handlers.NotFoundHandler;
 import com.transtu.transtu.Repositoy.BrandRepo;
 import com.transtu.transtu.Repositoy.makerRepo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.HttpStatus;
@@ -23,8 +25,8 @@ public class brandService {
    private BrandRepo brandRepo;
 @Autowired
 private makerRepo builderRepo;
-    public List<Brand> getAllbrands(){
-        return brandRepo.findAll();
+    public Page<Brand> getAllbrands(Pageable pageable){
+        return brandRepo.findAll(pageable);
     }
     public List<CarBuilder> getallfabriquants(){
         return builderRepo.findAll();

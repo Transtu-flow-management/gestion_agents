@@ -1,7 +1,9 @@
 package com.transtu.transtu.Controller;
 
+import com.transtu.transtu.Document.Line;
 import com.transtu.transtu.Document.Warehouse;
 import com.transtu.transtu.Document.Networks;
+import com.transtu.transtu.Repositoy.LineRepo;
 import com.transtu.transtu.Service.SequenceGeneratorService;
 import com.transtu.transtu.Service.entropotService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +28,8 @@ public class WarehouseController {
     SequenceGeneratorService mongogen;
     @Autowired
     private com.transtu.transtu.Repositoy.entropotRepo entropotRepo;
+    @Autowired
+    private LineRepo lineRepo;
 
     @PostMapping("/create")
     private ResponseEntity<EntityModel<Warehouse>> addDepot(@RequestBody Warehouse warehouse){
@@ -56,11 +60,16 @@ public class WarehouseController {
     return ResponseEntity.ok(currentDepot);
 }
 @DeleteMapping("/{id}")
-    private ResponseEntity<Warehouse> deleteDepot(@PathVariable Integer id){
+    private ResponseEntity<Warehouse> deleteDepot(@PathVariable Integer id,@RequestParam(required = false) boolean confirmDelete){
         Optional<Warehouse> removedDepo = entropotRepo.findById(id);
         if (removedDepo.isEmpty()){
             return ResponseEntity.notFound().build();
         }
+        Warehouse warehouse = removedDepo.get();
+    List<Line> associatedLines = lineRepo.findByWarehouse(warehouse);
+    if(!associatedLines.isEmpty() && !confirmDelete){
+        return ResponseEntity.status(HttpStatus.CONFLICT).build();
+    }
         entropotRepo.deleteById(id);
         return ResponseEntity.status(HttpStatus.ACCEPTED).build();
     }

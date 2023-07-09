@@ -4,6 +4,7 @@ import com.transtu.transtu.DTO.AgentDTO;
 import com.transtu.transtu.Document.Agent;
 import com.transtu.transtu.Document.Permissions;
 import com.transtu.transtu.Document.Role;
+import com.transtu.transtu.Repositoy.AgentRepo;
 import com.transtu.transtu.Repositoy.RoleRepo;
 import com.transtu.transtu.Service.RoleService;
 import com.transtu.transtu.Service.SequenceGeneratorService;
@@ -13,6 +14,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.IanaLinkRelations;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,6 +34,8 @@ public class RoleController {
     SequenceGeneratorService mongo;
     @Autowired
     private RoleRepo roleRepo;
+    @Autowired
+    private AgentRepo agentRepo;
 
     //utilisation de Hateoas method Restful API
     @PostMapping("/add")
@@ -59,23 +63,29 @@ public class RoleController {
         return ResponseEntity.ok("all Roles are gone");
     }
     @PutMapping("/update/{roleid}")
-    private ResponseEntity<Role> updateagent(@PathVariable Integer roleid, @RequestBody Role role){
-        Role updated = roleService.updateRole(roleid,role);
-        return ResponseEntity.ok(updated);
+    private ResponseEntity<Role> updateRole(@PathVariable Integer roleid, @RequestBody Role role){
+         this.roleService.updateRole(roleid,role);
+
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
     @PostMapping("/{roleid}/permissions")
     public ResponseEntity<?> assignPermsToRole(@PathVariable Integer roleid, @RequestBody Set<String> permission){
-        roleService.assignPermstoRole(roleid,permission);
-        return ResponseEntity.ok("permissions are assigned to role");
+        roleService.assignPermissionsToRole(roleid,permission);
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
     @DeleteMapping("/delete/{roleid}")
-    public ResponseEntity<?>deleteRole(@PathVariable("roleid") Integer roleid){
+    public ResponseEntity<?>deleteRole(@PathVariable("roleid") Integer roleid,@RequestParam(required = false) boolean confirmDelete){
         Optional<Role> optionalrole = roleRepo.findById(roleid);
         if(optionalrole.isEmpty()){
             return ResponseEntity.notFound().build();
         }
+        Role role = optionalrole.get();
+        List<Agent> associatedAgents = agentRepo.findByRole(role);
+        if(!associatedAgents.isEmpty() && !confirmDelete){
+            return ResponseEntity.status(HttpStatus.CONFLICT).build();
+        }
         roleRepo.deleteById(roleid);
-        return ResponseEntity.ok("Role deleted");
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
     @DeleteMapping("/delete/{roleid}/permission/{permission}")
     public ResponseEntity<?>deletepermissionfromRole(@PathVariable("roleid") Integer roleid,@PathVariable("permission") Permissions permission){
@@ -83,8 +93,8 @@ public class RoleController {
        if(delroleperm.isEmpty()){
            return ResponseEntity.notFound().build();
        }
-       roleService.removepermissionfromRole(roleid,permission);
-       return ResponseEntity.ok("Permission Supprimé ");
+       roleService.removePermissionFromRole(roleid,permission);
+       return ResponseEntity.ok(HttpStatus.OK);
     }
 
 }

@@ -24,6 +24,7 @@ public class LineService {
 
     public Page<Line> getalllines(Pageable pageable) {
         return lineRepo.findAll(pageable);
+
     }
 
     public Line createLine(Line line) {

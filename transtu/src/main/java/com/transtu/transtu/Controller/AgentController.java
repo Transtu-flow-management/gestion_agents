@@ -61,7 +61,7 @@ public class AgentController {
             return service.getAllagents(pageable);
     }
    @GetMapping
-    private List<AgentDTO> getall() {
+    private List<Agent> getall() {
 
         return service.findAllAgents();
     }
@@ -106,12 +106,12 @@ public class AgentController {
     @PostMapping("/{agentid}/role/{roleid}")
     public ResponseEntity<String> AssignRoleToAgent(@PathVariable Integer agentid, @PathVariable Integer roleid) throws ChangeSetPersister.NotFoundException {
         service.AssignRoleToAgent(agentid, roleid);
-        return ResponseEntity.ok("Role is assigned to agent");
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
     @DeleteMapping("/{agentid}/role/{roleid}")
     public ResponseEntity<?> DeleteRoleFromAgent(@PathVariable Integer agentid, @PathVariable Integer roleid) throws ChangeSetPersister.NotFoundException {
         service.deleteRoleFromAgenta(agentid, roleid);
-        return ResponseEntity.ok(HttpStatus.ACCEPTED);
+        return ResponseEntity.status(HttpStatus.ACCEPTED).build();
     }
     @GetMapping("/search")
     public List<AgentDTO> searchAgents(@RequestParam("query") String query) {

@@ -2,9 +2,13 @@ package com.transtu.transtu.Controller;
 
 import com.transtu.transtu.Document.Brand;
 import com.transtu.transtu.Document.CarBuilder;
+import com.transtu.transtu.Document.Conductor;
 import com.transtu.transtu.Repositoy.BrandRepo;
 import com.transtu.transtu.Service.brandService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.IanaLinkRelations;
 import org.springframework.http.HttpStatus;
@@ -41,9 +45,11 @@ public class brandController {
         return ResponseEntity.status(HttpStatus.GONE).build();
     }
     @GetMapping
-    private ResponseEntity<List<Brand>> getAll(){
-        List<Brand> brands = brandService.getAllbrands();
-        return ResponseEntity.ok(brands);
+    private Page<Brand> getConductors(@RequestParam (defaultValue = "0")int page,
+                                          @RequestParam(defaultValue = "2")int size
+    ){
+        Pageable pageable = PageRequest.of(page,size);
+        return brandService.getAllbrands(pageable);
     }
     @PutMapping("/update/{id}")
     private ResponseEntity<Brand> updatebrand(@PathVariable String id, @RequestBody Brand brand){

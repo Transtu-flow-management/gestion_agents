@@ -43,9 +43,9 @@ public class AgentService implements UserDetailsService {
     public AgentService() {
     }
 
-    public List<AgentDTO> findAllAgents(){
+    public List<Agent> findAllAgents(){
         List<Agent> agents = agentRepo.findAll();
-        return convertDtoToEntity(agents);
+       return agents;
     }
    /* public Page<AgentDTO> getAllagents(Pageable pageable) {
         return agentRepo.findAll(pageable);
@@ -70,10 +70,10 @@ public class AgentService implements UserDetailsService {
         agent1.setName(agent.getName());
         agent1.setSurname(agent.getSurname());
         //agent1.setRoles(agent.getRoles());
-        agent1.setEmail(agent.getEmail());
         agent1.setImageUrl(agent.getImageUrl());
         agent1.setPhone(agent.getPhone());
         agent1.setUsername(agent.getUsername());
+        agent1.setDateOfBirth(agent.getDateOfBirth());
         agent1.setPassword(agent.getPassword());
         agent1.setDateOfModification(new Date());
     return agentRepo.save(agent1);
@@ -85,26 +85,23 @@ public class AgentService implements UserDetailsService {
             champs.forEach((key, value) -> {
                 if (key.equals("dateOfModification")) {
                     agent.setDateOfModification((Date) value);
-
-                } else if (key.equals("roles") && value != null) {
-                    agent.getRoles().clear();
+                } else if (key.equals("role") && value != null) {
                     Integer roleId;
                     if (value instanceof String) {
                         roleId = Integer.parseInt((String) value);
                     } else if (value instanceof Integer) {
                         roleId = (Integer) value;
                     } else {
-
                         roleId = null;
                     }
                     if (roleId != null) {
                         Optional<Role> role = roleRepo.findById(roleId);
-                        role.ifPresent(agent.getRoles()::add);
+                        role.ifPresent(agent::setRole);
                     }
-                }else {
-                    Field champ = ReflectionUtils.findField(Agent.class, key);
-                    champ.setAccessible(true);
-                    ReflectionUtils.setField(champ, agent, value);
+                } else {
+                    Field field = ReflectionUtils.findField(Agent.class, key);
+                    field.setAccessible(true);
+                    ReflectionUtils.setField(field, agent, value);
                 }
             });
             if (file != null && !file.isEmpty()) {
@@ -125,15 +122,19 @@ public class AgentService implements UserDetailsService {
         AgentDTO agentDTO = new AgentDTO();
         agentDTO.setId(agent.getId());
         agentDTO.setName(agent.getName());
-        agentDTO.setEmail(agent.getEmail());
         agentDTO.setPhone(agent.getPhone());
-        if (!agent.getRoles().isEmpty()) {
-            Role role = agent.getRoles().iterator().next();
-            agentDTO.setRoleName(role.getRoleName());
+        if (agent.getRole() != null) {
+            agentDTO.setRoleName(agent.getRole().getRoleName());
+
+        }else {
+            agentDTO.setRoleName(null);
         }
         agentDTO.setImageUrl(agent.getImageUrl());
         agentDTO.setSurname(agent.getSurname());
         agentDTO.setUsername(agent.getUsername());
+        agentDTO.setDateOfBirth(agent.getDateOfBirth());
+        agentDTO.setAddress(agent.getAddress());
+        agentDTO.setPhone(agent.getPhone());
         agentDTO.setDateOfModification(agent.getDateOfModification());
         return agentDTO;
     }
@@ -149,14 +150,18 @@ public class AgentService implements UserDetailsService {
             dto.setId(user2.getId());
             dto.setName(user2.getName());
             dto.setSurname(user2.getSurname());
-            dto.setEmail(user2.getEmail());
+            dto.setPhone(user2.getPhone());
             dto.setUsername(user2.getUsername());
             dto.setImageUrl(user2.getImageUrl());
+            dto.setAddress(user2.getAddress());
+            dto.setDateOfBirth(user2.getDateOfBirth());
             dto.setDateOfInsertion(user2.getDateOfInsertion());
             dto.setDateOfModification(user2.getDateOfModification());
-            if (!user2.getRoles().isEmpty()) {
-                Role role = user2.getRoles().iterator().next();
+            if (user2.getRole() != null) {
+                Role role = user2.getRole();
                 dto.setRoleName(role.getRoleName());
+            }else {
+                dto.setRoleName(null);
             }
             dtoList.add(dto);
         }
@@ -213,7 +218,6 @@ public Page <AgentDTO> searchAgents(String searchterm, Pageable p){
         String lowercaseSearchTerm = searchTerm.toLowerCase();
         return agent.getName().toLowerCase().contains(lowercaseSearchTerm)
                 || agent.getSurname().toLowerCase().contains(lowercaseSearchTerm)
-                || agent.getEmail().toLowerCase().contains(lowercaseSearchTerm)
                 || agent.getUsername().toLowerCase().contains(lowercaseSearchTerm);
     }
 

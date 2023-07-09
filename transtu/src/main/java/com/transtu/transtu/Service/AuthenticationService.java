@@ -49,13 +49,16 @@ private final SequenceGeneratorService mongo;
         String fileName=storegeService.CreateNameImage(file);
         storegeService.store(file,fileName);
         Date currentDate = new Date();
+
         Integer signid = mongo.generateSequence(SEQUENCE_NAME);
         var user = Agent.builder().id(signid)
 
                 .name((request.getName()))
                 .surname(request.getSurname())
-                .email(request.getEmail())
                 .username(request.getUsername())
+                .phone((request.getPhone()))
+                .address(request.getAddress())
+                .DateOfBirth(request.getDateOfBirth())
                 .password(passwordEncoder.encode(request.getPassword()))
                 //.roles(request.getRoles())
                 .dateOfInsertion(currentDate)
@@ -67,8 +70,11 @@ private final SequenceGeneratorService mongo;
         agentDTO.setId(savedUser.getId());
         agentDTO.setSurname(savedUser.getSurname());
         agentDTO.setName(savedUser.getName());
+        agentDTO.setAddress(savedUser.getAddress());
+        agentDTO.setDateOfBirth(savedUser.getDateOfBirth());
+        agentDTO.setPhone(savedUser.getPhone());
         agentDTO.setUsername(savedUser.getUsername());
-        agentDTO.setEmail(savedUser.getEmail());
+
         agentDTO.setDateOfInsertion(savedUser.getDateOfInsertion());
         //String rolename = savedUser.getRoles().stream().findFirst().map(Role::getRoleName).orElse(null);
        // agentDTO.setRoleName(rolename);

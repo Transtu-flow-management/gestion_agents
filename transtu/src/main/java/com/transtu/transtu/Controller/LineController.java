@@ -20,6 +20,7 @@ public class LineController {
     private Page<Line> getallLines(@RequestParam (defaultValue = "0")int page,
                                    @RequestParam(defaultValue = "4")int size){
         Pageable pageable = PageRequest.of(page,size);
+
         return lineService.getalllines(pageable);
     }
     @PostMapping("/add")

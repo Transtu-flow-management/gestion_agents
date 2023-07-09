@@ -11,63 +11,82 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Date;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Set;
+import javax.management.relation.RoleNotFoundException;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
 public class RoleService {
     @Autowired
     private RoleRepo roleRepo;
-    public Role getRolebyId(Integer id){
-        return roleRepo.findById(id).orElseThrow(()->new NoSuchElementException("Role introuvable"));
+
+    public Role getRolebyId(Integer id) {
+        return roleRepo.findById(id).orElseThrow(() -> new NoSuchElementException("Role introuvable"));
     }
 
-   public List<Role> getAllRoles() {
+    public List<Role> getAllRoles() {
         return roleRepo.findAll();
     }
-    public Page<Role>getAllRolesP(Pageable peg){
-        return roleRepo.findAll(peg);
+
+    public Page<Role> getAllRolesP(Pageable peg) {
+        Page<Role> roles = roleRepo.findAll(peg);
+        return roles;
     }
-    public EntityModel<Role> CreateRole(Role role){
-        if (roleRepo.existsByRoleName(role.getRoleName())){
+
+    public EntityModel<Role> CreateRole(Role role) {
+        if (roleRepo.existsByRoleName(role.getRoleName())) {
             throw new IllegalArgumentException("Role avec le meme nom deja existant");
         }
         role.setDateOfCreation(new Date());
 
         Role savedRole = roleRepo.save(role);
         WebMvcLinkBuilder selflink = WebMvcLinkBuilder.linkTo(RoleController.class).slash(savedRole.getId());
-     EntityModel<Role> roleentity = EntityModel.of(savedRole);
-     roleentity.add(selflink.withSelfRel());
-     return roleentity;
+        EntityModel<Role> roleentity = EntityModel.of(savedRole);
+        roleentity.add(selflink.withSelfRel());
+        return roleentity;
     }
-    public Role updateRole(Integer id,Role role) {
+
+    public Role updateRole(Integer id, Role role) {
         Role newrole = roleRepo.findById(id).orElseThrow(() -> new NoSuchElementException(("Role introuvable")));
         newrole.setRoleName(role.getRoleName());
         //newrole.setPermissions(role.getPermissions());
         newrole.setDateOfModification(new Date());
         return roleRepo.save(newrole);
     }
-    public void Deleteall(){
+
+    public void Deleteall() {
         roleRepo.deleteAll();
     }
-    public Role assignPermstoRole(Integer roleid, Set<String> permissionNames){
-        Role role = roleRepo.findById(roleid).orElseThrow(()-> new NotFoundExcemptionhandler(roleid));
-        Set<Permissions> permissions = permissionNames.stream()
-                        .map(Permissions::fromstring)
-                                .collect(Collectors.toSet());
+
+    @Transactional
+    public Role assignPermissionsToRole(Integer roleId, Set<String> permissionNames) {
+        Role role = roleRepo.findById(roleId).orElseThrow(() -> new NotFoundExcemptionhandler(roleId));
+
+        List<Permissions> permissions = permissionNames.stream()
+                .map(Permissions::fromstring)
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
+
         role.setPermissions(permissions);
-        roleRepo.save(role);
-        return role;
+        role.setContainsPermissions(!permissions.isEmpty());
+
+        return roleRepo.save(role);
     }
 
-    public Role removepermissionfromRole(Integer roleid,Permissions permission){
-        Role role = roleRepo.findById(roleid).orElseThrow(()-> new NotFoundExcemptionhandler(roleid));
-       role.getPermissions().remove(permission);
-       roleRepo.save(role);
-       return role;
-}
+    public void removePermissionFromRole(Integer roleId, Permissions permission) {
+        Optional<Role> roleOptional = roleRepo.findById(roleId);
+        if (roleOptional.isPresent()) {
+            Role role = roleOptional.get();
+            List<Permissions> permissions = role.getPermissions();
+
+            // Remove the permission from the role only if it exists in the permissions list
+            if (permissions.contains(permission)) {
+                permissions.remove(permission);
+                role.setPermissions(permissions);
+                roleRepo.save(role);
+            }
+        }
+    }
 }
