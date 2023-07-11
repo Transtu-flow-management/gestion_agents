@@ -58,4 +58,15 @@ public class PathService {
         path.setDateOfModification(new Date());
         return pathRepo.save(path);
     }
+    public void  deleteAll(){
+        pathRepo.deleteAll();
+    }
+    public void deletePathbyId(String id){
+        Optional<Path> optionalpath = pathRepo.findById(id);
+        if (optionalpath.isPresent()){
+            pathRepo.deleteById(id);
+        }else {
+            throw new NotFoundHandler(id);
+        }
+    }
 }

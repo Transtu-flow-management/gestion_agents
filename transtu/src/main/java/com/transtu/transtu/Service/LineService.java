@@ -13,6 +13,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -25,6 +26,9 @@ public class LineService {
     public Page<Line> getalllines(Pageable pageable) {
         return lineRepo.findAll(pageable);
 
+    }
+    public List<Line> getAlllines(){
+        return lineRepo.findAll();
     }
 
     public Line createLine(Line line) {

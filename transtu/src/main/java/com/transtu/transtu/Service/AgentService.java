@@ -85,7 +85,7 @@ public class AgentService implements UserDetailsService {
             champs.forEach((key, value) -> {
                 if (key.equals("dateOfModification")) {
                     agent.setDateOfModification((Date) value);
-                } else if (key.equals("role") && value != null) {
+                } else if (key.equals("roles") && value != null) {
                     Integer roleId;
                     if (value instanceof String) {
                         roleId = Integer.parseInt((String) value);
@@ -100,8 +100,12 @@ public class AgentService implements UserDetailsService {
                     }
                 } else {
                     Field field = ReflectionUtils.findField(Agent.class, key);
+                    if (field!=null){
                     field.setAccessible(true);
-                    ReflectionUtils.setField(field, agent, value);
+                    ReflectionUtils.setField(field, agent, value);}
+                    else {
+                        throw new RuntimeException("Field not found or inaccessible: " + key);
+                    }
                 }
             });
             if (file != null && !file.isEmpty()) {

@@ -33,4 +33,14 @@ public class PathController {
         this.pathService.updatePath(id,path);
         return ResponseEntity.status(HttpStatus.ACCEPTED).build();
     }
+    @DeleteMapping
+    private ResponseEntity<?>deleteAll(){
+        pathService.deleteAll();
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+    @DeleteMapping("/{id}")
+    private ResponseEntity<?> deletebyid (@PathVariable("id") String id){
+        pathService.deletePathbyId(id);
+        return ResponseEntity.status(HttpStatus.ACCEPTED).build();
+    }
 }

@@ -20,6 +20,7 @@ public class Path {
     private Line line;
     private String nameFr;
     private String nameAr;
+
     private Byte type;
     private Date dateOfInsertion;
     private Date dateOfModification;

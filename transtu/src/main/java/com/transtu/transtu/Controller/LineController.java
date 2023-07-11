@@ -10,6 +10,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @CrossOrigin("*")
 @RequestMapping("/api/lines")
@@ -22,6 +24,10 @@ public class LineController {
         Pageable pageable = PageRequest.of(page,size);
 
         return lineService.getalllines(pageable);
+    }
+    @GetMapping("/all")
+    private List<Line> getall(){
+        return lineService.getAlllines();
     }
     @PostMapping("/add")
     private ResponseEntity<Line> create(@RequestBody Line line){
