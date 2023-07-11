@@ -1,5 +1,5 @@
 export interface Depot{
-    id:Number,
+    id:number,
     name:string,
     longitude:number;
     lattitude: number;

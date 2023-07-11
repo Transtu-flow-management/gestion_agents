@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { GlobalService } from 'src/app/global.service';
 import { Brand } from '../interfaces/brand';
 import { Observable } from 'rxjs';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
@@ -15,10 +15,16 @@ export class BrandService {
     const curl = this.gs.uri +this.url+'/create';
    return this.http.post<Brand>(curl,brand);
   }
-  public getAllbrands():Observable<Brand[]>{
+  
+  getAllbrands(page: number, size: number): Observable<Brand[]> {
     const gurl = this.gs.uri +this.url ;
-    return this.http.get<Brand[]>(gurl);
+    let params = new HttpParams()
+      .set('page', page.toString())
+      .set('size', size.toString());
+
+    return this.http.get<Brand[]>(gurl, { params });
   }
+
   public deletebrand(id:string):Observable<any>{
     const surl =this.gs.uri +this.url+`/${id}`;
     return this.http.delete(surl);

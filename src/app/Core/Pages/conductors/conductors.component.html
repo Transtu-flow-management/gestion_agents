@@ -1,8 +1,8 @@
 <!-- component -->
-<div class="overflow-hidden rounded-lg pt-28 -mb-14 pl-24">
-  <p class="text-5xl not-italic font-sans font-bold tracking-wide text-justify dark:text-[#111827] capitalize">conducteurs</p>
+<div class="overflow-hidden rounded-lg pt-12 -mb-14 pl-20">
+  <p class="text-4xl not-italic font-sans font-bold tracking-wide text-justify dark:text-[#111827] capitalize">conducteurs</p>
 </div>
-  <div class="overflow-hidden rounded-lg mt-24 ml-24 mr-24 w-auto">
+  <div class="overflow-hidden rounded-lg mt-20 ml-20 mr-24 w-auto">
 
     <div class="py-4 ">
       <div class="sm:flex items-center justify-between">
@@ -35,53 +35,53 @@
          </div>
        
         <button (click)="openAddConductorDialog()"
-          class="bg-[#F8AF26] px-3 py-4 text-sm shadow-sm font-medium tracking-wider text-black-100 rounded-full hover:shadow-2xl hover:bg-amber-700"><span class="flex items-center font-medium"> <mat-icon>add</mat-icon>Ajouter
+          class="bg-[#F8AF26] px-3 py-2 text-sm shadow-sm font-medium tracking-wider text-black-100 rounded-full hover:shadow-2xl hover:bg-amber-700"><span class="flex items-center font-medium"> <mat-icon>add</mat-icon>Ajouter
             un Conduteur</span></button>
       </div>
     </div>
-    <table  class="w-full border-collapse bg-white text-center text- text-gray-600">
-      <thead class="bg-[#DDDDDD]">
+    <table  class="min-w-full border-collapse bg-white text-center text-  text-red-900">
+      <thead class="bg-[#DDDDDD] ">
         <tr>
-          <th scope="col" class="px-6 py-4 font-medium text-gray-900">Id</th>
-          <th scope="col" class="px-6 py-4 font-medium text-gray-900">Nom Complet</th>
-          <th scope="col" class="px-6 py-4 font-medium text-gray-900">UID</th>
-          <th scope="col" class="px-12 py-4 font-medium text-gray-900">Date de Creation</th>
-          <th scope="col" class="px-12 py-4 font-medium text-gray-900">Date de Modification</th>
-          <th scope="col" class="px-12 py-4 font-medium text-gray-900">Actions</th>
+          <th scope="col" class=" font-medium text-gray-900 ">Id</th>
+          <th scope="col" class=" font-medium text-gray-900">Nom Complet</th>
+          <th scope="col" class=" font-medium text-gray-900">UID</th>
+          <th scope="col" class="font-medium text-gray-900">Date de Creation</th>
+          <th scope="col" class=" font-medium text-gray-900">Date de Modification</th>
+          <th scope="col" class="px-4 py-4 font-medium text-gray-900">Actions</th>
         </tr>
       </thead>
-      <tbody class="divide-y divide-gray-100 border-t border-gray-100 ">
+      <tbody class="divide-y divide-gray-300 border-t border-gray-300 ">
         <tr class="hover:bg-gray-50 leading-none"*ngFor="let conductor of conductors |paginate:{itemsPerPage:pageSize,currentPage:currentPage,totalItems: totalElements}">
-          <th class="flex px-6 py-4 font-normal text-gray-900">
-            <div class="relative h-7 w-10">
-              <div class="font-medium text-gray-700">{{conductor.id}}</div>
-            </div>
-          </th>
-          <td class="px-6 py-4">
+          <td class="px-2">
+            <span class="font-medium text-gray-700">
+              {{conductor.id}}
+            </span>
+          </td>
+          <td class="px-2 ">
             <span class="font-medium text-gray-700">
               {{conductor.name}} {{conductor.surname}}
             </span>
           </td>
-          <td class="px-6 py-4">
+          <td class="px-2 ">
             <span class="font-medium text-gray-700">
               {{conductor.uid}}
             </span>
           </td>
          
-          <td class="px-6 py-4">
+          <td class="px-2 ">
             <span
-              class="inline-flex items-center gap-1 rounded-full bg-blue-50 px-2 py-1 text-xs font-semibold text-blue-600">
-              {{conductor.dateOfInsertion | date :'medium'}}
+            class="inline-flex items-center  bg-zinc-50 px-2 py-1 text-xs font-semibold text-stone-600">
+              {{conductor.dateOfInsertion | date :'short' }}
             </span>
           </td>
-          <td class="px-6 py-4">
+          <td class="px-2 ">
             <span
-              class="inline-flex items-center gap-1 rounded-full bg-blue-50 px-2 py-1 text-xs font-semibold text-red-600">
-              {{conductor.dateOfModification | date :'medium'}}
+            class="inline-flex items-center  bg-yellow-50 px-2 py-1 text-xs font-semibold text-stone-900">
+              {{conductor.dateOfModification | date :'short'}}
             </span>
           </td>
-          <td class="px-8 py-4">
-            <div class="flex justify-end gap-5">
+          <td class="px-2">
+            <div class="flex justify-evenly">
               <button x-data="{ tooltip: 'Edit' }" (click)="openEditConductorDialog(conductor)" >
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                   stroke="currentColor" class="h-6 w-6" x-tooltip="tooltip">

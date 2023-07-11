@@ -38,11 +38,13 @@ export class RoleService {
   const url = `${this.roleurl}/update/${id}`;
     return this.http.put<Role>(url, role);
   }
-  public deleteRole(id:Number):Observable<any>{
+  public deleteRole(id:Number,confirmDelete?:boolean):Observable<any>{
     const url =`${this.roleurl}/delete/${id}`;
-    return this.http.delete(url);
+    const params = { confirmDelete: confirmDelete ? 'true' : 'false' };
+    const options = { params };
+    return this.http.delete(url,options);
   }
-  public AssignPermssionsToRole(id:Number,permissions : String[]):Observable<IPermissions>{
+  public AssignPermssionsToRole(id:Number,permissions : string[]):Observable<IPermissions>{
     const url = `${this.roleurl}/${id}/permissions`;
     return this.http.post<any>(url,permissions);
   }

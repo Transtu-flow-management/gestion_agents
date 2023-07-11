@@ -4,10 +4,12 @@ export interface Agent {
     id: number;
     name: string;
     surname: string;
-    email: string;
     imageUrl:string;
     username: string;
     roleName: string;
+    address:string;
+    DateOfBirth:Date;
+    phone:string;
     roles: Role[];
     dateOfInsertion : Date;
     dateOfModification : Date;

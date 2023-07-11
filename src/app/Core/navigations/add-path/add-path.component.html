@@ -1,0 +1,88 @@
+
+<div class="rounded-lg pt-12 mb-2 pl-10">
+    <a routerLink="/paths">
+        <p class="text-1 not-italic font-sans font-bold tracking-wide text-justify dark:text-amber-700 capitalize">
+            &#8630; Liste des tragets</p>
+    </a>
+    <hr class="border-b-2 border-gray-300">
+</div>
+<div class="rounded-lg pt-8 -mb-14 pl-20">
+    <p class="text-4xl not-italic font-sans font-bold tracking-wide text-justify dark:text-[#111827] capitalize">Ajouter
+        un traget</p>
+</div>
+<div class="mt-20 ml-40 w-3/4 h-screen">
+
+    <form [formGroup]="addForm" >
+        <div class="relative z-0 mt-4 w-full group gap-12 flex flex-row items-start justify-evenly ">
+            <div class="relative w-full">
+                <label for="name" class="text-lg text-gray-700 block mb-1 font-medium">Nom du traget en français</label>
+                <input type="text" name="name" id="name" class="bg-[#F1F6F9] border border-gray-400 rounded py-3 px-3 block focus:ring-blue-500 focus:border-blue-500 text-gray-700 w-full" placeholder="Enter your name" />
+                <ng-container>
+                    <div *ngIf="isFormSubmitted && addForm.get('nameFr').errors?.['required']  && addForm.get('nameFr')"
+                        class="text-red-500 text-xs italic">Veillez verifier que le champ non vide </div>
+                    <div *ngIf="isFormSubmitted && addForm.get('nameFr').errors?.['minlength']  && addForm.get('nameFr').invalid && addForm.get('nameFr')"
+                        class="text-red-500 text-xs italic">le nom doit contient minimum 4 lettres</div>
+                </ng-container>  
+            </div>
+            
+            <div class="relative w-full">
+                <label for="nameAr" class="text-lg text-gray-700 block mb-1 font-bold">إسم المسار بالعربية</label>
+                <input type="text" name="nameAr" id="name" class="bg-[#F1F6F9] border border-gray-400 rounded py-3 px-3 block focus:ring-blue-500 focus:border-blue-500 text-gray-700 w-full" placeholder="Enter your name" />
+                <ng-container>
+                    <div *ngIf="isFormSubmitted && addForm.get('nameAr').errors?.['required']  && addForm.get('nameAr')"
+                        class="text-red-500 text-xs italic">Veillez verifier que le champ non vide </div>
+                    <div *ngIf="isFormSubmitted && addForm.get('nameAr').errors?.['minlength']  && addForm.get('nameAr').invalid && addForm.get('nameAr')"
+                        class="text-red-500 text-xs italic">le nom doit contient minimum 4 lettres</div>
+                </ng-container> 
+            </div>
+        </div>
+        <hr>
+        <div class="my-8"> <!-- Add spacing here -->
+            <div class="relative h-10 w-auto min-w-[200px] ">
+                <select formControlName="selectedLine"
+                    class="peer h-full w-full rounded-[16px] border border-zinc-700 border-t-transparent bg-transparent px-3 py-2.5 font-sans text-sm font-normal text-blue-gray-700 outline outline-0 transition-all placeholder-shown:border placeholder-shown:border-blue-gray-200 placeholder-shown:border-t-blue-gray-200 focus:border-2 focus:border-pink-500 focus:border-t-transparent focus:outline-0 disabled:border-0 disabled:bg-blue-gray-50">
+                    <option [value]="" disabled>Select line</option>
+                    <option *ngFor="let line of lines" [value]="line">{{line.nameFr}}</option>
+                </select>
+                <label
+                    class=" text-lg	 before:content[' '] after:content[' '] pointer-events-none absolute left-0 -top-1 flex h-full w-full select-none text-[13px] font-normal leading-tight text-blue-gray-400 transition-all before:pointer-events-none before:mt-[6.5px] before:mr-1 before:box-border before:block before:h-1.5 before:w-2.5 before:rounded-tl-md before:border-t before:border-l before:border-blue-gray-200 before:transition-all after:pointer-events-none after:mt-[6.5px] after:ml-1 after:box-border after:block after:h-1.5 after:w-2.5 after:flex-grow after:rounded-tr-md after:border-t after:border-r after:border-blue-gray-200 after:transition-all peer-placeholder-shown:text-sm peer-placeholder-shown:leading-[3.75] peer-placeholder-shown:text-blue-gray-500 peer-placeholder-shown:before:border-transparent peer-placeholder-shown:after:border-transparent peer-focus:text-[11px] peer-focus:leading-tight peer-focus:text-pink-500 peer-focus:before:border-t-2 peer-focus:before:border-l-2 peer-focus:before:border-pink-500 peer-focus:after:border-t-2 peer-focus:after:border-r-2 peer-focus:after:border-pink-500 peer-disabled:text-transparent peer-disabled:before:border-transparent peer-disabled:after:border-transparent peer-disabled:peer-placeholder-shown:text-blue-gray-500">
+                    Selectionner Une ligne
+                </label>
+
+            </div>
+            <ng-container>
+                <div *ngIf="isFormSubmitted && !addForm.value.selectedLine" class="text-red-500 text-xs italic">
+                    Selectionner Une ligne </div>
+
+            </ng-container>
+        </div>
+        <div class="my-4"></div> 
+        <div class=" rounded-lg ">
+            <span class="text-lg not-italic font-sans font-bold tracking-wide text-justify dark:text-[#111827] capitalize">Type de traget :</span>
+        </div>
+        <mat-radio-group >
+            <div class="flex flex-wrap gap-4">
+          <mat-radio-button class="w-1/4" color="primary" [value]="0">
+            <p class="font-sans text-justify font-medium pt-3">Du début à la fin</p>
+          </mat-radio-button>
+          <mat-radio-button class="w-1/4" color="primary" [value]="1">
+            <p class="font-sans text-justify font-medium pt-3">De fin à début</p>
+          </mat-radio-button>
+        </div>
+        </mat-radio-group>
+     
+        <div class="rounded-lg pt-8 ">
+            <p class="text-lg not-italic font-sans font-bold tracking-wide text-justify dark:text-[#111827] capitalize">Selectonner deux point pour former un traget :</p>
+        </div>
+        <div class="my-4"></div> <!-- Add spacing here -->
+        <div class="map-container">
+            <div class="map-frame">
+                <div id="map"></div>
+            </div>
+           
+        </div>
+    </form>
+    <button
+            class="text-black-100 font-medium mt-8 bg-[#F8AF26] hover:shadow-2xl hover:bg-amber-700 focus:ring-4 focus:ring-amber-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center "
+            (click)="addpath()">ajouter</button>
+</div>

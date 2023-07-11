@@ -1,5 +1,4 @@
-.hide-pagination-buttons .mat-paginator-navigation {
-    display: none;
-  }
 
-  
+  tr:nth-child(even) {
+    background-color: #f2f2f2;
+  }

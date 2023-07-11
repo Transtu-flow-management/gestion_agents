@@ -1,10 +1,12 @@
-import { Component, OnInit } from '@angular/core';
-import { FormControl } from '@angular/forms';
-import {Observable} from 'rxjs';
-import {map, startWith} from 'rxjs/operators';
-import { Role } from '../../interfaces/Role';
-import { Conductor } from '../../interfaces/Conductor';
-import { ConductorService } from '../../Services/conductor.service';
+import { Component, OnInit,Inject } from '@angular/core';
+
+import { IPermissions, Role } from '../../interfaces/Role';
+
+import { PermissionService } from '../../Services/permission.service';
+import { RoleService } from '../../Services/role.service';
+import { UserServiceService } from '../../Services/user-service.service';
+import { AssignRoledialogComponent } from 'src/app/Dialogs/assign-roledialog/assign-roledialog.component';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-test',
@@ -12,12 +14,24 @@ import { ConductorService } from '../../Services/conductor.service';
   styleUrls: ['./test.component.css']
 })
 export class TestComponent implements OnInit{
-  fabriquants = new FormControl< Conductor>(null);
-  condcutors : Conductor[] =[];
-  filteredOptions :Observable<Conductor[]>
-  constructor(private _service : ConductorService){}
-  
-  ngOnInit(): void {
 
+  role :Role[]=[]
+  selected :String;
+   constructor(private _roleService : RoleService, private _Agentservice : UserServiceService){
+    
   }
+  ngOnInit(): void {
+      this.fetchRoles()
+  }
+  fetchRoles(){
+    this._roleService.getRoles().subscribe((role : Role[])=>
+    {
+      this.role=role
+    },(error)=>{
+      console.error('failed to fetch Roles from DB',error)
+    }
+    )
+  }
+ 
+
 }

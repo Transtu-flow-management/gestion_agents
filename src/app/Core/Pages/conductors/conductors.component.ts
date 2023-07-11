@@ -28,7 +28,7 @@ export class ConductorsComponent implements OnInit {
   currentPage = 0;
   pageSize = 2;
   isButtonDisabled= false;
-  pageSizeOptions: number[] = [5, 10, 20];
+  pageSizeOptions: number[] = [5, 10, 20,50];
   isfilterclicked=false;
   filterValue: string = ''
   dateFilter = new FormControl(null);

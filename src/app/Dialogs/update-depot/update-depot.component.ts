@@ -1,5 +1,5 @@
 import { Component, AfterViewInit, Inject, ElementRef } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { EntropotService } from 'src/app/Core/Services/entropot.service';
 import { HttpClient } from '@angular/common/http';
@@ -24,13 +24,16 @@ export class UpdateDepotComponent implements AfterViewInit {
   public long: number;
   public adresse: string;
   selectedReseau :string;
+  isFormSubmitted = false;
+  showdialg = false;    
   constructor(
     private elementRef: ElementRef,
     private http: HttpClient,
     public dialogRef: MatDialogRef<UpdateDepotComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
     private fb: FormBuilder,
-    private _entrservice: EntropotService
+    private _entrservice: EntropotService,
+    private dialog :MatDialog
   ) {
     
     const depot: any = data.depot;
@@ -80,6 +83,7 @@ export class UpdateDepotComponent implements AfterViewInit {
   }
 
   public update(): void {
+   this.isFormSubmitted=true;
     const depot = this.updateForm.getRawValue();
     const checkvalues = this.data.depot;
     var selected = this.updateForm.get('selectedReseau').value;
@@ -111,6 +115,14 @@ export class UpdateDepotComponent implements AfterViewInit {
     
   }
   }
+  close()
+  {
+     this.dialog.closeAll()
+   }
+  dismissdialog(){
+    this.showdialg = false;    
+  }
+
 
   updatMap(): void {
     const centralLocation = {

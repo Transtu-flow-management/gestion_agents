@@ -27,15 +27,12 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
 import { RolesComponent } from './Core/Pages/roles/roles.component';
-import { AddRoleComponent } from './Core/Pages/add-role/add-role.component';
 import { RoleModalComponent } from './Dialogs/role-modal/role-modal.component';
 import { UpdateroleComponent } from './Dialogs/updaterole/updaterole.component';
 import { PermissionsComponent } from './Core/Pages/permissions/permissions.component';
-import { AdduserDialogComponent } from './Dialogs/adduser-dialog/adduser-dialog.component';
 import { AssignRoledialogComponent } from './Dialogs/assign-roledialog/assign-roledialog.component';
 import {MatRadioModule} from '@angular/material/radio';
 import { EntropotComponent } from './Core/Pages/entropot/entropot.component';
-import { ReseauComponent } from './Core/Pages/reseau/reseau.component';
 import{NgxPaginationModule} from 'ngx-pagination'
 import { environment } from './environment';
 import { HttpClientModule } from '@angular/common/http';
@@ -67,7 +64,10 @@ import { LinesComponent } from './Core/Pages/lines/lines.component';
 import { AddLineComponent } from './Dialogs/add-line/add-line.component';
 import { UpdateLineComponent } from './Dialogs/update-line/update-line.component';
 import {MatExpansionModule} from '@angular/material/expansion';
-
+import {MatSlideToggleModule} from '@angular/material/slide-toggle';
+import { WarningComponent } from './alerts/warning/warning.component';
+import { PathsComponent } from './Core/Pages/paths/paths.component';
+import { AddPathComponent } from './Core/navigations/add-path/add-path.component';
 export const API_URL = new InjectionToken<String>('API_URL');
 
 @NgModule({
@@ -83,14 +83,11 @@ export const API_URL = new InjectionToken<String>('API_URL');
     AgentdialogComponent,
     ErrorsComponent,
     RolesComponent,
-    AddRoleComponent,
     RoleModalComponent,
     UpdateroleComponent,
     PermissionsComponent,
-    AdduserDialogComponent,
     AssignRoledialogComponent,
     EntropotComponent,
-    ReseauComponent,
     AddDepoComponent,
     UpdateDepotComponent,
     FailedToastComponent,
@@ -113,6 +110,9 @@ export const API_URL = new InjectionToken<String>('API_URL');
     LinesComponent,
     AddLineComponent,
     UpdateLineComponent,
+    WarningComponent,
+    PathsComponent,
+    AddPathComponent,
   ],
   imports: [
     MatRadioModule,
@@ -138,7 +138,8 @@ export const API_URL = new InjectionToken<String>('API_URL');
       MatNativeDateModule,
       MatPaginatorModule ,
       MatButtonModule,
-      MatExpansionModule
+      MatExpansionModule,
+      MatSlideToggleModule
   ],
 
   

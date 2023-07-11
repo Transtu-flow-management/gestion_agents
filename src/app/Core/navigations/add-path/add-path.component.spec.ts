@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ReseauComponent } from './reseau.component';
+import { AddPathComponent } from './add-path.component';
 
-describe('ReseauComponent', () => {
-  let component: ReseauComponent;
-  let fixture: ComponentFixture<ReseauComponent>;
+describe('AddPathComponent', () => {
+  let component: AddPathComponent;
+  let fixture: ComponentFixture<AddPathComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ ReseauComponent ]
+      declarations: [ AddPathComponent ]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(ReseauComponent);
+    fixture = TestBed.createComponent(AddPathComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

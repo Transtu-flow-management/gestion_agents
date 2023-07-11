@@ -20,9 +20,11 @@ export class EntropotService {
     const gurl = this.gs.uri +this.url ;
     return this.http.get<Depot[]>(gurl);
   }
-  public deleteEntrp(id:Number):Observable<any>{
-    const surl =this.gs.uri +this.url+`/${id}`;
-    return this.http.delete(surl);
+  public deleteEntrp(id: number, confirmDelete?: boolean): Observable<any> {
+    const surl = this.gs.uri + this.url + `/${id}`;
+    const params = { confirmDelete: confirmDelete ? 'true' : 'false' };
+    const options = { params };
+    return this.http.delete(surl, options);
   }
   public updateEntropot(id :Number,depot){
     const upurl = this.gs.uri +this.url +`/update/${id}`;

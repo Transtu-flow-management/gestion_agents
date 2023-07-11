@@ -1,27 +1,53 @@
-{{data.role | json}}
-{{data.assignedPermissions | json}}
-<h1 mat-dialog-title>modifier le Role</h1>
-<div mat-dialog-content>
-  <div fxLayout="column">
-    <mat-form-field >
-        
-        <input matInput [readonly]="true" [(ngModel)]="id" />
-      </mat-form-field>
-    <mat-form-field appearance="outline">
-      <mat-label>  Saisir le nom du role </mat-label>
-      <input [(ngModel)]="roleName" matInput />
-    </mat-form-field>
+<mat-dialog-content >
+  <div class="flex absolute top-0 right-0 h-10 w-10">
+    <button type="button" id="dismissButton"
+      class="ml-2 box-content rounded-none border-none opacity-80 hover:no-underline hover:opacity-75 focus:opacity-100 focus:shadow-none focus:outline-none"
+      data-te-toast-dismiss (click)="close()" aria-label="Close">
+      <span (click)="dismissdialog()"
+        class="w-[1em] focus:opacity-100 disabled:pointer-events-none disabled:select-none disabled:opacity-25 [&.disabled]:pointer-events-none [&.disabled]:select-none [&.disabled]:opacity-25">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+          class="h-6 w-6">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </span>
+    </button>
   </div>
-</div>
-<div>
-  <app-permissions [assignedPermissions]="data.assignedPermissions" [isDialogOpen]="isDialogOpen" (selectedPermissions)="selectedPermission($event)"></app-permissions>
-</div>
-<div fxLayout="row-reverse" fxLayoutGap="10px" mat-dialog-actions>
-  <button cdkFocusInitial mat-dialog-close class="bg-blue-200 px-5 py-3 text-sm shadow-sm font-medium tracking-wider text-green-800 rounded-full hover:shadow-2xl hover:bg-green-300">annuler</button>
-  <button mat-dialog-close
-    mat-raised-button
-    color="primary" class="bg-blue-200 px-5 py-3 text-sm shadow-sm font-medium tracking-wider text-green-800 rounded-full hover:shadow-2xl hover:bg-green-300" (click)="updateRole()"
-  >
-    modifier
-  </button>
-</div>
+  <div class="overflow-hidden rounded-lg pt-8 -mb-14 pl-20">
+    <p class="text-4xl not-italic font-sans font-bold tracking-wide text-justify dark:text-[#111827] capitalize">
+      Modifier le role
+    </p>
+  </div>
+
+  <div class="pt-24">
+    <form [formGroup]="updateForm">
+      <div fxLayout="column">
+        <div class="relative z-0 mt-4 w-full group mb-2 "
+          [ngClass]="{ 'shadow-lg shadow-rose-600/25 ring-1 ring-red-200': isModalSubmitted && updateForm.get('roleName').invalid }">
+          <input type="text" name="name"
+            class="block py-2.5 px-0 w-full text-lg text-black-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-black dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+            formControlName="roleName" placeholder=" " required />
+          <label for="name"
+            class="absolute text-lg text-black-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Nom
+            de Role modifié</label>
+            <div class="mb-8" *ngIf="isModalSubmitted && updateForm.get('roleName').errors?.['required']  && updateForm.get('roleName')"
+            class="text-red-500 text-xs italic">Veillez verifier que le champ non vide </div>
+        </div>
+      </div>
+    
+    <div class="pt-8">
+      <app-permissions [assignedPermissions]="data.assignedPermissions" [isDialogOpen]="isDialogOpen"
+        (selectedPermissions)="selectedPermission($event)"></app-permissions>
+    </div>
+  </form>
+    <div fxLayout="row" class="flex justify-center gap-36">
+      <button cdkFocusInitial mat-dialog-close color="primary"
+        class="text-black-100 font-medium mt-8 bg-[#F8AF60] hover:shadow-2xl hover:bg-amber-200 focus:ring-4 focus:ring-amber-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center ">annuler</button>
+      <button color="primary"
+        class="text-black-100 font-medium mt-8 bg-[#F8AF26] hover:shadow-2xl hover:bg-amber-700 focus:ring-4 focus:ring-amber-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center "
+        (click)="updateRole()">
+        modifier
+      </button>
+    </div>
+  </div>
+</mat-dialog-content>
+

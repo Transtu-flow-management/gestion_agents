@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { AdduserDialogComponent } from './adduser-dialog.component';
+import { WarningComponent } from './warning.component';
 
-describe('AdduserDialogComponent', () => {
-  let component: AdduserDialogComponent;
-  let fixture: ComponentFixture<AdduserDialogComponent>;
+describe('WarningComponent', () => {
+  let component: WarningComponent;
+  let fixture: ComponentFixture<WarningComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ AdduserDialogComponent ]
+      declarations: [ WarningComponent ]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(AdduserDialogComponent);
+    fixture = TestBed.createComponent(WarningComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

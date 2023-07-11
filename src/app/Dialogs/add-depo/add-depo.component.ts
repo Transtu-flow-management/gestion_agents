@@ -4,7 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { AbstractControl,ValidatorFn, FormBuilder, FormControl, FormGroup,ValidationErrors,Validators } from '@angular/forms';
 import { EntropotService } from 'src/app/Core/Services/entropot.service';
 import { Depot } from 'src/app/Core/interfaces/depot';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import {
   MatSnackBarHorizontalPosition,
@@ -33,7 +33,7 @@ export class AddDepoComponent implements AfterViewInit {
   public adresse: string;
   addForm: FormGroup;
   isFormSubmitted = false;
-  constructor(private dialog :MatDialog,private elementRef: ElementRef, private http: HttpClient, private fb:FormBuilder,private _entrpserv :EntropotService,private snackBar: MatSnackBar) {
+  constructor(private dialog :MatDialogRef<AddDepoComponent>,private elementRef: ElementRef, private http: HttpClient, private fb:FormBuilder,private _entrpserv :EntropotService,private snackBar: MatSnackBar) {
     this.addForm= this.fb.group({
       name: new FormControl('', [Validators.required, Validators.minLength(6)]),
 
@@ -70,14 +70,15 @@ export class AddDepoComponent implements AfterViewInit {
     const formvalue = this.addForm.value;
   this._entrpserv.createEntroopot(formvalue).subscribe(()=>{
     this.openAddToast('Entropot ajoué avec success')
+    this.dialog.close(formvalue);
   },(error)=>{
-    this.openfailToast('Erreur l\'ors de l\'ajout d\'un entropot')
-    console.log(error);
+    const errormessage =`Erreur lors de l'ajout d'un agent : ${error.status}`
+    this.openfailToast(errormessage)
   })
   }
   close()
   {
-     this.dialog.closeAll()
+     this.dialog.close()
    }
   dismissdialog(){
     this.showdialg = false;    

@@ -1,0 +1,9 @@
+tr:nth-child(even) {
+    background-color: #f2f1eb;
+  }
+
+
+  ::ng-deep .mat-mdc-dialog-content{
+    --mdc-dialog-container-color:#e9e3db ;
+
+  }

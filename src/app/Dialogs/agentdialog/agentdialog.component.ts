@@ -36,15 +36,15 @@ export class AgentdialogComponent implements OnInit {
       id: [agent.id],
       name: [agent.name],
       surname: [agent.surname],
-      email: [agent.email],
       username: [agent.username],
+      phone:[agent.phone],
       roleName: [agent.roleName],
-      roles: [agent.roles],
+      roles: [agent.role],
       password: [''],
       //role: [user.role, Validators.required],
     });
 
-    this.updateForm.controls['email'].setValidators([
+    this.updateForm.controls['username'].setValidators([
       Validators.required,
       Validators.email,
     ]);
@@ -88,12 +88,6 @@ export class AgentdialogComponent implements OnInit {
         console.log("error updating agent", error)
       });
 
-  }
-
-  getSelectedRoleName(): String {
-    const selectedRoleId = this.updateForm.get('roles').value;
-    const selectedRole = this.roleList.find(role => role.id === selectedRoleId);
-    return selectedRole ? selectedRole.roleName : '';
   }
 
   openToast(message: string): void {

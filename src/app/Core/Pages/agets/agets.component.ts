@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { UserServiceService } from '../../Services/user-service.service';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 
 import { Agent } from '../../interfaces/Agent';
 import { AgentdialogComponent } from '../../../Dialogs/agentdialog/agentdialog.component';
@@ -8,7 +8,6 @@ import { ErrorsComponent } from '../../../Dialogs/errors/errors.component';
 import { CoreService } from '../../Services/core.service';
 import { Role } from '../../interfaces/Role';
 import { RoleService } from '../../Services/role.service';
-import { AdduserDialogComponent } from '../../../Dialogs/adduser-dialog/adduser-dialog.component';
 import { AddUserComponent } from '../../../Dialogs/add-user/add-user.component';
 import { AssignRoledialogComponent } from 'src/app/Dialogs/assign-roledialog/assign-roledialog.component';
 import { Observable, Subject } from 'rxjs';
@@ -16,6 +15,8 @@ import { Router } from '@angular/router';
 import { ConfirmationComponent } from 'src/app/confirmation/confirmation.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { FormControl } from '@angular/forms';
+import { SuccessToastComponent } from 'src/app/alerts/success-toast/success-toast.component';
+import { auto } from '@popperjs/core';
 
 @Component({
   selector: 'app-agets',
@@ -40,7 +41,7 @@ export class AgetsComponent implements OnInit, AfterViewInit {
   isButtonDisabled= false;
   dateFilter = new FormControl(null);
   isfilterclicked=false;
-  pageSizeOptions: number[] = [5, 10, 20];
+  pageSizeOptions: number[] = [5, 10, 20,50];
 
   constructor(private agentservice: UserServiceService,
     private dialog: MatDialog,
@@ -95,18 +96,26 @@ export class AgetsComponent implements OnInit, AfterViewInit {
   
   openAddUserDialog(): void {
     const dialogref = this.dialog.open(AddUserComponent, {
-      height: '60%',
-      width: '50%',
+      height: 'auto',
+      width: 'auto',
       enterAnimationDuration: '1000ms',
       exitAnimationDuration: '200ms',
-      panelClass: 'dialogbackgroundcolor'
-
+    });
+    dialogref.afterClosed().subscribe(result =>{
+    
+      if (result){
+        this.agents.push(result);
+      }
     })
   }
+
+ 
   openEditAgentDialog(agent: Agent): void {
     const dialogRef = this.dialog.open(AgentdialogComponent, {
-      width: '50%',
+      width: '70%',
+      height:'auto',
       data: { agent: agent },
+      
     });
 
     // Subscribe to the dialog's afterClosed event to handle the result or any other logic
@@ -158,19 +167,32 @@ export class AgetsComponent implements OnInit, AfterViewInit {
   deleteagent(id: number): void {
 
     const deldialog = this.dialog.open(ConfirmationComponent, {
-
+      data: { message: 'supprimer l\'agent ?' },
     });
     deldialog.afterClosed().subscribe((res) => {
+      const message = 'l\'agent a été supprimé avec succes';
       if (res == 'confirm')
         this.agentservice.deleteAgent(id).subscribe({
           next: (res) => {
-            alert('Agent supprimé');
-            // this.fetchAgents();
+            this.snackbar.openFromComponent(SuccessToastComponent, {
+              data: { message: message },
+              duration: 5000,
+              horizontalPosition: "end",
+              verticalPosition: "top",
+              panelClass: ['snack-green', 'snack-size', 'snack-position']
+            });
+            this.agents = this.agents.filter(agent => agent.id !== id);
+                    if (this.agents.length === 0) {
+                      this.currentPage = this.currentPage -1
+                      if (this.currentPage < 0) {
+                        this.currentPage = 0;
+                      }
+                      this.fetchAgents();
+                    }
           },
         })
-    });
+  });
   }
-
 
   public getRoles(): void {
     this.roleservice.getRoles().subscribe(

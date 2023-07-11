@@ -41,7 +41,7 @@ export class UpdateBrandComponent implements OnInit{
     this.updateForm = this.fb.group({
 
       name: new FormControl(brand.name, [Validators.required, Validators.minLength(6)]),
-      builder:   new FormControl(this.fabriquants, [Validators.required])
+      builder:   new FormControl(this.fabriquants.value, [Validators.required])
     });
    
 
@@ -58,6 +58,7 @@ ngOnInit(): void {
   this._brandservice.getAllmakers().subscribe(maker => {
     this.makers = maker;
   });
+  this.fabriquants.setValue(this.data.brand.builder);
 }
 
 
@@ -104,20 +105,20 @@ openErrorToast(message:string){
 public update():void{
   var brand =this.updateForm.getRawValue();
   const fabriquantValue = this.fabriquants.value;
-  console.log(fabriquantValue);
-  console.log(brand);
+
   if (fabriquantValue !== this.data.brand.builder){ 
     brand.builder = fabriquantValue;
   }
     else{
       brand.builder = this.data.brand.builder;
     }
-    console.log(brand);
+
   this._brandservice.updatebrand(this.data.brand.id,brand).subscribe(()=>{
     this.openToast('La marque a été mis à jour')
     this.dialogRef.close();
   },(error)=>{
-    console.log("error updating",error);
+   this.openErrorToast("Erreur l\'ors de mis à jour de la marque")
+
   });
 
 }

@@ -45,7 +45,12 @@ export class LinesComponent implements OnInit{
     } else {
       this._lineservice.getlines(page, pageSize).subscribe(
         (lines: any) => {
-          this.Lines = lines.content;
+          this.Lines = lines.content.map((line: any) => {
+            if (line.warehouse === null) {
+              line.warehouse = { name: 'Null' };
+            }
+            return line;
+          });
           this.totalElements = lines.totalElements;
           this.totalPages = lines.totalPages;
         },
@@ -122,7 +127,7 @@ this.fetchlines(this.currentPage,this.pageSize);
     });
   }
   deleteLine(id: string) {
-    const message = "Effacer le ligne?";
+    const message = "Effacer la ligne?";
     const title = "Delete Line"
     const deletedialog = this.dialog.open(ConfirmationComponent, {
       data: { message: message, title: title },

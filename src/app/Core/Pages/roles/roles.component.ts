@@ -5,6 +5,11 @@ import { MatDialog,MatDialogConfig } from '@angular/material/dialog';
 import { RoleModalComponent } from '../../../Dialogs/role-modal/role-modal.component';
 import { UpdateroleComponent } from '../../../Dialogs/updaterole/updaterole.component';
 import { ErrorsComponent } from 'src/app/Dialogs/errors/errors.component';
+import { ConfirmationComponent } from 'src/app/confirmation/confirmation.component';
+import { SuccessToastComponent } from 'src/app/alerts/success-toast/success-toast.component';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { WarningToastComponent } from 'src/app/alerts/warning-toast/warning-toast.component';
+import { FailedToastComponent } from 'src/app/alerts/failed-toast/failed-toast.component';
 
 @Component({
   selector: 'app-roles',
@@ -21,7 +26,8 @@ totalPages:number;
 totalElements :number;
 pageSizeOptions: number[] = [5, 10, 20];
 
-  constructor(private _roleservice : RoleService , private _dialog :MatDialog){
+
+  constructor(private _roleservice : RoleService , private _dialog :MatDialog,private snackbar:MatSnackBar){
 this.pageSize = this.pageSizeOptions[0]
   }
 
@@ -51,16 +57,18 @@ openRoleDialog(){
     exitAnimationDuration:'2000ms',
   });
   dialogRef.afterClosed().subscribe(result =>{
+    
     if (result){
       console.log(result);
+      this.Roles.push(result);
     }
   })
 }
 openEditRoleDialog(role:Role):void{
 const dialogref = this._dialog.open(UpdateroleComponent,{
-  width :'70%',height:'400px',
+  width :'70%',height:'auto',
     enterAnimationDuration:'1000ms',
-    exitAnimationDuration:'2000ms',
+    exitAnimationDuration:'1000ms',
     data: { role: role, assignedPermissions:role.permissions}
 })
 }
@@ -72,15 +80,79 @@ openError(message:string,title:string){
 }
 
 deleteRole(id:Number):void{
-  if (confirm('Confirm delete'))
- this._roleservice.deleteRole(id).subscribe({
-   next : (res)=> {
-     alert('Agent supprimé');
-     //this.getRoles();
-   },
-   error: console.log
- })
- }
+  const deleteDialog = this._dialog.open(ConfirmationComponent, {
+    data: { message: 'Êtes-vous sûr de vouloir supprimer ce Role ?' ,title:"Delete"},
+  });
+
+  deleteDialog.afterClosed().subscribe((res) => {
+    if (res === 'confirm') {
+      this._roleservice.deleteRole(id).subscribe({
+        next: () => {
+         this.openDelToast("Le Role a été supprimé avec succès");
+         this.Roles = this.Roles.filter(line => line.id !== id);
+         if (this.Roles.length === 0) {
+          this.currentPage = this.currentPage -1
+          if (this.currentPage < 0) {
+            this.currentPage = 0;
+          }
+          this.getRoles(this.currentPage, this.pageSize);
+        }
+        },
+        error: (error) => {
+          if (error.status === 409) {
+            const warningDialog = this._dialog.open(WarningToastComponent, {
+              data: { message: 'Ce Role est associé à Un Agent. Voulez-vous quand même le supprimer ?',title:"Warning" },
+            });
+
+            warningDialog.afterClosed().subscribe((res) => {
+              if (res === 'confirm') {
+                this._roleservice.deleteRole(id,true).subscribe({
+                  next: () => {
+                    this.openDelToast("Le Role a été supprimé avec succès");
+                    this.Roles = this.Roles.filter(line => line.id !== id);
+                    if (this.Roles.length === 0) {
+                      this.currentPage = this.currentPage -1
+                      if (this.currentPage < 0) {
+                        this.currentPage = 0;
+                      }
+                      this.getRoles(this.currentPage, this.pageSize);
+                    }
+                  },
+                  error: (error) => {
+                    const errorMessage = `Failed to delete Role : ${error.status}`;
+                    this.openfailToast(errorMessage)
+                  }
+                });
+              }
+            });
+          } else {
+            const errorMessage = `Failed to delete Role : ${error.status}`;
+            this.openfailToast(errorMessage)
+          }
+        }
+      });
+    }
+  });
+}
+
+openDelToast(message: string) {
+  this.snackbar.openFromComponent(SuccessToastComponent, {
+    data: { message: message },
+    duration: 5000,
+    horizontalPosition: "end",
+    verticalPosition: "top",
+    panelClass: ['snack-green', 'snack-size', 'snack-position']
+  })
+}
+openfailToast(message: string): void {
+  this.snackbar.openFromComponent(FailedToastComponent, {
+    data: { message: message }, duration: 5000,
+    horizontalPosition: "end",
+    verticalPosition: "bottom",
+    panelClass: ['snack-red', 'snack-size']
+  });
+}
+
  onPageChange(page :number){
   this.currentPage = page ;
   this.getRoles(this.currentPage-1,this.pageSize);

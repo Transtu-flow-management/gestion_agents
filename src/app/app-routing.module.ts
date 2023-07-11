@@ -7,7 +7,6 @@ import { AgetsComponent } from './Core/Pages/agets/agets.component';
 import { RolesComponent } from './Core/Pages/roles/roles.component';
 import { PermissionsComponent } from './Core/Pages/permissions/permissions.component';
 import { EntropotComponent } from './Core/Pages/entropot/entropot.component';
-import { ReseauComponent } from './Core/Pages/reseau/reseau.component';
 import { AddDepoComponent } from './Dialogs/add-depo/add-depo.component';
 import { AddBrandComponent } from './Dialogs/add-brand/add-brand.component';
 import { BrandsComponent } from './Core/Pages/brands/brands.component';
@@ -16,6 +15,11 @@ import { ConditionsComponent } from './Core/Pages/conditions/conditions.componen
 import { TestComponent } from './Core/Pages/test/test.component';
 import { NotfoundComponent } from './Core/Pages/errors/notfound/notfound.component';
 import { LinesComponent } from './Core/Pages/lines/lines.component';
+import { AddConditionComponent } from './Dialogs/add-condition/add-condition.component';
+import { RoleModalComponent } from './Dialogs/role-modal/role-modal.component';
+import { UpdateroleComponent } from './Dialogs/updaterole/updaterole.component';
+import { PathsComponent } from './Core/Pages/paths/paths.component';
+import { AddPathComponent } from './Core/navigations/add-path/add-path.component';
 
 const approute: Routes = [
   {path:'',redirectTo:'home',pathMatch:'full'},
@@ -29,8 +33,10 @@ const approute: Routes = [
   {path:'conductors',component:ConductorsComponent},
   {path:'brands',component:BrandsComponent},
   {path:'conditions',component:ConditionsComponent},
-  {path:'test',component:TestComponent},
+  {path:'add',component:TestComponent},
   {path:'lines',component:LinesComponent},
+  {path:'paths',component:PathsComponent},
+  {path:'addpath',component:AddPathComponent},
   {path:'**',component:NotfoundComponent},
 ]
 @NgModule({

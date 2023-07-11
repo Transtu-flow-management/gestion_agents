@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Observable } from 'rxjs';
 import {map, startWith} from 'rxjs/operators';
@@ -30,7 +30,7 @@ export class AddBrandComponent implements OnInit{
   isFormSubmitted = false;
   showdialg: boolean = true;
   
-  constructor(private dialog :MatDialog,private fb:FormBuilder,private snackBar:MatSnackBar,private router:Router ,private _brandservice :BrandService){
+  constructor(private dialog :MatDialogRef<AddBrandComponent>,private fb:FormBuilder,private snackBar:MatSnackBar,private router:Router ,private _brandservice :BrandService){
      this.addForm = this.fb.group({
       name: new FormControl('', [Validators.required, Validators.minLength(6)]),
       builder:  new FormControl(this.fabriquant, [Validators.required])
@@ -60,7 +60,7 @@ export class AddBrandComponent implements OnInit{
 
   close()
   {
-     this.dialog.closeAll()
+     this.dialog.close()
    }
   dismissdialog(){
     this.showdialg = false;    
@@ -94,8 +94,7 @@ add(): void {
     console.log(formValue);
     this._brandservice.createBrand(formValue).subscribe(() => {
       this.openAddToast('Marque ajoutée avec succès');
-     
-      this.router.navigate(['/brands']);
+     this.dialog.close(formValue);
     }, (error) => {
       this.openfailToast('Erreur lors de l\'ajout d\'une Marque');
       console.log(error);

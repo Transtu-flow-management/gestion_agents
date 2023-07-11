@@ -1,15 +1,17 @@
 export interface Role{
-    id:Number;
-    roleName: String;
+    id:number;
+    roleName: string;
     dateOfCreation : Date;
     dateOfModification :Date;
-    permissions:String[];
+    containsPermissions: boolean;
+    permissions:IPermissions[];
    
 }
 
 export interface IPermissions {
-    permissionName : String;
+    permissionName : string;
+    group :string;
     selected: boolean;
-    TYPE: String;
+    TYPE: string;
 }
 

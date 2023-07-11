@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { AddRoleComponent } from './add-role.component';
+import { PathsComponent } from './paths.component';
 
-describe('AddRoleComponent', () => {
-  let component: AddRoleComponent;
-  let fixture: ComponentFixture<AddRoleComponent>;
+describe('PathsComponent', () => {
+  let component: PathsComponent;
+  let fixture: ComponentFixture<PathsComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ AddRoleComponent ]
+      declarations: [ PathsComponent ]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(AddRoleComponent);
+    fixture = TestBed.createComponent(PathsComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
