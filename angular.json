@@ -27,11 +27,12 @@
             "styles": [
               "@angular/material/prebuilt-themes/deeppurple-amber.css",
               "./node_modules/leaflet/dist/leaflet.css",
+              "src/assets/geocoder.css",
               "src/styles.css"
             ],
             "scripts": [
-              "node_modules/jquery/dist/jquery.min.js"
-                          
+              "node_modules/jquery/dist/jquery.min.js",
+              "node_modules/leaflet-routing-machine/dist/leaflet-routing-machine.js"             
             ]
           },
           "configurations": {
