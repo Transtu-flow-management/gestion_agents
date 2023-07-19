@@ -3,9 +3,12 @@ import { Lines } from "./Lines";
 export interface Path{
     id:string;
     line:Lines;
-    nameFr:string;
-    nameAr:string;
+    startFr:string;
+    startAr:string;
+    endFr:string;
+    endAr:string;
     type:number;
+    data:string;
     dateOfInsertion:Date;
     dateOfModification:Date;
 

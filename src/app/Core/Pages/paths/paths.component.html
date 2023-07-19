@@ -19,15 +19,15 @@
          
           <button (click)="openAddPathDialog()"
             class="bg-[#F8AF26] px-3 py-2 text-sm shadow-sm font-medium tracking-wider text-black-100 rounded-full hover:shadow-2xl hover:bg-amber-700"><span class="flex items-center font-medium"> <mat-icon>add</mat-icon>Ajouter
-              un Conduteur</span></button>
+              un traget</span></button>
         </div>
       </div>
       <table  class="min-w-full border-collapse bg-white text-center text-  text-red-900">
         <thead class="bg-[#DDDDDD] ">
           <tr>
             <th scope="col" class=" font-medium text-gray-900">Ligne</th>
-            <th scope="col" class="  font-medium text-gray-900">nom FR</th>
-            <th scope="col" class="  font-medium text-gray-900">Nom AR</th>
+            <th scope="col" class="  font-medium text-gray-900">nom de traget FR</th>
+            <th scope="col" class="  font-medium text-gray-900">nom de traget AR</th>
             <th scope="col" class=" font-medium text-gray-900">Type</th>
             <th scope="col" class=" font-medium text-gray-900">Date insertion</th>
             <th scope="col" class=" font-medium text-gray-900">Date de modification</th>
@@ -43,18 +43,18 @@
             </td>
           <td class="px-2 ">
             <span class="font-medium text-gray-700">
-              {{path.nameFr}}
+              {{path.startFr}} vers {{path.endFr}}
             </span>
           </td>
           <td class=" px-2">
             <span class="font-medium text-gray-700">
-              {{path.nameAr}}
+              {{path.startAr}} إلى {{path.endAr}}
             </span>
           </td>
          
             <td class=" px-2">
               <span class="font-medium text-gray-700">
-                {{path.type}}
+                {{ path.type === 0 ? 'Start to end' : 'End to start' }}
               </span>
             </td>
            

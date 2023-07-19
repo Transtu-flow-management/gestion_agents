@@ -1,17 +1,22 @@
-import { Component, ElementRef, AfterViewInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Component, ElementRef, AfterViewInit, OnInit } from '@angular/core';
 import { MatSnackBar, MatSnackBarHorizontalPosition, MatSnackBarVerticalPosition } from '@angular/material/snack-bar';
-import { Path } from '../../interfaces/Path';
 import { AbstractControl, FormBuilder, FormControl, FormGroup, ValidationErrors, Validators } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { PathService } from '../../Services/path.service';
 import { SuccessToastComponent } from 'src/app/alerts/success-toast/success-toast.component';
-import { WarningToastComponent } from 'src/app/alerts/warning-toast/warning-toast.component';
 import { FailedToastComponent } from 'src/app/alerts/failed-toast/failed-toast.component';
 import * as L from 'leaflet';
 import { Lines } from '../../interfaces/Lines';
 import 'leaflet-routing-machine';
 import "leaflet-control-geocoder/dist/Control.Geocoder.js";
 import { WarningComponent } from 'src/app/alerts/warning/warning.component';
+import { UpdateToastComponent } from 'src/app/alerts/update-toast/update-toast.component';
+import 'leaflet-draw';
+import * as MapboxSdk from '@mapbox/mapbox-sdk/services/directions';
+import 'leaflet-polylineoffset';
+
+const accessToken = 'sk.eyJ1Ijoib3VzczAxYW1hIiwiYSI6ImNsa2FiMjA1NjA2MHczZG8yZHpoenc5MW0ifQ.bjv3uS_nOm21zC0v2dS1MA';
 
 function allowedValues(control: FormControl) {
   const value = control.value;
@@ -22,13 +27,32 @@ function allowedValues(control: FormControl) {
 
   return null;
 }
-@Component({
-  selector: 'app-add-path',
-  templateUrl: './add-path.component.html',
-  styleUrls: ['./add-path.component.css']
 
+@Component({
+  selector: 'app-update-path',
+  templateUrl: './update-path.component.html',
+  styleUrls: ['./update-path.component.css']
 })
-export class AddPathComponent implements AfterViewInit {
+export class UpdatePathComponent implements AfterViewInit {
+  public path: any;
+  constructor(private route: Router, private elementRef: ElementRef,
+    private http: HttpClient,
+    private fb: FormBuilder, private _pathsertvice: PathService,
+    private snackBar: MatSnackBar) {
+    if (this.route.getCurrentNavigation().extras.state) {
+      let path = this.route.getCurrentNavigation().extras.state['pathData'];
+      this.updateForm = this.fb.group({
+        startFr: new FormControl(path.startFr || '', [Validators.required, Validators.minLength(4)]),
+        startAr: new FormControl(path.startAr || '', [Validators.required, Validators.minLength(4)]),
+        endFr: new FormControl(path.endFr || '', [Validators.required, Validators.minLength(4)]),
+        endAr: new FormControl(path.endAr || '', [Validators.required, Validators.minLength(4)]),
+        type: new FormControl(path.type || 0, [Validators.required, allowedValues]),
+        data: new FormControl(path.data || '', [Validators.required]),
+        line: new FormControl(path.line.id, [Validators.required]),
+      })
+    }
+  }
+
 
   horizontalPosition: MatSnackBarHorizontalPosition = 'start';
   verticalPosition: MatSnackBarVerticalPosition = 'bottom';
@@ -40,22 +64,11 @@ export class AddPathComponent implements AfterViewInit {
   marker: L.Marker;
   public latt: number;
   public long: number;
-  public data:string;
-  addForm: FormGroup;
+  public data: string;
+  updateForm: FormGroup;
   isFormSubmitted = false;
-  constructor(private elementRef: ElementRef, private http: HttpClient,
-     private fb: FormBuilder, private _pathsertvice: PathService,
-      private snackBar: MatSnackBar) {
-    this.addForm = this.fb.group({
-      startFr: new FormControl('', [Validators.required, Validators.minLength(4)]),
-      startAr: new FormControl('', [Validators.required, Validators.minLength(4)]),
-      endFr: new FormControl('', [Validators.required, Validators.minLength(4)]),
-      endAr: new FormControl('', [Validators.required, Validators.minLength(4)]),
-      type: new FormControl('', [Validators.required, allowedValues]),
-      data:new FormControl('', [Validators.required]),
-      line:new FormControl('', [Validators.required]),
-    })
-  }
+  drawControl: any;
+  drawnFeatures: L.FeatureGroup;
 
   capaciteValidator(control: AbstractControl): ValidationErrors | null {
     const value = control.value;
@@ -73,25 +86,29 @@ export class AddPathComponent implements AfterViewInit {
   }
 
 
-  addpath(): void {
+
+  update(): void {
     this.isFormSubmitted = true;
-  
-    const formvalue = this.addForm.value;
-    
-    
-    if (this.addForm.invalid) {
-      
+
+    const formvalue = this.updateForm.getRawValue();
+    const selectedLineId = formvalue.line;
+    const selectedLine = this.lines.find(line => line.id === selectedLineId);
+    formvalue.line = selectedLine;
+
+
+    if (this.updateForm.invalid) {
       console.log(formvalue);
       this.openWarningToast("Form invalide ou incomplet!");
     } else {
       const selectedLineId = formvalue.line;
-    const selectedLine = this.lines.find(line => line.id === selectedLineId);  
+      const selectedLine = this.lines.find(line => line.id === selectedLineId);
       formvalue.line = selectedLine;
-      this._pathsertvice.addpath(formvalue).subscribe(
+
+      this._pathsertvice.updatepaths(formvalue, this.path.id).subscribe(
         () => {
-        
+
           console.log(formvalue);
-          this.openAddToast('Traget ajouté avec succès');
+          this.openAddToast('Traget modifié avec succès');
         },
         (error) => {
           const errormessage = `Erreur lors de l'ajout d'un traget : ${error.status}`;
@@ -100,12 +117,12 @@ export class AddPathComponent implements AfterViewInit {
         }
       );
     }
-  }  
-  
-  
-  
+  }
+
+
+
   openAddToast(message: string) {
-    this.snackBar.openFromComponent(SuccessToastComponent, {
+    this.snackBar.openFromComponent(UpdateToastComponent, {
       data: { message: message },
       duration: 5000,
       horizontalPosition: "end",
@@ -131,38 +148,57 @@ export class AddPathComponent implements AfterViewInit {
       panelClass: ['snack-red', 'snack-size']
     });
   }
- 
+
   createMap(): void {
+
     const centralLocation = {
       lat: 36.8392,
       lng: 10.1577
     };
+
 
     const zoomLevel = 12;
 
     this.map = L.map(this.elementRef.nativeElement.querySelector('#map'), {
       center: [centralLocation.lat, centralLocation.lng],
       zoom: zoomLevel,
-      minZoom:8,
+      minZoom: 8,
 
     });
+    this.drawnFeatures = new L.FeatureGroup().addTo(this.map);
+    this.drawControl = new (L.Control as any).Draw({
+      edit: {
+        featureGroup: this.drawnFeatures,
+        remove: false
+      },
+      draw: {
+        polygon: false,
+        marker: false,
+        circlemarker: false,
+        circle: false,
+        rectangle: false
+      }
+    });
+
+    this.map.addControl(this.drawControl);
+
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution: '&copy; OpenStreetMap contributors'
     }).addTo(this.map);
 
     var googleSat = L.tileLayer('http://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
-     
+
       maxZoom: 14,
       subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
     });
     var googleStreets = L.tileLayer('http://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}', {
-      
+
       maxZoom: 14,
       subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
     });
 
     var mainLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      
+
       maxZoom: 14,
       attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
     });
@@ -203,7 +239,7 @@ export class AddPathComponent implements AfterViewInit {
   }
   getAddressFromCoordinates(lat: number, lng: number): Promise<{ lat: number, lng: number }> {
     const url = `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lng}`;
-  
+
     return this.http.get(url)
       .toPromise()
       .then((response: any) => {
@@ -223,9 +259,11 @@ export class AddPathComponent implements AfterViewInit {
     let endMarker: L.Marker;
     let routingPlan: L.Routing.Plan;
     let routingControl: L.Routing.Control;
-    let savedData: L.LayerGroup = L.layerGroup(); 
-    let loadedData: L.LayerGroup = L.layerGroup(); 
+    let savedData: L.LayerGroup = L.layerGroup();
+    let loadedData: L.LayerGroup = L.layerGroup();
     let geoJSONLayer: L.GeoJSON;
+    let routingPolyline: L.Polyline = null;
+
     const clearMarkersAndRouting = (): void => {
 
       if (routingControl) {
@@ -254,128 +292,122 @@ export class AddPathComponent implements AfterViewInit {
         this.map.removeLayer(geoJSONLayer);
         geoJSONLayer = null;
       }
-   
-    };
-    this.addForm.get('startFr').valueChanges.subscribe(()=>{
-      updateRouting();
-    });
-    this.addForm.get('startAr').valueChanges.subscribe(()=>{
-      updateRouting();
-    });
-    this.addForm.get('endFr').valueChanges.subscribe(()=>{
-      updateRouting();
-    });
-    this.addForm.get('endAr').valueChanges.subscribe(()=>{
-      updateRouting();
-    });
-    const updateRouting = (): void => {
-        if (startMarker && endMarker) {
-          const popupTextS = `Location FR: ${this.addForm.get('startFr').value} <br> Location AR:${this.addForm.get('startAr').value}`;
-          const popupTextE = `Location FR: ${this.addForm.get('endFr').value} <br> Location AR:${this.addForm.get('endAr').value}`;
-         
-
-        routingPlan = new L.Routing.Plan([startMarker.getLatLng(), endMarker.getLatLng()], {
-
-          createMarker: (i, waypoints, n) => {
-            if (i === 0) {
-             startMarker = L.marker(waypoints.latLng, { icon: this.smallIcon, draggable: true }).bindPopup(popupTextS).openPopup() 
-          
-            savedData.addLayer(startMarker)
-            return startMarker;
-              
-            } else if (i === n - 1) {
-               endMarker= L.marker(waypoints.latLng, { icon: this.redicon, draggable: true }).bindPopup(popupTextE).openPopup()  
-            
-              savedData.addLayer(endMarker);
-              return endMarker;
-            }
-            return null;
-          },
-        });
-        routingPlan.addTo(this.map);
-
-        routingControl = L.Routing.control({
-          plan: routingPlan,
-          lineOptions: {
-            styles: [{ color: 'blue', opacity: 0.6, weight: 9 },
-            { color: 'white', opacity: 0.6, weight: 6 },
-            ],
-            extendToWaypoints: false,
-            missingRouteTolerance: 0,
-          },
-          
-        });
-        routingControl.addTo(this.map);
+      if (routingPolyline) {
+        this.map.removeLayer(routingPolyline);
       }
-      
+
     };
- 
+    this.updateForm.get('startFr').valueChanges.subscribe(() => {
+      updateRouting();
+    });
+    this.updateForm.get('startAr').valueChanges.subscribe(() => {
+      updateRouting();
+    });
+    this.updateForm.get('endFr').valueChanges.subscribe(() => {
+      updateRouting();
+    });
+    this.updateForm.get('endAr').valueChanges.subscribe(() => {
+      updateRouting();
+    });
+    const directionsService = MapboxSdk.Directions({
+      accessToken: accessToken,
+    });
+    const updateRouting = async (): Promise<void> => {
+      if (startMarker && endMarker) {
+        // Get the coordinates of the start and end markers
+        const startLatLng = startMarker.getLatLng();
+        const endLatLng = endMarker.getLatLng();
+    
+        // Request the routing data from Mapbox Directions API
+        const routingData = await directionsService.getRoute({
+          waypoints: [
+            { coordinates: [startLatLng.lng, startLatLng.lat] },
+            { coordinates: [endLatLng.lng, endLatLng.lat] },
+          ],
+          profile: 'mapbox/driving', // Replace with the appropriate profile (e.g., 'mapbox/walking', 'mapbox/cycling', etc.)
+        }).send();
+    
+        // Get the routing points from the response
+        const routingPoints = routingData.body.routes[0].geometry.coordinates.map((point) => L.latLng(point[1], point[0]));
+    
+        // Remove the old routing polyline if it exists
+        if (routingPolyline) {
+          this.map.removeLayer(routingPolyline);
+        }
+    
+        // Draw the new routing polyline
+        routingPolyline = L.polyline(routingPoints, { color: 'red' }).addTo(this.map);
+      }
+    };
+
     this.map.on('click', (event: L.LeafletMouseEvent) => {
       const { lat, lng } = event.latlng;
-
+    
       if (!startMarker) {
-        startMarker = L.marker([lat, lng], { icon: this.smallIcon, draggable: true })    
+        startMarker = L.marker([lat, lng]).addTo(this.map);
       } else if (!endMarker) {
-        endMarker = L.marker([lat, lng], { icon: this.redicon, draggable: true })
-      
-       
+        endMarker = L.marker([lat, lng]).addTo(this.map);
+    
+        // Get the route between startMarker and endMarker using Mapbox Directions API
+        const accessToken = 'sk.eyJ1Ijoib3VzczAxYW1hIiwiYSI6ImNsa2FiMjA1NjA2MHczZG8yZHpoenc5MW0ifQ.bjv3uS_nOm21zC0v2dS1MA';
+        const profile = 'mapbox/driving'; // You can change the profile based on your requirements (e.g., mapbox/walking, mapbox/cycling, etc.)
+        const serviceUrl = 'https://api.mapbox.com/directions/v5';
+        const waypoints = `${startMarker.getLatLng().lng},${startMarker.getLatLng().lat};${endMarker.getLatLng().lng},${endMarker.getLatLng().lat}`;
+        const url = `${serviceUrl}/${profile}/${waypoints}?access_token=${accessToken}`;
+    
+        this.http.get(url).subscribe(
+          (response: any) => {
+            if (response.routes && response.routes.length > 0) {
+              const route = response.routes[0].geometry;
+              const routePolyline = L.polyline((L.Polyline as any).fromEncoded(route), { color: 'blue' }).addTo(this.map);
+              this.map.fitBounds(routePolyline.getBounds());
+            }
+          },
+          (error) => {
+            console.error('Error fetching route:', error);
+          }
+        );
       } else {
         return null;
       }
-
-      updateRouting();
+    
       let geoJSON = savedData.toGeoJSON();
       let data = JSON.stringify(geoJSON);
-      this.addForm.get('data').setValue(data);
-    });  
-
+      this.updateForm.get('data').setValue(data);
+    });
     this.map.on('contextmenu', () => {
       clearMarkersAndRouting();
-      
+
     });
 
-    const saveButton = L.Control.extend({
+
+
+
+    const loadbutton = L.Control.extend({
       options: {
         position: 'topleft',
       },
-  
       onAdd: (map: L.Map) => {
-        const button = L.DomUtil.create('button', 'save-button');
-        button.innerHTML = 'Save';
-       
-        button.addEventListener('click', () => {
-          const geoJSON = savedData.toGeoJSON(); // Convert layer group to GeoJSON
-          const data = JSON.stringify(geoJSON);
-          // You can now use the 'data' variable to save the GeoJSON data as desired
-          console.log(data);
-        });
-  
-        return button;
-      },
-    });
-    
-   
-    this.map.addControl(new saveButton());
-    const geojson = '{"type":"FeatureCollection","features":[{"type":"Feature","properties":{},"geometry":{"type":"Point","coordinates":[10.183166,36.856274]}},{"type":"Feature","properties":{},"geometry":{"type":"Point","coordinates":[10.168749,36.831821]}}]}';
-  
-    const loadbutton = L.Control.extend({
-      options:{
-        position :'topleft',
-      },
-      onAdd:(map :L.Map) =>{
         const buttonl = L.DomUtil.create('button', 'load-button');
-        buttonl.innerHTML = 'Load';        
-        buttonl.addEventListener('click',()=>{
-           geoJSONLayer = L.geoJSON(JSON.parse(geojson)).addTo(map);
-          map.fitBounds(geoJSONLayer.getBounds());
+        buttonl.innerHTML = 'Load';
+        buttonl.addEventListener('click', () => {
+          clearMarkersAndRouting();
+          const geoJSONString = this.updateForm.get('data').value;
+          const geoJSON = JSON.parse(geoJSONString);
+          const features = geoJSON.features;
+          const startCoordinates = features[0].geometry.coordinates;
+          const endCoordinates = features[features.length - 1].geometry.coordinates;
+          startMarker = L.marker([startCoordinates[1], startCoordinates[0]]);
+          endMarker = L.marker([endCoordinates[1], endCoordinates[0]]);
+          updateRouting();
+
         });
-      
-return buttonl;
+        return buttonl;
       }
     });
-    this.map.addControl(new loadbutton);   
+    this.map.addControl(new loadbutton);
 
-    
+
   }
 
   getLineNames(): void {

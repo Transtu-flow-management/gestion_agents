@@ -9,7 +9,7 @@ import { FormControl } from '@angular/forms';
 import { PathService } from '../../Services/path.service';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Router } from '@angular/router';
+import { NavigationExtras, Router } from '@angular/router';
 
 @Component({
   selector: 'app-paths',
@@ -60,14 +60,13 @@ export class PathsComponent {
   openAddPathDialog() {
    this.router.navigate(['addpath'])
   }
-  openEditpathDialog(line: Path) { 
-    let dialogref = this.dialog.open(UpdateLineComponent,{
-      height:'90%',
-      width:'50%',
-      enterAnimationDuration:'1000ms',
-      exitAnimationDuration:'200ms',
-      data :{ line:line},
-    });
+  openEditpathDialog(path: Path) { 
+    const navigationExtras: NavigationExtras = {
+      state: {
+        pathData: path // 'line' is the data you want to send to the update page
+      }
+    };
+    this.router.navigate(['updatepath'],navigationExtras);
   }
   openDelToast(message: string) {
     this.snackBar.openFromComponent(SuccessToastComponent, {

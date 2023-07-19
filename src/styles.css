@@ -2,7 +2,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
+@import "src/assets/leafletdraw.css";
 
 /* ------------------------------------------------------------------------- */
 /*  Snackbar
@@ -48,16 +48,17 @@
   }
 
   .leaflet-control-geocoder-icon {
-    border-radius: 4px  !important;
-    width: 26px  !important;
-    height: 26px  !important;
-    border: none  !important;
-    background-color: white  !important;
+    border-radius: 4px  ;
+    width: 26px ;
+    height: 26px  ;
+    border: none  ;
+    background-color: white  ;
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12.2 13l3.4 6.6c.6 1.1 2.5-.4 2-1.2l-4-6.2z'/%3E%3Ccircle cx='10.8' cy='8.9' r='3.9' fill='none' stroke='%23000' stroke-width='1.5'/%3E%3C/svg%3E");
-    background-repeat: no-repeat  !important;
-    background-position: center  !important;
-    cursor: pointer  !important;
+    background-repeat: no-repeat ;
+    background-position: center ;
+    cursor: pointer  ;
   }
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+

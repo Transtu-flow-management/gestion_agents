@@ -20,6 +20,7 @@ import { RoleModalComponent } from './Dialogs/role-modal/role-modal.component';
 import { UpdateroleComponent } from './Dialogs/updaterole/updaterole.component';
 import { PathsComponent } from './Core/Pages/paths/paths.component';
 import { AddPathComponent } from './Core/navigations/add-path/add-path.component';
+import { UpdatePathComponent } from './Core/navigations/update-path/update-path.component';
 
 const approute: Routes = [
   {path:'',redirectTo:'home',pathMatch:'full'},
@@ -37,6 +38,7 @@ const approute: Routes = [
   {path:'lines',component:LinesComponent},
   {path:'paths',component:PathsComponent},
   {path:'addpath',component:AddPathComponent},
+  {path:'updatepath',component:UpdatePathComponent},
   {path:'**',component:NotfoundComponent},
 ]
 @NgModule({

@@ -28,7 +28,9 @@
               "@angular/material/prebuilt-themes/deeppurple-amber.css",
               "./node_modules/leaflet/dist/leaflet.css",
               "src/assets/geocoder.css",
-              "src/styles.css"
+              "src/styles.css",
+              "src/assets/leafletdraw.css"
+
             ],
             "scripts": [
               "node_modules/jquery/dist/jquery.min.js",

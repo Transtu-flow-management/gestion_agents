@@ -2,7 +2,7 @@
 @import "src/assets/geocoder.css";
 .map-container {
     position: relative;
-    height: 850px;
+    height: 550px;
     width: 90%;
  
     margin-top: 2rem;
@@ -24,4 +24,16 @@
   }
 
 
+  .load-button {
+  background-color: #007bff !important;
+  color: #fff !important;
+  padding: 10px 20px !important;
+  border: none !important;
+  border-radius: 4px !important;
+  cursor: pointer !important;
+}
+
+.load-button:hover {
+  background-color: #0056b3 !important;
+}
 

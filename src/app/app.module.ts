@@ -68,6 +68,7 @@ import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 import { WarningComponent } from './alerts/warning/warning.component';
 import { PathsComponent } from './Core/Pages/paths/paths.component';
 import { AddPathComponent } from './Core/navigations/add-path/add-path.component';
+import { UpdatePathComponent } from './Core/navigations/update-path/update-path.component';
 export const API_URL = new InjectionToken<String>('API_URL');
 
 @NgModule({
@@ -113,6 +114,7 @@ export const API_URL = new InjectionToken<String>('API_URL');
     WarningComponent,
     PathsComponent,
     AddPathComponent,
+    UpdatePathComponent,
   ],
   imports: [
     MatRadioModule,

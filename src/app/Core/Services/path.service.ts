@@ -32,7 +32,7 @@ export class PathService {
     return this.http.post<Path>(aurl,paths);
 
   }
-  public updatepaths(id:string,paths:Path):Observable<Path>{
+  public updatepaths(paths:Path,id:string):Observable<Path>{
     const updurl = this.gs.uri +this.url +`/update/${id}`;
     return this.http.put<Path>(updurl,paths);
   }

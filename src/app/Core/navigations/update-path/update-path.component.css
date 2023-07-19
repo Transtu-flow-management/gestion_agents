@@ -1,0 +1,26 @@
+
+.map-container {
+    position: relative;
+    height: 550px;
+    width: 90%;
+ 
+    margin-top: 2rem;
+    background-color: aqua;
+
+    margin: 1rem auto;
+  }
+  
+  .map-frame {
+    position: relative;
+    border: 2px solid rgb(71, 209, 78);
+    height: 100%;
+    width: 100%;
+
+  }
+  
+  #map {
+    height: 100%;
+  }
+
+
+
