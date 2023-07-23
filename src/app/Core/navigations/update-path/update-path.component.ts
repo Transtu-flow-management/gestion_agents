@@ -13,10 +13,10 @@ import "leaflet-control-geocoder/dist/Control.Geocoder.js";
 import { WarningComponent } from 'src/app/alerts/warning/warning.component';
 import { UpdateToastComponent } from 'src/app/alerts/update-toast/update-toast.component';
 import 'leaflet-draw';
-import * as MapboxSdk from '@mapbox/mapbox-sdk/services/directions';
-import 'leaflet-polylineoffset';
+import { event } from 'jquery';
+import { style } from '@angular/animations';
+import { Path } from '../../interfaces/Path';
 
-const accessToken = 'sk.eyJ1Ijoib3VzczAxYW1hIiwiYSI6ImNsa2FiMjA1NjA2MHczZG8yZHpoenc5MW0ifQ.bjv3uS_nOm21zC0v2dS1MA';
 
 function allowedValues(control: FormControl) {
   const value = control.value;
@@ -40,16 +40,20 @@ export class UpdatePathComponent implements AfterViewInit {
     private fb: FormBuilder, private _pathsertvice: PathService,
     private snackBar: MatSnackBar) {
     if (this.route.getCurrentNavigation().extras.state) {
-      let path = this.route.getCurrentNavigation().extras.state['pathData'];
-      this.updateForm = this.fb.group({
-        startFr: new FormControl(path.startFr || '', [Validators.required, Validators.minLength(4)]),
-        startAr: new FormControl(path.startAr || '', [Validators.required, Validators.minLength(4)]),
-        endFr: new FormControl(path.endFr || '', [Validators.required, Validators.minLength(4)]),
-        endAr: new FormControl(path.endAr || '', [Validators.required, Validators.minLength(4)]),
-        type: new FormControl(path.type || 0, [Validators.required, allowedValues]),
-        data: new FormControl(path.data || '', [Validators.required]),
-        line: new FormControl(path.line.id, [Validators.required]),
-      })
+      let pathData = this.route.getCurrentNavigation().extras.state['pathData'];
+      if (pathData) {
+        this.path = pathData;
+
+        this.updateForm = this.fb.group({
+          startFr: new FormControl(pathData.startFr || '', [Validators.required, Validators.minLength(4)]),
+          startAr: new FormControl(pathData.startAr || '', [Validators.required, Validators.minLength(4)]),
+          endFr: new FormControl(pathData.endFr || '', [Validators.required, Validators.minLength(4)]),
+          endAr: new FormControl(pathData.endAr || '', [Validators.required, Validators.minLength(4)]),
+          type: new FormControl(pathData.type || 0, [Validators.required, allowedValues]),
+          data: new FormControl(pathData.data || '', [Validators.required]),
+          line: new FormControl(pathData.line.id, [Validators.required]),
+        })
+      }
     }
   }
 
@@ -67,8 +71,7 @@ export class UpdatePathComponent implements AfterViewInit {
   public data: string;
   updateForm: FormGroup;
   isFormSubmitted = false;
-  drawControl: any;
-  drawnFeatures: L.FeatureGroup;
+
 
   capaciteValidator(control: AbstractControl): ValidationErrors | null {
     const value = control.value;
@@ -150,12 +153,10 @@ export class UpdatePathComponent implements AfterViewInit {
   }
 
   createMap(): void {
-
     const centralLocation = {
       lat: 36.8392,
       lng: 10.1577
     };
-
 
     const zoomLevel = 12;
 
@@ -165,26 +166,8 @@ export class UpdatePathComponent implements AfterViewInit {
       minZoom: 8,
 
     });
-    this.drawnFeatures = new L.FeatureGroup().addTo(this.map);
-    this.drawControl = new (L.Control as any).Draw({
-      edit: {
-        featureGroup: this.drawnFeatures,
-        remove: false
-      },
-      draw: {
-        polygon: false,
-        marker: false,
-        circlemarker: false,
-        circle: false,
-        rectangle: false
-      }
-    });
 
-    this.map.addControl(this.drawControl);
 
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '&copy; OpenStreetMap contributors'
-    }).addTo(this.map);
 
     var googleSat = L.tileLayer('http://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
 
@@ -200,7 +183,7 @@ export class UpdatePathComponent implements AfterViewInit {
     var mainLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 
       maxZoom: 14,
-      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors <span>Oussama Omrani</span>'
     });
 
     mainLayer.addTo(this.map);
@@ -257,12 +240,17 @@ export class UpdatePathComponent implements AfterViewInit {
   enableClickToAddMarker(): void {
     let startMarker: L.Marker;
     let endMarker: L.Marker;
+    let startMarkerdraw: L.Marker;
+    let endMarkerdraw: L.Marker;
     let routingPlan: L.Routing.Plan;
     let routingControl: L.Routing.Control;
     let savedData: L.LayerGroup = L.layerGroup();
     let loadedData: L.LayerGroup = L.layerGroup();
-    let geoJSONLayer: L.GeoJSON;
-    let routingPolyline: L.Polyline = null;
+    let isDrawing: boolean;
+    let lineExists : boolean;
+    let drawnPolylines: L.Polyline[] = [];
+    let drawControl: any;
+    let drawnFeatures: L.FeatureGroup;
 
     const clearMarkersAndRouting = (): void => {
 
@@ -287,100 +275,232 @@ export class UpdatePathComponent implements AfterViewInit {
         this.map.removeLayer(endMarker);
         endMarker = null;
       }
-      if (geoJSONLayer) {
-        loadedData.removeLayer(geoJSONLayer);
-        this.map.removeLayer(geoJSONLayer);
-        geoJSONLayer = null;
-      }
-      if (routingPolyline) {
-        this.map.removeLayer(routingPolyline);
+      if (startMarkerdraw) {
+        savedData.removeLayer(startMarkerdraw);
+        this.map.removeLayer(startMarkerdraw);
+        startMarkerdraw = null;
       }
 
+      if (endMarkerdraw) {
+        savedData.removeLayer(endMarkerdraw);
+        this.map.removeLayer(endMarkerdraw);
+        endMarkerdraw = null;
+      }
+
+      if (drawnFeatures) {
+        savedData.removeLayer(drawnFeatures);
+        drawnFeatures.clearLayers();
+      }
+
+
     };
-    this.updateForm.get('startFr').valueChanges.subscribe(() => {
-      updateRouting();
-    });
-    this.updateForm.get('startAr').valueChanges.subscribe(() => {
-      updateRouting();
-    });
-    this.updateForm.get('endFr').valueChanges.subscribe(() => {
-      updateRouting();
-    });
-    this.updateForm.get('endAr').valueChanges.subscribe(() => {
-      updateRouting();
-    });
-    const directionsService = MapboxSdk.Directions({
-      accessToken: accessToken,
-    });
-    const updateRouting = async (): Promise<void> => {
+
+
+    const updateRouting = (): void => {
       if (startMarker && endMarker) {
-        // Get the coordinates of the start and end markers
-        const startLatLng = startMarker.getLatLng();
-        const endLatLng = endMarker.getLatLng();
-    
-        // Request the routing data from Mapbox Directions API
-        const routingData = await directionsService.getRoute({
-          waypoints: [
-            { coordinates: [startLatLng.lng, startLatLng.lat] },
-            { coordinates: [endLatLng.lng, endLatLng.lat] },
-          ],
-          profile: 'mapbox/driving', // Replace with the appropriate profile (e.g., 'mapbox/walking', 'mapbox/cycling', etc.)
-        }).send();
-    
-        // Get the routing points from the response
-        const routingPoints = routingData.body.routes[0].geometry.coordinates.map((point) => L.latLng(point[1], point[0]));
-    
-        // Remove the old routing polyline if it exists
-        if (routingPolyline) {
-          this.map.removeLayer(routingPolyline);
-        }
-    
-        // Draw the new routing polyline
-        routingPolyline = L.polyline(routingPoints, { color: 'red' }).addTo(this.map);
+        routingPlan = new L.Routing.Plan([startMarker.getLatLng(), endMarker.getLatLng()], {
+
+          createMarker: (i, waypoints, n) => {
+            if (i === 0) {
+              console.log(waypoints.latLng);
+              startMarker = L.marker(waypoints.latLng, { icon: this.smallIcon, draggable: true }).on('dragend', onDragEndStart).bindPopup('popupTextS').openPopup()
+              savedData.addLayer(startMarker)
+              return startMarker;
+            } else if (i === n - 1) {
+              endMarker = L.marker(waypoints.latLng, { icon: this.redicon, draggable: true }).on('dragend', onDragEndEnd).bindPopup('popupTextE').openPopup()
+              savedData.addLayer(endMarker)
+              return endMarker;
+            }
+            return null;
+          },
+        });
+
+        routingPlan.addTo(this.map);
+
+        routingControl = L.Routing.control({
+          //router:(L.Routing as any).mapbox('pk.eyJ1Ijoib3VzczAxYW1hIiwiYSI6ImNsa2FheW41MzA1Z3ozZG13dGpiZjl4d2YifQ.zBUhApqgliMB7y1zR3ODWw'),
+          plan: routingPlan,
+          lineOptions: {
+            styles: [{ color: 'blue', opacity: 0.6, weight: 9 },
+            { color: 'white', opacity: 0.6, weight: 6 },
+            ],
+            extendToWaypoints: false,
+            missingRouteTolerance: 0,
+          },
+          addWaypoints: false,
+        });
+        routingControl.addTo(this.map);
+
       }
     };
 
+    const onDragEndStart = (event: L.LeafletEvent): void => {
+      const latlng = (event.target as L.Marker).getLatLng();
+      startMarker.setLatLng(latlng);
+
+    };
+
+    const onDragEndEnd = (event: L.LeafletEvent): void => {
+      const latlng = (event.target as L.Marker).getLatLng();
+      endMarker.setLatLng(latlng);
+
+    };
+
+    if (!drawnFeatures) {
+      drawnFeatures = new L.FeatureGroup().addTo(this.map);
+
+      drawControl = new (L.Control as any).Draw({
+        edit: {
+          featureGroup: drawnFeatures,
+          remove: false
+        },
+        draw: {
+          polyline: {
+            shapeOptions: {
+              color: 'green',
+            },
+          },
+          polygon: false,
+          marker: false,
+          circlemarker: false,
+          circle: false,
+          rectangle: false,
+
+        }
+
+      });
+
+      this.map.addControl(drawControl);
+
+    };
+    
+
+    this.map.on('draw:created', (event: L.LeafletEvent) => {
+      const layer: L.Layer = event.layer;
+      if (lineExists){
+        lineExists =false;
+        return;
+      }
+      if (layer instanceof L.Polyline) {
+        drawnPolylines.push(layer);
+        drawnFeatures.addLayer(layer);
+        savedData.addLayer(drawnFeatures);
+        lineExists= true;
+          // @ts-ignore
+        const latlngs: L.LatLng[] = layer.getLatLngs(); 
+        startMarkerdraw = L.marker(latlngs[0]);
+        startMarkerdraw.setIcon(this.smallIcon)
+    endMarkerdraw = L.marker(latlngs[latlngs.length - 1]);
+    endMarkerdraw.setIcon(this.redicon)
+    startMarkerdraw.addTo(this.map);
+    endMarkerdraw.addTo(this.map);
+        let geoJSON = savedData.toGeoJSON();
+        let data = JSON.stringify(geoJSON);
+        this.updateForm.get('data').setValue(data);
+        console.log(this.updateForm.get('data').value);
+       
+      }
+    });
+    const updateMarkerPositions = (polyline: L.Polyline): void => {
+      // @ts-ignore
+      const latlngs: L.LatLng[] = polyline.getLatLngs();
+    
+      if (latlngs.length >= 2) {
+        startMarkerdraw.setLatLng(latlngs[0]);
+        endMarkerdraw.setLatLng(latlngs[latlngs.length - 1]);
+      }
+    };
+
+    this.map.on('draw:edited', (event: L.LeafletEvent) => {
+      // @ts-ignore
+      const layers: L.Layer[] = (event).layers.getLayers();
+    
+      for (const layer of layers) {
+        if (layer instanceof L.Polyline) {
+          // @ts-ignore
+          const oldLayer = drawnFeatures.getLayer(layer._leaflet_id);
+          if (oldLayer) {
+            drawnFeatures.removeLayer(oldLayer);
+          }
+    
+          savedData.addLayer(layer);
+          drawnFeatures.addLayer(layer);
+          updateMarkerPositions(layer);
+    
+          const geoJSON = savedData.toGeoJSON();
+          const data = JSON.stringify(geoJSON);
+          this.updateForm.get('data').setValue(data);
+          console.log(drawnFeatures.getLayers().length);
+          console.log(this.updateForm.get('data').value);
+        }
+      }
+    });
+    this.map.on('draw:drawvertex', () => {
+      if (!lineExists) {
+        if (startMarker && endMarker) {
+          isDrawing = false;
+        } else {
+          isDrawing = true;
+        }
+      } else {
+        isDrawing = false;
+      }
+      
+    });
     this.map.on('click', (event: L.LeafletMouseEvent) => {
       const { lat, lng } = event.latlng;
-    
+      if (lineExists) {
+        return;
+      }
+
+      if (isDrawing) {
+        isDrawing = false;
+        return;
+      }
+      savedData.clearLayers();
+
       if (!startMarker) {
-        startMarker = L.marker([lat, lng]).addTo(this.map);
+        startMarker = L.marker([lat, lng])
+
       } else if (!endMarker) {
-        endMarker = L.marker([lat, lng]).addTo(this.map);
-    
-        // Get the route between startMarker and endMarker using Mapbox Directions API
-        const accessToken = 'sk.eyJ1Ijoib3VzczAxYW1hIiwiYSI6ImNsa2FiMjA1NjA2MHczZG8yZHpoenc5MW0ifQ.bjv3uS_nOm21zC0v2dS1MA';
-        const profile = 'mapbox/driving'; // You can change the profile based on your requirements (e.g., mapbox/walking, mapbox/cycling, etc.)
-        const serviceUrl = 'https://api.mapbox.com/directions/v5';
-        const waypoints = `${startMarker.getLatLng().lng},${startMarker.getLatLng().lat};${endMarker.getLatLng().lng},${endMarker.getLatLng().lat}`;
-        const url = `${serviceUrl}/${profile}/${waypoints}?access_token=${accessToken}`;
-    
-        this.http.get(url).subscribe(
-          (response: any) => {
-            if (response.routes && response.routes.length > 0) {
-              const route = response.routes[0].geometry;
-              const routePolyline = L.polyline((L.Polyline as any).fromEncoded(route), { color: 'blue' }).addTo(this.map);
-              this.map.fitBounds(routePolyline.getBounds());
-            }
-          },
-          (error) => {
-            console.error('Error fetching route:', error);
-          }
-        );
+        endMarker = L.marker([lat, lng])
+
       } else {
         return null;
       }
-    
+      updategeojson()
+
+
+    });
+  
+    const updategeojson = (): void => {
+      updateRouting();
+      if (startMarker && endMarker){
       let geoJSON = savedData.toGeoJSON();
       let data = JSON.stringify(geoJSON);
       this.updateForm.get('data').setValue(data);
-    });
+      console.log(data);
+      }
+    }
+
+
     this.map.on('contextmenu', () => {
       clearMarkersAndRouting();
+      drawnFeatures.clearLayers();
+      drawnPolylines.forEach((polyline) => this.map.removeLayer(polyline));
+      drawnPolylines = [];
+      lineExists = false;
 
     });
 
 
+    // @ts-ignore
+    const onEachFeature = (feature: L.GeoJSON.Feature, layer: L.Layer): void => {
+      if (drawnFeatures) {
+        drawnFeatures.addLayer(layer);
+      }
+
+    }
 
 
     const loadbutton = L.Control.extend({
@@ -390,23 +510,43 @@ export class UpdatePathComponent implements AfterViewInit {
       onAdd: (map: L.Map) => {
         const buttonl = L.DomUtil.create('button', 'load-button');
         buttonl.innerHTML = 'Load';
+        buttonl.style.backgroundColor = 'white';
+        buttonl.style.color = 'black';
+        buttonl.style.padding = '6px 5px';
+        buttonl.style.border = '1px solid black';
+        buttonl.style.cursor = 'pointer';
         buttonl.addEventListener('click', () => {
           clearMarkersAndRouting();
           const geoJSONString = this.updateForm.get('data').value;
           const geoJSON = JSON.parse(geoJSONString);
           const features = geoJSON.features;
-          const startCoordinates = features[0].geometry.coordinates;
-          const endCoordinates = features[features.length - 1].geometry.coordinates;
-          startMarker = L.marker([startCoordinates[1], startCoordinates[0]]);
-          endMarker = L.marker([endCoordinates[1], endCoordinates[0]]);
-          updateRouting();
+         
+
+          if (loadedData) {
+            map.removeLayer(loadedData);
+          }
+          for (const feature of geoJSON.features) {
+            if (feature.geometry.type === 'LineString') {
+              
+              const loadedpoly = L.geoJSON(geoJSON, { style: { color: 'green', "weight": 6, "opacity": 0.65 }, onEachFeature: onEachFeature });
+              loadedData = L.layerGroup([loadedpoly]);
+              loadedData.addTo(this.map);
+              const coordinates = feature.geometry.coordinates;
+              const firstC = coordinates[0];
+              const lastC = coordinates[coordinates.length - 1];
+              startMarkerdraw = L.marker([firstC[1], firstC[0]]).setIcon(this.smallIcon).addTo(this.map);
+              endMarkerdraw = L.marker([lastC[1], lastC[0]]).setIcon(this.redicon).addTo(this.map);
+            
+              console.log(geoJSON)
+
+            }
+          }
 
         });
         return buttonl;
       }
     });
     this.map.addControl(new loadbutton);
-
 
   }
 
