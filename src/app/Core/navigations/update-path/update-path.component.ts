@@ -520,7 +520,14 @@ export class UpdatePathComponent implements AfterViewInit {
           const geoJSONString = this.updateForm.get('data').value;
           const geoJSON = JSON.parse(geoJSONString);
           const features = geoJSON.features;
-         
+          if (features[0].geometry.type ==='Point'){
+            const startCoordinates = features[0].geometry.coordinates;
+            const endCoordinates = features[features.length - 1].geometry.coordinates;
+            startMarker = L.marker([startCoordinates[1], startCoordinates[0]]);
+            endMarker = L.marker([endCoordinates[1], endCoordinates[0]]);
+            updateRouting()
+          }
+
 
           if (loadedData) {
             map.removeLayer(loadedData);
