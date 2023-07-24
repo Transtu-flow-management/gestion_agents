@@ -28,16 +28,13 @@ public class PathService {
         if (path.getLine()==null || path.getLine().getId()==null){
             throw  new IllegalArgumentException("Line id must be provided");
         }
-        Optional<Line> lineOptional = lineRepo.findById(path.getLine().getId());
-        if (lineOptional.isEmpty()){
-            throw  new NotFoundHandler(path.getLine().getId());
-        }
-        Line line = lineOptional.get();
-        path.setLine(line);
-        String nameFr = line.getNameFr();
-        String nameAr = line.getNameAr();
-        if (pathRepo.existsByNameFr(nameFr) || pathRepo.existsByNameAr(nameAr)) {
-            throw new IllegalArgumentException("name already exists");
+        String nameFr = path.getStartFr();
+        String nameAr = path.getStartAr();
+        String endAr = path.getEndAr();
+        String endFr = path.getEndFr();
+        if (((pathRepo.existsByStartFr(nameFr) || pathRepo.existsByStartAr(nameAr))
+                && (pathRepo.existsByEndAr(endAr)|| pathRepo.existsByEndFr(endFr)))) {
+            throw new IllegalArgumentException("start path and end path should be different");
         }
         path.setDateOfInsertion(new Date());
         Path savedpath = pathRepo.save(path);
@@ -45,9 +42,12 @@ public class PathService {
     }
     public Path updatePath(String id,Path newpath){
         Path path = pathRepo.findById(id).orElseThrow(()-> new NotFoundHandler(id));
-        path.setNameAr(newpath.getNameAr());
-        path.setNameFr(newpath.getNameFr());
+        path.setStartAr(newpath.getStartAr());
+        path.setStartFr(newpath.getStartFr());
+        path.setEndAr(newpath.getEndAr());
+        path.setEndFr(newpath.getEndFr());
         path.setType(newpath.getType());
+        path.setData(newpath.getData());
         Line newline = newpath.getLine();
         if (newline != null) {
             Optional<Line> lineOptional = lineRepo.findById(newline.getId());

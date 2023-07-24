@@ -6,6 +6,8 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface PathRepo extends MongoRepository<Path,String> {
-    boolean existsByNameAr( String nameAr);
-    boolean existsByNameFr(String nameFr);
+    boolean existsByStartFr( String startFr);
+    boolean existsByStartAr(String startAr);
+    boolean existsByEndFr(String endFr);
+    boolean existsByEndAr(String endAr);
 }

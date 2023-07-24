@@ -2,6 +2,7 @@ package com.transtu.transtu.Document;
 
 import lombok.Data;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
@@ -13,6 +14,7 @@ import java.util.Date;
 @Getter
 @Setter
 @Document(collection = "Lines")
+@NoArgsConstructor
 public class Line {
     @Id
     private String id;
