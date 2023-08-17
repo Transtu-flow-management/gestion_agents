@@ -10,6 +10,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -17,6 +18,9 @@ public class ConditionService {
     @Autowired private ConditionRepo conditionRepo;
     public Page<Condition> getAll(Pageable p){
         return conditionRepo.findAll(p);
+    }
+    public List<Condition> getAllc(){
+        return conditionRepo.findAll();
     }
     public Condition addCondition(Condition condition){
         if (conditionRepo.existsByName(condition.getName())){

@@ -18,6 +18,7 @@ public interface AgentRepo extends MongoRepository<Agent, Integer> {
     boolean existsByUsername(String username);
     List<Agent> findByRole(Role role);
     List<Agent> findBydateOfInsertionBetween(Date start, Date end);
+    Warehouse findByWarehouse(Warehouse warehouse);
 
 
 }

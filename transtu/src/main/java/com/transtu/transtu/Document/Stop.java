@@ -9,26 +9,23 @@ import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.Date;
-import java.util.List;
 
 @Data
 @Getter
 @Setter
-@Document(collection = "Paths")
 @NoArgsConstructor
-public class Path {
+@Document(collection = "Stops")
+public class Stop {
     @Id
     private String id;
+    private String name_fr;
+    private String name_ar;
+    private double lat;
+    private double lng;
+    private int stopnumber;
     @DBRef
-    private Line line;
-    private String startFr;
-    private String startAr;
-    private String endFr;
-    private String endAr;
-    private String data;
-    private Byte type;
-    @DBRef
-    private List<Stop> stops;
+    private Path path;
+    private String description;
     private Date dateOfInsertion;
     private Date dateOfModification;
 }

@@ -35,5 +35,3 @@ public class AuthenticationController {
         }
 
     }
-/*  "access_token": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0c2VjdXJlZDEiLCJpYXQiOjE2ODg3MTgyNjMsImV4cCI6MTY4ODgwNDY2M30.PB11aewzdW-6swan_WIAZvH95LlsxMENsOyoLiaJ5to",
-    "refresh_token": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0c2VjdXJlZDEiLCJpYXQiOjE2ODg3MTgyNjMsImV4cCI6MTY4OTMyMzA2M30.MD_gzdBhCZ_0m1g_ssu4JFpxCeasQrOTwce5L6O8P-w",,*/

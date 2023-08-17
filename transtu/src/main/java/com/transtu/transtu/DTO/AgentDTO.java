@@ -17,6 +17,7 @@ public class AgentDTO {
     private String imageUrl;
     private String address;
     private LocalDate DateOfBirth;
+    private String warehouseName;
 
     private String roleName;
     //@JsonFormat(pattern = "yyyy-MM-dd:HH:mm:ss", timezone = "UTC")

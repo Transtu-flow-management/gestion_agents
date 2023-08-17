@@ -37,6 +37,8 @@ public class Agent implements UserDetails {
     private LocalDate DateOfBirth;
     private String password;
     private String phone;
+    @DBRef
+    private Warehouse warehouse;
 
     private String imageUrl;
     @JsonIgnore

@@ -55,7 +55,7 @@ public class AgentController {
 
     @GetMapping("/p")
    public Page<AgentDTO> getAgents(@RequestParam(defaultValue = "0") int page,
-                                 @RequestParam(defaultValue = "2") int size
+                                 @RequestParam(defaultValue = "5") int size
                                   ) {
         Pageable pageable = PageRequest.of(page, size);
             return service.getAllagents(pageable);

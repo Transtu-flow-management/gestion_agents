@@ -25,6 +25,10 @@ public class ConditionController {
         Pageable pageable = PageRequest.of(page,size);
         return conditionService.getAll(pageable);
     }
+    @GetMapping("/all")
+    private List<Condition> getall(){
+        return conditionService.getAllc();
+    }
 
     @PostMapping("/add")
     private ResponseEntity<Condition> addcondition(@RequestBody Condition condition){

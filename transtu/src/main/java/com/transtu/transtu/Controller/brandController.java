@@ -27,7 +27,10 @@ public class brandController {
     @Autowired
     private BrandRepo brandRepo;
 
-
+@GetMapping("/all")
+private List<Brand> getall(){
+    return brandRepo.findAll();
+}
     @PostMapping("/create")
     private ResponseEntity<EntityModel<Brand>> addDepot(@RequestBody Brand brand){
 

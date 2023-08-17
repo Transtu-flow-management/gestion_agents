@@ -13,6 +13,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -23,6 +24,10 @@ public class PathService {
     private LineRepo lineRepo;
     public Page<Path> getAllpaths(Pageable pageable){
         return pathRepo.findAll(pageable);
+
+    }
+    public List<Path>getall(){
+        return pathRepo.findAll();
     }
     public Path createPath(Path path){
         if (path.getLine()==null || path.getLine().getId()==null){

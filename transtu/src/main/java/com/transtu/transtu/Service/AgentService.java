@@ -4,11 +4,14 @@ import com.transtu.transtu.DTO.AgentDTO;
 import com.transtu.transtu.Document.Agent;
 import com.transtu.transtu.Document.Conductor;
 import com.transtu.transtu.Document.Role;
+import com.transtu.transtu.Document.Warehouse;
 import com.transtu.transtu.Handlers.NotFoundExcemptionhandler;
 import com.transtu.transtu.Repositoy.AgentPageRepo;
 import com.transtu.transtu.Repositoy.AgentRepo;
 import com.transtu.transtu.Repositoy.RoleRepo;
+import com.transtu.transtu.Repositoy.entropotRepo;
 import com.transtu.transtu.utils.StoregeService;
+import org.apache.catalina.webresources.WarResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.data.crossstore.ChangeSetPersister;
@@ -35,6 +38,8 @@ public class AgentService implements UserDetailsService {
     private AgentRepo agentRepo;
     @Autowired
     private RoleRepo roleRepo;
+    @Autowired
+    private entropotRepo entropotRepo;
     @Autowired
     private StoregeService storegeService;
     @Autowired
@@ -98,6 +103,19 @@ public class AgentService implements UserDetailsService {
                         Optional<Role> role = roleRepo.findById(roleId);
                         role.ifPresent(agent::setRole);
                     }
+                } else if (key.equals("warehouse") && value != null) {
+                    Integer whID;
+                    if (value instanceof String) {
+                        whID = Integer.parseInt((String) value);
+                    } else if (value instanceof Integer) {
+                        whID = (Integer) value;
+                    } else {
+                        whID = null;
+                    }
+                    if (whID != null) {
+                        Optional<Warehouse> warehouseOptional = entropotRepo.findById(whID);
+                        warehouseOptional.ifPresent(agent::setWarehouse);
+                    }
                 } else {
                     Field field = ReflectionUtils.findField(Agent.class, key);
                     if (field!=null){
@@ -133,6 +151,12 @@ public class AgentService implements UserDetailsService {
         }else {
             agentDTO.setRoleName(null);
         }
+        if (agent.getWarehouse() != null){
+            agentDTO.setWarehouseName(agent.getWarehouse().getName());
+        }
+        else {
+            agentDTO.setWarehouseName(null);
+        }
         agentDTO.setImageUrl(agent.getImageUrl());
         agentDTO.setSurname(agent.getSurname());
         agentDTO.setUsername(agent.getUsername());
@@ -166,6 +190,10 @@ public class AgentService implements UserDetailsService {
                 dto.setRoleName(role.getRoleName());
             }else {
                 dto.setRoleName(null);
+            }
+            if (user2.getWarehouse() != null){
+                Warehouse warehouse = user2.getWarehouse();
+                dto.setWarehouseName(warehouse.getName());
             }
             dtoList.add(dto);
         }
@@ -208,21 +236,6 @@ public class AgentService implements UserDetailsService {
                 .headers(headers)
                 .body(file);
     }
-public Page <AgentDTO> searchAgents(String searchterm, Pageable p){
-        List<Agent> allagents = agentRepo.findAll();
-        List<Agent> filteredagents = allagents.stream().filter(agent ->containssearchterm(agent,searchterm)).collect(Collectors.toList());
-        int startindex = p.getPageNumber() * p.getPageSize();
-        int endIndex = Math.min(startindex + p.getPageSize(), filteredagents.size());
-    List<Agent> agentsPage = filteredagents.subList(startindex, endIndex);
-    List<AgentDTO> agentsDtoPage = convertDtoToEntity(agentsPage);
-    long totalCount = filteredagents.size();
-    return new PageImpl<>(agentsDtoPage, p, totalCount);
-}
-    private boolean containssearchterm(Agent agent, String searchTerm) {
-        String lowercaseSearchTerm = searchTerm.toLowerCase();
-        return agent.getName().toLowerCase().contains(lowercaseSearchTerm)
-                || agent.getSurname().toLowerCase().contains(lowercaseSearchTerm)
-                || agent.getUsername().toLowerCase().contains(lowercaseSearchTerm);
-    }
+
 
 }

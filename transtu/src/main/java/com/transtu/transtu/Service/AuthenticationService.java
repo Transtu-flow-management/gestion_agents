@@ -62,6 +62,7 @@ private final SequenceGeneratorService mongo;
                 .password(passwordEncoder.encode(request.getPassword()))
                 //.roles(request.getRoles())
                 .dateOfInsertion(currentDate)
+                .warehouse(request.getWarehouse())
                 .build();
         user.setImageUrl(fileName);
         var savedUser = agentRepo.save(user);
@@ -74,6 +75,7 @@ private final SequenceGeneratorService mongo;
         agentDTO.setDateOfBirth(savedUser.getDateOfBirth());
         agentDTO.setPhone(savedUser.getPhone());
         agentDTO.setUsername(savedUser.getUsername());
+        agentDTO.setWarehouseName(savedUser.getWarehouse().getName());
 
         agentDTO.setDateOfInsertion(savedUser.getDateOfInsertion());
         //String rolename = savedUser.getRoles().stream().findFirst().map(Role::getRoleName).orElse(null);
