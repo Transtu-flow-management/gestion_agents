@@ -1,5 +1,5 @@
 import { Component,OnInit } from '@angular/core';
-import { Depot } from '../../interfaces/depot';
+import { Depot } from '../../Models/depot';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { EntropotService } from '../../Services/entropot.service';
 import { AddDepoComponent } from 'src/app/Dialogs/add-depo/add-depo.component';

@@ -7,7 +7,7 @@ import { PathService } from '../../Services/path.service';
 import { SuccessToastComponent } from 'src/app/alerts/success-toast/success-toast.component';
 import { FailedToastComponent } from 'src/app/alerts/failed-toast/failed-toast.component';
 import * as L from 'leaflet';
-import { Lines } from '../../interfaces/Lines';
+import { Lines } from '../../Models/Lines';
 import 'leaflet-routing-machine';
 import "leaflet-control-geocoder/dist/Control.Geocoder.js";
 import { WarningComponent } from 'src/app/alerts/warning/warning.component';
@@ -15,7 +15,7 @@ import { UpdateToastComponent } from 'src/app/alerts/update-toast/update-toast.c
 import 'leaflet-draw';
 import { event } from 'jquery';
 import { style } from '@angular/animations';
-import { Path } from '../../interfaces/Path';
+import { Path } from '../../Models/Path';
 
 
 function allowedValues(control: FormControl) {
@@ -171,19 +171,19 @@ export class UpdatePathComponent implements AfterViewInit {
 
     var googleSat = L.tileLayer('http://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
 
-      maxZoom: 14,
+      maxZoom: 16,
       subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
     });
     var googleStreets = L.tileLayer('http://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}', {
 
-      maxZoom: 14,
+      maxZoom: 19,
       subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
     });
 
     var mainLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 
-      maxZoom: 14,
-      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors <span>Oussama Omrani</span>'
+      maxZoom: 19,
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
     });
 
     mainLayer.addTo(this.map);
@@ -247,7 +247,7 @@ export class UpdatePathComponent implements AfterViewInit {
     let savedData: L.LayerGroup = L.layerGroup();
     let loadedData: L.LayerGroup = L.layerGroup();
     let isDrawing: boolean;
-    let lineExists : boolean;
+    let lineExists: boolean;
     let drawnPolylines: L.Polyline[] = [];
     let drawControl: any;
     let drawnFeatures: L.FeatureGroup;
@@ -291,23 +291,58 @@ export class UpdatePathComponent implements AfterViewInit {
         savedData.removeLayer(drawnFeatures);
         drawnFeatures.clearLayers();
       }
-
-
     };
 
+    const initialiszeroute = (): void => {
+      if (routingControl) {
+        this.map.removeControl(routingControl);
+        routingControl = null;
+      }
+
+      if (routingPlan) {
+        routingPlan.removeFrom(this.map);
+        routingPlan = null;
+      }
+    }
+
+    this.updateForm.get('startFr').valueChanges.subscribe(() => {
+      updateMarkerPopupContent();
+    });
+    this.updateForm.get('startAr').valueChanges.subscribe(() => {
+      updateMarkerPopupContent();
+    });
+    this.updateForm.get('endFr').valueChanges.subscribe(() => {
+      updateMarkerPopupContent();
+    });
+    this.updateForm.get('endAr').valueChanges.subscribe(() => {
+      updateMarkerPopupContent();
+    });
+    const updateMarkerPopupContent = (): void => {
+      const startPopupText = `Location FR: ${this.updateForm.get('startFr').value} <br> Location AR:${this.updateForm.get('startAr').value}`;
+      const endPopupText = `Location FR: ${this.updateForm.get('endFr').value} <br> Location AR:${this.updateForm.get('endAr').value}`;
+
+      if (startMarker) {
+        startMarker.setPopupContent(startPopupText);
+      }
+
+      if (endMarker) {
+        endMarker.setPopupContent(endPopupText);
+      }
+    };
 
     const updateRouting = (): void => {
       if (startMarker && endMarker) {
+        const popupTextS = `Location FR: ${this.updateForm.get('startFr').value} <br> Location AR:${this.updateForm.get('startAr').value}`;
+        const popupTextE = `Location FR: ${this.updateForm.get('endFr').value} <br> Location AR:${this.updateForm.get('endAr').value}`;
+        initialiszeroute();
         routingPlan = new L.Routing.Plan([startMarker.getLatLng(), endMarker.getLatLng()], {
-
           createMarker: (i, waypoints, n) => {
             if (i === 0) {
-              console.log(waypoints.latLng);
-              startMarker = L.marker(waypoints.latLng, { icon: this.smallIcon, draggable: true }).on('dragend', onDragEndStart).bindPopup('popupTextS').openPopup()
+              startMarker = L.marker(waypoints.latLng, { icon: this.smallIcon, draggable: true }).on('dragend', onDragEndStart).bindPopup(popupTextS).openPopup()
               savedData.addLayer(startMarker)
               return startMarker;
             } else if (i === n - 1) {
-              endMarker = L.marker(waypoints.latLng, { icon: this.redicon, draggable: true }).on('dragend', onDragEndEnd).bindPopup('popupTextE').openPopup()
+              endMarker = L.marker(waypoints.latLng, { icon: this.redicon, draggable: true }).on('dragend', onDragEndEnd).bindPopup(popupTextE).openPopup()
               savedData.addLayer(endMarker)
               return endMarker;
             }
@@ -335,15 +370,15 @@ export class UpdatePathComponent implements AfterViewInit {
     };
 
     const onDragEndStart = (event: L.LeafletEvent): void => {
+      startMarker.options.draggable = true;
       const latlng = (event.target as L.Marker).getLatLng();
       startMarker.setLatLng(latlng);
-
     };
 
     const onDragEndEnd = (event: L.LeafletEvent): void => {
+      endMarker.options.draggable = true;
       const latlng = (event.target as L.Marker).getLatLng();
       endMarker.setLatLng(latlng);
-
     };
 
     if (!drawnFeatures) {
@@ -373,38 +408,38 @@ export class UpdatePathComponent implements AfterViewInit {
       this.map.addControl(drawControl);
 
     };
-    
+
 
     this.map.on('draw:created', (event: L.LeafletEvent) => {
       const layer: L.Layer = event.layer;
-      if (lineExists){
-        lineExists =false;
+      if (lineExists) {
+        lineExists = false;
         return;
       }
       if (layer instanceof L.Polyline) {
         drawnPolylines.push(layer);
         drawnFeatures.addLayer(layer);
         savedData.addLayer(drawnFeatures);
-        lineExists= true;
-          // @ts-ignore
-        const latlngs: L.LatLng[] = layer.getLatLngs(); 
+        lineExists = true;
+        // @ts-ignore
+        const latlngs: L.LatLng[] = layer.getLatLngs();
         startMarkerdraw = L.marker(latlngs[0]);
         startMarkerdraw.setIcon(this.smallIcon)
-    endMarkerdraw = L.marker(latlngs[latlngs.length - 1]);
-    endMarkerdraw.setIcon(this.redicon)
-    startMarkerdraw.addTo(this.map);
-    endMarkerdraw.addTo(this.map);
+        endMarkerdraw = L.marker(latlngs[latlngs.length - 1]);
+        endMarkerdraw.setIcon(this.redicon)
+        startMarkerdraw.addTo(this.map);
+        endMarkerdraw.addTo(this.map);
         let geoJSON = savedData.toGeoJSON();
         let data = JSON.stringify(geoJSON);
         this.updateForm.get('data').setValue(data);
         console.log(this.updateForm.get('data').value);
-       
+
       }
     });
     const updateMarkerPositions = (polyline: L.Polyline): void => {
       // @ts-ignore
       const latlngs: L.LatLng[] = polyline.getLatLngs();
-    
+
       if (latlngs.length >= 2) {
         startMarkerdraw.setLatLng(latlngs[0]);
         endMarkerdraw.setLatLng(latlngs[latlngs.length - 1]);
@@ -414,7 +449,7 @@ export class UpdatePathComponent implements AfterViewInit {
     this.map.on('draw:edited', (event: L.LeafletEvent) => {
       // @ts-ignore
       const layers: L.Layer[] = (event).layers.getLayers();
-    
+
       for (const layer of layers) {
         if (layer instanceof L.Polyline) {
           // @ts-ignore
@@ -422,11 +457,11 @@ export class UpdatePathComponent implements AfterViewInit {
           if (oldLayer) {
             drawnFeatures.removeLayer(oldLayer);
           }
-    
+
           savedData.addLayer(layer);
           drawnFeatures.addLayer(layer);
           updateMarkerPositions(layer);
-    
+
           const geoJSON = savedData.toGeoJSON();
           const data = JSON.stringify(geoJSON);
           this.updateForm.get('data').setValue(data);
@@ -439,13 +474,14 @@ export class UpdatePathComponent implements AfterViewInit {
       if (!lineExists) {
         if (startMarker && endMarker) {
           isDrawing = false;
+          lineExists = true;
         } else {
           isDrawing = true;
         }
       } else {
         isDrawing = false;
       }
-      
+
     });
     this.map.on('click', (event: L.LeafletMouseEvent) => {
       const { lat, lng } = event.latlng;
@@ -472,14 +508,14 @@ export class UpdatePathComponent implements AfterViewInit {
 
 
     });
-  
+
     const updategeojson = (): void => {
       updateRouting();
-      if (startMarker && endMarker){
-      let geoJSON = savedData.toGeoJSON();
-      let data = JSON.stringify(geoJSON);
-      this.updateForm.get('data').setValue(data);
-      console.log(data);
+      if (startMarker && endMarker) {
+        let geoJSON = savedData.toGeoJSON();
+        let data = JSON.stringify(geoJSON);
+        this.updateForm.get('data').setValue(data);
+        console.log(data);
       }
     }
 
@@ -520,7 +556,7 @@ export class UpdatePathComponent implements AfterViewInit {
           const geoJSONString = this.updateForm.get('data').value;
           const geoJSON = JSON.parse(geoJSONString);
           const features = geoJSON.features;
-          if (features[0].geometry.type ==='Point'){
+          if (features[0].geometry.type === 'Point') {
             const startCoordinates = features[0].geometry.coordinates;
             const endCoordinates = features[features.length - 1].geometry.coordinates;
             startMarker = L.marker([startCoordinates[1], startCoordinates[0]]);
@@ -534,16 +570,16 @@ export class UpdatePathComponent implements AfterViewInit {
           }
           for (const feature of geoJSON.features) {
             if (feature.geometry.type === 'LineString') {
-              
               const loadedpoly = L.geoJSON(geoJSON, { style: { color: 'green', "weight": 6, "opacity": 0.65 }, onEachFeature: onEachFeature });
               loadedData = L.layerGroup([loadedpoly]);
               loadedData.addTo(this.map);
+              lineExists = true;
               const coordinates = feature.geometry.coordinates;
               const firstC = coordinates[0];
               const lastC = coordinates[coordinates.length - 1];
               startMarkerdraw = L.marker([firstC[1], firstC[0]]).setIcon(this.smallIcon).addTo(this.map);
               endMarkerdraw = L.marker([lastC[1], lastC[0]]).setIcon(this.redicon).addTo(this.map);
-            
+              isDrawing = false
               console.log(geoJSON)
 
             }
@@ -554,8 +590,30 @@ export class UpdatePathComponent implements AfterViewInit {
       }
     });
     this.map.addControl(new loadbutton);
+    const saveButton = L.Control.extend({
+      options: {
+        position: 'topleft',
+      },
+
+      onAdd: (map: L.Map) => {
+        const button = L.DomUtil.create('button', 'save-button');
+        button.innerHTML = 'Save';
+        button.style.backgroundColor = 'white';
+        button.style.color = 'black';
+        button.style.padding = '6px 5px';
+        button.style.border = '1px solid black';
+        button.style.cursor = 'pointer';
+        button.addEventListener('click', () => {
+          updategeojson()
+        });
+
+        return button;
+      },
+    });
+    this.map.addControl(new saveButton());
 
   }
+
 
   getLineNames(): void {
     this._pathsertvice.retreivelines().subscribe((line) => {

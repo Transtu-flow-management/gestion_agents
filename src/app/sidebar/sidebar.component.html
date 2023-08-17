@@ -8,7 +8,7 @@
 <div class="sidebar absolute top-0 bottom-0 lg:left-0 right-0 p-2.5 overflow-y-auto text-center bg-[#001449]">
   <div class="text-gray-100 text-xl">
     <div
-      class="pt-1 pr-16 mt-1 flex-initial bg-[#001439] border-4 border-[#001435] rounded-md shadow-2xl shadow-emerald-900/50">
+      class="pt-1 pr-16 mt-1 flex-initial bg-[#001439] border-4 border-[#001435] hover:border-emerald-900/10 ounded-md shadow-2xl shadow-emerald-900/50 hover:bg-emerald-900/20 ">
 
       <p class="font-medium text-gray-300 text-[24px] ">Transtu</p>
       <h4 class="font-bold text-gray-200 pl-16">suivi de flotte</h4>
@@ -127,11 +127,20 @@
         </mat-panel-title>
       </mat-expansion-panel-header>
       <div
+      class="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-[#001469] text-white"
+      routerLinkActive="text-[15px] ml-3 text-gray-200 font-bold bg-[#001499]">
+      <i class="bi bi-bus-front-fill"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bus-front-fill" viewBox="0 0 16 16">
+        <path d="M16 7a1 1 0 0 1-1 1v3.5c0 .818-.393 1.544-1 2v2a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5V14H5v1.5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5v-2a2.496 2.496 0 0 1-1-2V8a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1V2.64C1 1.452 1.845.408 3.064.268A43.608 43.608 0 0 1 8 0c2.1 0 3.792.136 4.936.268C14.155.408 15 1.452 15 2.64V4a1 1 0 0 1 1 1v2ZM3.552 3.22A43.306 43.306 0 0 1 8 3c1.837 0 3.353.107 4.448.22a.5.5 0 0 0 .104-.994A44.304 44.304 0 0 0 8 2c-1.876 0-3.426.109-4.552.226a.5.5 0 1 0 .104.994ZM8 4c-1.876 0-3.426.109-4.552.226A.5.5 0 0 0 3 4.723v3.554a.5.5 0 0 0 .448.497C4.574 8.891 6.124 9 8 9c1.876 0 3.426-.109 4.552-.226A.5.5 0 0 0 13 8.277V4.723a.5.5 0 0 0-.448-.497A44.304 44.304 0 0 0 8 4Zm-3 7a1 1 0 1 0-2 0 1 1 0 0 0 2 0Zm8 0a1 1 0 1 0-2 0 1 1 0 0 0 2 0Zm-7 0a1 1 0 0 0 1 1h2a1 1 0 1 0 0-2H7a1 1 0 0 0-1 1Z"/>
+      </svg></i>
+      <span class="text-[15px] ml-4 text-gray-200 font-bold capitalize" routerLink="/cars">Vehicules</span>
+    </div>
+      <div
         class="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-[#001469] text-white"
         routerLinkActive="text-[15px] ml-3 text-gray-200 font-bold bg-[#001499]">
         <i class="bi bi-gear-wide-connected"></i>
         <span class="text-[15px] ml-4 text-gray-200 font-bold capitalize" routerLink="/conditions">Conditions</span>
       </div>
+     
 
     </mat-expansion-panel>
   </mat-accordion>
@@ -165,8 +174,14 @@
       <div
       class="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-[#001469] text-white"
       routerLinkActive="text-[15px] ml-3 text-gray-200 font-bold bg-[#001499]">
-      <i class="bi bi-pin-map"></i>
+      <i class="bi bi-cursor-fill"></i>
       <span class="text-[15px] ml-4 text-gray-200 font-bold capitalize" routerLink="/paths">Traget</span>
+    </div>
+    <div
+      class="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-[#001469] text-white"
+      routerLinkActive="text-[15px] ml-3 text-gray-200 font-bold bg-[#001499]">
+      <i class="bi bi-geo-fill"></i>
+      <span class="text-[15px] ml-4 text-gray-200 font-bold capitalize" routerLink="/addstop">Arrêts</span>
     </div>
 
     </mat-expansion-panel>

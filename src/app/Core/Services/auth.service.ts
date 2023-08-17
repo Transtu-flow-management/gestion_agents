@@ -4,7 +4,7 @@ import { Observable,BehaviorSubject } from 'rxjs';
 import { loginDTO } from '../../DTO/login';
 import { Router } from '@angular/router';
 import { tap } from 'rxjs/operators';
-import { Agent } from '../interfaces/Agent';
+import { Agent } from '../Models/Agent';
 @Injectable({
   providedIn: 'root'
 })

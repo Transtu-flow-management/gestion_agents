@@ -4,7 +4,7 @@ import { UpdateLineComponent } from 'src/app/Dialogs/update-line/update-line.com
 import { FailedToastComponent } from 'src/app/alerts/failed-toast/failed-toast.component';
 import { SuccessToastComponent } from 'src/app/alerts/success-toast/success-toast.component';
 import { ConfirmationComponent } from 'src/app/confirmation/confirmation.component';
-import { Path } from '../../interfaces/Path';
+import { Path } from '../../Models/Path';
 import { FormControl } from '@angular/forms';
 import { PathService } from '../../Services/path.service';
 import { MatDialog } from '@angular/material/dialog';
@@ -86,15 +86,15 @@ export class PathsComponent {
     });
   }
   deletepath(id: string) {
-    const message = "Effacer la ligne?";
-    const title = "Delete Line"
+    const message = "Effacer le traget?";
+    const title = "Delete path"
     const deletedialog = this.dialog.open(ConfirmationComponent, {
       data: { message: message, title: title },
     });
     deletedialog.afterClosed().subscribe((res) => {
       if (res == 'confirm')
         this._pathservice.deletepath(id).subscribe(()=>{
-            this.openDelToast("Ligne a ete supprimé avec success");
+            this.openDelToast("traget a ete supprimé avec success");
             this.Paths = this.Paths.filter(line => line.id !== id);
             if (this.Paths.length === 0) {
               this.currentPage = this.currentPage -1

@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Condition } from 'src/app/Core/interfaces/condition';
+import { Condition } from 'src/app/Core/Models/condition';
 
 @Component({
   selector: 'app-add-condition',

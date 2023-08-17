@@ -6,7 +6,7 @@ import { HttpClient } from '@angular/common/http';
 import { ViewChild } from '@angular/core';
 import { switchMap, of } from 'rxjs';
 import * as L from 'leaflet';
-import { Depot } from 'src/app/Core/interfaces/depot';
+import { Depot } from 'src/app/Core/Models/depot';
 
 @Component({
   selector: 'app-update-depot',

@@ -2,11 +2,11 @@ import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { UserServiceService } from '../../Services/user-service.service';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 
-import { Agent } from '../../interfaces/Agent';
+import { Agent } from '../../Models/Agent';
 import { AgentdialogComponent } from '../../../Dialogs/agentdialog/agentdialog.component';
 import { ErrorsComponent } from '../../../Dialogs/errors/errors.component';
 import { CoreService } from '../../Services/core.service';
-import { Role } from '../../interfaces/Role';
+import { Role } from '../../Models/Role';
 import { RoleService } from '../../Services/role.service';
 import { AddUserComponent } from '../../../Dialogs/add-user/add-user.component';
 import { AssignRoledialogComponent } from 'src/app/Dialogs/assign-roledialog/assign-roledialog.component';
@@ -101,12 +101,10 @@ export class AgetsComponent implements OnInit, AfterViewInit {
       enterAnimationDuration: '1000ms',
       exitAnimationDuration: '200ms',
     });
-    dialogref.afterClosed().subscribe(result =>{
-    
-      if (result){
-        this.agents.push(result);
-      }
-    })
+    dialogref.afterClosed().subscribe(()=>{
+      this.currentPage =0;
+      this.loadagentspages(this.currentPage,this.pageSize);
+          })
   }
 
  
@@ -114,22 +112,13 @@ export class AgetsComponent implements OnInit, AfterViewInit {
     const dialogRef = this.dialog.open(AgentdialogComponent, {
       width: '70%',
       height:'auto',
-      data: { agent: agent },
-      
+      data: { agent: agent },      
     });
 
     // Subscribe to the dialog's afterClosed event to handle the result or any other logic
-    dialogRef.afterClosed().subscribe((updatedAgent) => {
-      if (updatedAgent) {
-        if (updatedAgent.err === 'USERNAME_EXIST') {
-          this.openError('nom utlisateur deja existant', 'user_exist');
-        }
-      } else {
-        let index = this.agents.findIndex(
-          (item: Agent) => item.id === updatedAgent.id
-        );
-        this.agents.splice(index, 1, agent);;
-      }
+    dialogRef.afterClosed().subscribe(() => {
+      this.currentPage =0;
+      this.loadagentspages(this.currentPage,this.pageSize);
     });
   }
   openAssignRole(agent: number): void {
@@ -138,8 +127,9 @@ export class AgetsComponent implements OnInit, AfterViewInit {
       height: '50%',
       data: { agent: { id: agent } },
     });
-    dialg.afterClosed().subscribe(result => {
-      console.log('Dialog closed:', result);
+    dialg.afterClosed().subscribe(()=> {
+      this.currentPage =0;
+      this.loadagentspages(this.currentPage,this.pageSize);
     });
   }
 
@@ -187,7 +177,7 @@ export class AgetsComponent implements OnInit, AfterViewInit {
                       if (this.currentPage < 0) {
                         this.currentPage = 0;
                       }
-                      this.fetchAgents();
+                      this.loadagentspages(this.currentPage,this.pageSize);
                     }
           },
         })

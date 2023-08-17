@@ -3,7 +3,7 @@ import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ConditionService } from 'src/app/Core/Services/condition.service';
-import { Condition } from 'src/app/Core/interfaces/condition';
+import { Condition } from 'src/app/Core/Models/condition';
 import { FailedToastComponent } from 'src/app/alerts/failed-toast/failed-toast.component';
 import { UpdateToastComponent } from 'src/app/alerts/update-toast/update-toast.component';
 import { WarningToastComponent } from 'src/app/alerts/warning-toast/warning-toast.component';

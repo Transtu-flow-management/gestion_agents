@@ -14,10 +14,11 @@
     background-color: var(--mat-mdc-radio-checked-ripple-color, transparent);
 }
 
-::ng-deep .mat-mdc-select{
+ .mat-mdc-text-field-wrapper {
    
-    color: red;
-    background-color:#c1ac34 !important ;
+    background-color:#11da4a !important ;
+    border-radius: 30px !important;
+    
 }
 
 body {background-color : #ededed; font-family : "Open Sans", sans-serif;}

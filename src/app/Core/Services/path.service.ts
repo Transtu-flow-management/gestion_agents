@@ -2,8 +2,8 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { GlobalService } from 'src/app/global.service';
-import { Lines } from '../interfaces/Lines';
-import { Path } from '../interfaces/Path';
+import { Lines } from '../Models/Lines';
+import { Path } from '../Models/Path';
 
 @Injectable({
   providedIn: 'root'

@@ -3,7 +3,7 @@ import * as L from 'leaflet';
 import { HttpClient } from '@angular/common/http';
 import { AbstractControl,ValidatorFn, FormBuilder, FormControl, FormGroup,ValidationErrors,Validators } from '@angular/forms';
 import { EntropotService } from 'src/app/Core/Services/entropot.service';
-import { Depot } from 'src/app/Core/interfaces/depot';
+import { Depot } from 'src/app/Core/Models/depot';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import {
@@ -33,7 +33,9 @@ export class AddDepoComponent implements AfterViewInit {
   public adresse: string;
   addForm: FormGroup;
   isFormSubmitted = false;
-  constructor(private dialog :MatDialogRef<AddDepoComponent>,private elementRef: ElementRef, private http: HttpClient, private fb:FormBuilder,private _entrpserv :EntropotService,private snackBar: MatSnackBar) {
+  constructor(private dialog :MatDialogRef<AddDepoComponent>,private elementRef: ElementRef, private http: HttpClient, 
+    private fb:FormBuilder,private _entrpserv :EntropotService,
+    private snackBar: MatSnackBar) {
     this.addForm= this.fb.group({
       name: new FormControl('', [Validators.required, Validators.minLength(6)]),
 

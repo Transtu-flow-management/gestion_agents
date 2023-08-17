@@ -1,6 +1,6 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Depot } from '../interfaces/depot';
+import { Depot } from '../Models/depot';
 import { Observable } from 'rxjs';
 import { GlobalService } from 'src/app/global.service';
 @Injectable({

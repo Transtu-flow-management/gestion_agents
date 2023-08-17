@@ -5,7 +5,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { Observable } from 'rxjs';
 import {map, startWith} from 'rxjs/operators';
 import { BrandService } from 'src/app/Core/Services/brand.service';
-import { Brand, Maker } from 'src/app/Core/interfaces/brand';
+import { Brand, Maker } from 'src/app/Core/Models/brand';
 
 import {
   MatSnackBarHorizontalPosition,

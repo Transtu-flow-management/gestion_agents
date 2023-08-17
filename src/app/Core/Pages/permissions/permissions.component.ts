@@ -1,5 +1,5 @@
 import { Component,OnInit,EventEmitter,Output,Input } from '@angular/core';
-import { IPermissions } from '../../interfaces/Role';
+import { IPermissions } from '../../Models/Role';
 import { PermissionService } from '../../Services/permission.service';
 
 @Component({

@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import {MatTableDataSource, MatTableModule} from '@angular/material/table';
-import { Condition } from '../../interfaces/condition';
+import { Condition } from '../../Models/condition';
 import {MatPaginator, PageEvent} from '@angular/material/paginator';
 import { ConditionService } from '../../Services/condition.service';
 import { MatDialog } from '@angular/material/dialog';

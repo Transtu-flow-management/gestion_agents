@@ -1,0 +1,38 @@
+<div class ="overflow-hidden ">
+     <form [formGroup]="addForm" >
+    <div class="relative z-0 mt-4 w-full group gap-12 flex flex-row items-start justify-evenly ">
+        <div class="relative w-full">
+            <label for="name" class="text-lg text-gray-700 block mb-1 font-medium">début de la ligne</label>
+            <input type="text" name="name" formControlName="startFr" id="name" class="bg-[#F1F6F9] border border-gray-400 rounded py-3 px-3 block focus:ring-blue-500 focus:border-blue-500 text-gray-700 w-full" placeholder="Enter your name" />
+            <ng-container>
+                <div *ngIf="isFormSubmitted && addForm.get('startFr').errors?.['required']  && addForm.get('startFr')"
+                    class="text-red-500 text-xs italic">Veillez verifier que le champ non vide </div>
+                <div *ngIf="isFormSubmitted && addForm.get('startFr').errors?.['minlength']  && addForm.get('startFr').invalid && addForm.get('startFr')"
+                    class="text-red-500 text-xs italic">le nom doit contient minimum 4 lettres</div>
+            </ng-container>  
+        </div>
+        
+        <div class="relative w-full">
+            <label for="nameAr" class="text-lg text-gray-700 block mb-1 font-bold dir=rtl" style="text-align: right;">بداية الخط</label>
+            <input type="text" name="nameAr" formControlName="startAr" id="name" class="bg-[#F1F6F9] border border-gray-400 rounded py-3 px-3 block focus:ring-blue-500 focus:border-blue-500 text-gray-700 w-full" placeholder="Enter your name" />
+            <ng-container>
+                <div *ngIf="isFormSubmitted && addForm.get('startAr').errors?.['required']  && addForm.get('startAr')"
+                    class="text-red-500 text-xs italic">Veillez verifier que le champ non vide </div>
+                <div *ngIf="isFormSubmitted && addForm.get('startAr').errors?.['minlength']  && addForm.get('startAr').invalid && addForm.get('startAr')"
+                    class="text-red-500 text-xs italic">le nom doit contient minimum 4 lettres</div>
+            </ng-container> 
+        </div>
+    </div>
+    <hr>
+    <div class="my-4"></div> 
+    <div class=" rounded-lg ">
+        <span class="text-lg not-italic font-sans font-bold tracking-wide text-justify dark:text-[#111827] capitalize">Type de traget :</span>
+      
+    </div>
+  
+    <ng-container>
+        <div *ngIf="isFormSubmitted &&addForm.get('type').errors?.['required']  && addForm.get('type')" class="text-red-500 text-xs italic">
+            Selectionner type de traget</div>
+    </ng-container>        
+</form>
+</div>

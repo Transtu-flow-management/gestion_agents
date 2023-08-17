@@ -7,7 +7,7 @@ import {map, startWith} from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { EntropotService } from 'src/app/Core/Services/entropot.service';
 import { LinesService } from 'src/app/Core/Services/lines.service';
-import { Depot } from 'src/app/Core/interfaces/depot';
+import { Depot } from 'src/app/Core/Models/depot';
 import { FailedToastComponent } from 'src/app/alerts/failed-toast/failed-toast.component';
 import { SuccessToastComponent } from 'src/app/alerts/success-toast/success-toast.component';
 import { WarningToastComponent } from 'src/app/alerts/warning-toast/warning-toast.component';

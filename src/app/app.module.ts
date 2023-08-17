@@ -69,6 +69,12 @@ import { WarningComponent } from './alerts/warning/warning.component';
 import { PathsComponent } from './Core/Pages/paths/paths.component';
 import { AddPathComponent } from './Core/navigations/add-path/add-path.component';
 import { UpdatePathComponent } from './Core/navigations/update-path/update-path.component';
+import {MatStepperModule} from '@angular/material/stepper';
+import { AddStopComponent } from './Core/navigations/add-stop/add-stop.component';
+import { DynamicPopupComponent } from './Core/Pages/dynamic-popup/dynamic-popup.component';
+import { CarsComponent } from './Core/Pages/cars/cars.component';
+import { AddCarComponent } from './Dialogs/add-car/add-car.component';
+import { UpdateCarComponent } from './Dialogs/update-car/update-car.component';
 export const API_URL = new InjectionToken<String>('API_URL');
 
 @NgModule({
@@ -115,6 +121,12 @@ export const API_URL = new InjectionToken<String>('API_URL');
     PathsComponent,
     AddPathComponent,
     UpdatePathComponent,
+    AddStopComponent,
+    DynamicPopupComponent,
+    CarsComponent,
+    AddCarComponent,
+    UpdateCarComponent,
+
   ],
   imports: [
     MatRadioModule,
@@ -141,7 +153,8 @@ export const API_URL = new InjectionToken<String>('API_URL');
       MatPaginatorModule ,
       MatButtonModule,
       MatExpansionModule,
-      MatSlideToggleModule
+      MatSlideToggleModule,
+      MatStepperModule
   ],
 
   

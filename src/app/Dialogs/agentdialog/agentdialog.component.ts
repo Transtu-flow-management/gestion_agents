@@ -1,12 +1,15 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component,ViewChild,ElementRef, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 import { UserServiceService } from 'src/app/Core/Services/user-service.service';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { RoleService } from 'src/app/Core/Services/role.service';
-import { Role } from 'src/app/Core/interfaces/Role';
+import { Role } from 'src/app/Core/Models/Role';
 import { UpdateToastComponent } from 'src/app/alerts/update-toast/update-toast.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { Depot } from 'src/app/Core/Models/depot';
+import { EntropotService } from 'src/app/Core/Services/entropot.service';
+import { th } from 'date-fns/locale';
 
 @Component({
   selector: 'app-agentdialog',
@@ -14,18 +17,22 @@ import { MatSnackBar } from '@angular/material/snack-bar';
   styleUrls: ['./agentdialog.component.css']
 })
 export class AgentdialogComponent implements OnInit {
+  @ViewChild('fileInput') fileInput: ElementRef;
   selected: String;
   selectedRoleId: Number;
   roleList: Role[] = [];
+  warehouselist : Depot [] = [];
   updateForm: FormGroup;
+  uploadedImage: string | ArrayBuffer | null = null;
   checked: boolean = false;
   imageSizeError: String;
   selectedImage: File;
+  selectedfile:string ='';
   constructor(
     public dialogRef: MatDialogRef<AgentdialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
     private fb: FormBuilder,
-    private service: UserServiceService, private _roleservice: RoleService,
+    private service: UserServiceService, private _roleservice: RoleService, private _whservice:EntropotService,
     private snackBar:MatSnackBar
 
   ) {
@@ -40,6 +47,8 @@ export class AgentdialogComponent implements OnInit {
       phone:[agent.phone],
       roleName: [agent.roleName],
       roles: [agent.role],
+      warehouse : [agent.depot],
+      warehouseName :[agent.warehouseName],
       password: [''],
       //role: [user.role, Validators.required],
     });
@@ -54,6 +63,7 @@ export class AgentdialogComponent implements OnInit {
   ngOnInit(): void {
     this._roleservice.getRoles().subscribe((roles) => {
       this.roleList = roles;
+      this.getallwarehouses();
     });
   }
   annuler() {
@@ -77,6 +87,18 @@ export class AgentdialogComponent implements OnInit {
       }
     }
   }
+  onfileRead(event:any){
+    const file: File = event.target.files[0];
+  
+  const reader = new FileReader();
+
+  reader.onload = (e: any) => {
+    this.selectedfile = e.target.result;
+  };
+
+  reader.readAsDataURL(file);
+  }
+
   public updateUser() {
     const agent = this.updateForm.getRawValue();
     this.service.updateAgent(this.data.agent.id, agent).subscribe((res) => {
@@ -126,6 +148,15 @@ export class AgentdialogComponent implements OnInit {
           formdata.append('roles', values.roles[0]);
         }
         }
+        else if (key ==='warehouse') {
+          var whId = values[key];
+          const selectedwH = this.warehouselist.find(wh => wh.id === whId);
+          if (selectedwH) {
+            values.warehouse = [];
+            values.warehouse.push(selectedwH.id); 
+            formdata.append('warehouse', values.warehouse[0]);
+          }
+          }
         else {
           formdata.append(key, values[key]);
 
@@ -138,7 +169,8 @@ export class AgentdialogComponent implements OnInit {
     });
     if (this.selectedImage) {
       this.service.patchAgentimg(this.data.agent.id, formdata, this.selectedImage).subscribe((res) => {
-        console.log("agent patched", res);
+       
+        this.openToast("agent a été mis à jour");
         this.dialogRef.close(res);
       }, (error) => {
         console.log("error patching agent avec image ", error);
@@ -152,8 +184,11 @@ export class AgentdialogComponent implements OnInit {
       });
 
   }
-
-
-
+  
+  getallwarehouses():void{
+    this._whservice.getAllentrp().subscribe((wh : Depot[])=>{
+      this.warehouselist = wh;
+    })
+  }
 
 }

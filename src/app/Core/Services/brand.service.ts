@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { GlobalService } from 'src/app/global.service';
-import { Brand } from '../interfaces/brand';
+import { Brand } from '../Models/brand';
 import { Observable } from 'rxjs';
 import { HttpClient, HttpParams } from '@angular/common/http';
 

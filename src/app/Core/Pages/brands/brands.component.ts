@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Brand } from '../../interfaces/brand';
+import { Brand } from '../../Models/brand';
 import { BrandService } from '../../Services/brand.service';
 import { MatDialog } from '@angular/material/dialog';
 import { AddBrandComponent } from 'src/app/Dialogs/add-brand/add-brand.component';

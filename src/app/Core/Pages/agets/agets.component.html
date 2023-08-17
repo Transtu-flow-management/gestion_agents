@@ -49,6 +49,7 @@
         <th scope="col" class=" font-medium text-gray-900">prenom</th>
         <th scope="col" class=" font-medium text-gray-900">Email</th>
         <th scope="col" class=" font-medium text-gray-900">Role</th>
+        <th scope="col" class=" font-medium text-gray-900">Dépôt</th>
         <th scope="col" class="p font-medium text-gray-900">Date de Creation</th>
         <th scope="col" class=" font-medium text-gray-900">Date de Modification</th>
         <th scope="col" class="px-4 py-4 font-medium text-gray-900">Actions</th>
@@ -97,6 +98,17 @@
                 class="bg-blue-200 px-2 py-1 text-sm shadow-sm font-medium tracking-wider text-blue-600 rounded-lg hover:shadow-2xl hover:bg-blue-300">
                 <span>Assign Role</span>
               </button>
+            </ng-template>
+          </td>
+          <td class="px-2">
+            <ng-container *ngIf="agent.warehouseName && agent.warehouseName.length > 0; else wareh">
+  
+              <div class="font-medium text-gray-900" >{{agent.warehouseName}}</div>
+            </ng-container>
+            <ng-template #wareh>
+              <span class="font-medium text-gray-700">
+                Aucun dépôt 
+              </span>
             </ng-template>
           </td>
           <td class="px-2">

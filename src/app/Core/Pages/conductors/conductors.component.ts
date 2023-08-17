@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { Conductor } from '../../interfaces/Conductor';
+import { Conductor } from '../../Models/Conductor';
 import { ConductorService } from '../../Services/conductor.service';
 import { MatDialog } from '@angular/material/dialog';
 import { AddConductorComponent } from 'src/app/Dialogs/add-conductor/add-conductor.component';

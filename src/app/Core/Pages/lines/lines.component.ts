@@ -1,5 +1,5 @@
 import { Component,OnInit } from '@angular/core';
-import { Lines } from '../../interfaces/Lines';
+import { Lines } from '../../Models/Lines';
 import { LinesService } from '../../Services/lines.service';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';

@@ -1,0 +1,7 @@
+::ng-deep
+ .mat-mdc-text-field-wrapper {
+    border-radius: 16px !important;
+    background-color: rgb(229, 236, 233) !important;
+    width: auto !important;
+    
+}

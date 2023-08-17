@@ -1,4 +1,4 @@
-import { Role } from "../Core/interfaces/Role";
+import { Role } from "../Core/Models/Role";
 
 export interface registerDTO{
     name: String;

@@ -2,7 +2,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { GlobalService } from 'src/app/global.service';
-import { Conductor } from '../interfaces/Conductor';
+import { Conductor } from '../Models/Conductor';
 
 @Injectable({
   providedIn: 'root'
@@ -39,5 +39,9 @@ export class ConductorService {
   public updateconductor(id:number,conductor:Conductor):Observable<Conductor>{
     const updurl = this.gs.uri +this.url +`/update/${id}`;
     return this.http.put<Conductor>(updurl,conductor);
+  }
+  public getallDrivers():Observable<Conductor[]>{
+    const getall = this.gs.uri + this.url +`/all`;
+    return this.http.get<Conductor[]>(getall);
   }
 }

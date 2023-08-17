@@ -1,4 +1,5 @@
 import { Component, OnInit, Inject } from '@angular/core';
+import { isEqual } from 'lodash';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar, MatSnackBarHorizontalPosition, MatSnackBarVerticalPosition } from '@angular/material/snack-bar';
@@ -6,10 +7,11 @@ import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { EntropotService } from 'src/app/Core/Services/entropot.service';
 import { LinesService } from 'src/app/Core/Services/lines.service';
-import { Depot } from 'src/app/Core/interfaces/depot';
+import { Depot } from 'src/app/Core/Models/depot';
 import { FailedToastComponent } from 'src/app/alerts/failed-toast/failed-toast.component';
 import { UpdateToastComponent } from 'src/app/alerts/update-toast/update-toast.component';
 import { WarningToastComponent } from 'src/app/alerts/warning-toast/warning-toast.component';
+import { WarningComponent } from 'src/app/alerts/warning/warning.component';
 
 @Component({
   selector: 'app-update-line',
@@ -43,7 +45,8 @@ export class UpdateLineComponent implements OnInit {
       start_ar: new FormControl(line.start_ar, [Validators.required,]),
       end_fr: new FormControl(line.end_fr, [Validators.required,]),
       end_ar: new FormControl(line.end_ar, [Validators.required,]),
-      warehouse: new FormControl(this.entrpt.value, [Validators.required])
+      warehouse: new FormControl(this.entrpt.value, [Validators.required]),
+      depot : new FormControl(line.warehouse)
     });
 
     this._warehouseService.getAllentrp().subscribe(warehouses => {
@@ -94,7 +97,7 @@ export class UpdateLineComponent implements OnInit {
     });
   }
   openWarningToast(message: string): void {
-    this.snackBar.openFromComponent(WarningToastComponent, {
+    this.snackBar.openFromComponent(WarningComponent, {
       data: { message: message }, duration: 5000,
       horizontalPosition: "center",
       verticalPosition: "top",
@@ -105,19 +108,22 @@ export class UpdateLineComponent implements OnInit {
   isFormUnchanged() {
     var lineform = this.updateForm.getRawValue();
     const checkvalues = this.data.line;
-
+    const entropotValue: Depot = this.entrpt.value;
     return lineform.nameAr === checkvalues.nameAr &&
     lineform.nameFr === checkvalues.nameFr &&
     lineform.start_fr === checkvalues.start_fr &&
     lineform.start_ar === checkvalues.start_ar &&
     lineform.end_fr === checkvalues.end_fr &&
-    lineform.end_ar === checkvalues.end_ar 
+    lineform.end_ar === checkvalues.end_ar &&
+    entropotValue.id === checkvalues.warehouse.id;
+    
   }
 
   public update(): void {
     var line = this.updateForm.getRawValue();
     const entropotValue: Depot = this.entrpt.value;
-    console.log(entropotValue);
+    console.log(JSON.stringify(entropotValue));
+   
     if (entropotValue.id !== this.data.line.warehouse.id) {
       line.warehouse = entropotValue;
     }

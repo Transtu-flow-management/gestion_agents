@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Role } from '../../interfaces/Role';
+import { Role } from '../../Models/Role';
 import { RoleService } from '../../Services/role.service';
 import { MatDialog,MatDialogConfig } from '@angular/material/dialog';
 import { RoleModalComponent } from '../../../Dialogs/role-modal/role-modal.component';

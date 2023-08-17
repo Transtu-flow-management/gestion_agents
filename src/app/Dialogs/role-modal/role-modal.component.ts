@@ -3,7 +3,7 @@ import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
 import { MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { RoleService } from 'src/app/Core/Services/role.service';
-import { IPermissions, Role } from 'src/app/Core/interfaces/Role';
+import { IPermissions, Role } from 'src/app/Core/Models/Role';
 import { FailedToastComponent } from 'src/app/alerts/failed-toast/failed-toast.component';
 import { SuccessToastComponent } from 'src/app/alerts/success-toast/success-toast.component';
 import {

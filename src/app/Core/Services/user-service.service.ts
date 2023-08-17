@@ -1,6 +1,6 @@
 import { HttpClient, HttpErrorResponse,HttpHeaders, HttpParams  } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Agent } from '../interfaces/Agent';
+import { Agent } from '../Models/Agent';
 import { Observable } from 'rxjs';
 import * as shajs from 'sha.js';
 

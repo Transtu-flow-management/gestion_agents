@@ -1,6 +1,6 @@
-import { Component, ElementRef, AfterViewInit } from '@angular/core';
+import { Component, ElementRef, AfterViewInit,ViewContainerRef,ViewChild } from '@angular/core';
 import { MatSnackBar, MatSnackBarHorizontalPosition, MatSnackBarVerticalPosition } from '@angular/material/snack-bar';
-import { Path } from '../../interfaces/Path';
+
 import { AbstractControl, FormBuilder, FormControl, FormGroup, ValidationErrors, Validators } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { PathService } from '../../Services/path.service';
@@ -8,10 +8,11 @@ import { SuccessToastComponent } from 'src/app/alerts/success-toast/success-toas
 import { WarningToastComponent } from 'src/app/alerts/warning-toast/warning-toast.component';
 import { FailedToastComponent } from 'src/app/alerts/failed-toast/failed-toast.component';
 import * as L from 'leaflet';
-import { Lines } from '../../interfaces/Lines';
+import { Lines } from '../../Models/Lines';
 import 'leaflet-routing-machine';
 import "leaflet-control-geocoder/dist/Control.Geocoder.js";
 import { WarningComponent } from 'src/app/alerts/warning/warning.component';
+import { DynamicPopupComponent } from '../../Pages/dynamic-popup/dynamic-popup.component';
 
 function allowedValues(control: FormControl) {
   const value = control.value;
@@ -29,33 +30,40 @@ function allowedValues(control: FormControl) {
 
 })
 export class AddPathComponent implements AfterViewInit {
+  @ViewChild('popupPlaceholder', { read: ViewContainerRef }) popupPlaceholder!: ViewContainerRef;
 
   horizontalPosition: MatSnackBarHorizontalPosition = 'start';
-  verticalPosition: MatSnackBarVerticalPosition = 'bottom';
+  verticalPosition: MatSnackBarVerticalPosition = 'bottom';c
   lines: Lines[] = [];
   showdialg: boolean = true;
   map: L.Map;
   smallIcon: L.Icon;
   redicon: L.Icon;
   marker: L.Marker;
-  public latt: number;
-  public long: number;
   public data:string;
   addForm: FormGroup;
+  componentRef: any;
   isFormSubmitted = false;
   constructor(private elementRef: ElementRef, private http: HttpClient,
+    private viewContainerRef: ViewContainerRef,
      private fb: FormBuilder, private _pathsertvice: PathService,
       private snackBar: MatSnackBar) {
     this.addForm = this.fb.group({
-      startFr: new FormControl('', [Validators.required, Validators.minLength(4)]),
-      startAr: new FormControl('', [Validators.required, Validators.minLength(4)]),
-      endFr: new FormControl('', [Validators.required, Validators.minLength(4)]),
-      endAr: new FormControl('', [Validators.required, Validators.minLength(4)]),
+     
+    
       type: new FormControl('', [Validators.required, allowedValues]),
       data:new FormControl('', [Validators.required]),
       line:new FormControl('', [Validators.required]),
     })
   }
+ showPopup() {
+    this.viewContainerRef.clear();
+    const componentRef = this.viewContainerRef.createComponent(DynamicPopupComponent);
+
+    componentRef.instance.addForm = this.addForm;
+    componentRef.instance.isFormSubmitted = this.isFormSubmitted;
+  }
+
 
   capaciteValidator(control: AbstractControl): ValidationErrors | null {
     const value = control.value;
@@ -147,7 +155,7 @@ export class AddPathComponent implements AfterViewInit {
 
     });
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '&copy; OpenStreetMap contributors'
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors Oussama Omrani'
     }).addTo(this.map);
 
     var googleSat = L.tileLayer('http://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
@@ -164,7 +172,7 @@ export class AddPathComponent implements AfterViewInit {
     var mainLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       
       maxZoom: 14,
-      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+     
     });
 
     mainLayer.addTo(this.map);
@@ -221,11 +229,19 @@ export class AddPathComponent implements AfterViewInit {
   enableClickToAddMarker(): void {
     let startMarker: L.Marker;
     let endMarker: L.Marker;
+    let startMarkerdraw: L.Marker;
+    let endMarkerdraw: L.Marker;
     let routingPlan: L.Routing.Plan;
     let routingControl: L.Routing.Control;
     let savedData: L.LayerGroup = L.layerGroup(); 
     let loadedData: L.LayerGroup = L.layerGroup(); 
     let geoJSONLayer: L.GeoJSON;
+    let drawnFeatures: L.FeatureGroup;
+    let drawControl: any;
+    let isDrawing: boolean;
+    let lineExists : boolean;
+    let drawnPolylines: L.Polyline[] = [];
+    let markerDragged: boolean = false;
     const clearMarkersAndRouting = (): void => {
 
       if (routingControl) {
@@ -249,52 +265,68 @@ export class AddPathComponent implements AfterViewInit {
         this.map.removeLayer(endMarker);
         endMarker = null;
       }
+
+      if (startMarkerdraw) {
+        savedData.removeLayer(startMarkerdraw);
+        this.map.removeLayer(startMarkerdraw);
+        startMarkerdraw = null;
+      }
+
+      if (endMarkerdraw) {
+        savedData.removeLayer(endMarkerdraw);
+        this.map.removeLayer(endMarkerdraw);
+        endMarkerdraw = null;
+      }
+
       if (geoJSONLayer) {
         loadedData.removeLayer(geoJSONLayer);
         this.map.removeLayer(geoJSONLayer);
         geoJSONLayer = null;
       }
+      if (drawnFeatures) {
+        savedData.removeLayer(drawnFeatures);
+        drawnFeatures.clearLayers();
+      }
    
     };
-    this.addForm.get('startFr').valueChanges.subscribe(()=>{
-      updateRouting();
-    });
-    this.addForm.get('startAr').valueChanges.subscribe(()=>{
-      updateRouting();
-    });
-    this.addForm.get('endFr').valueChanges.subscribe(()=>{
-      updateRouting();
-    });
-    this.addForm.get('endAr').valueChanges.subscribe(()=>{
-      updateRouting();
-    });
-    const updateRouting = (): void => {
-        if (startMarker && endMarker) {
-          const popupTextS = `Location FR: ${this.addForm.get('startFr').value} <br> Location AR:${this.addForm.get('startAr').value}`;
-          const popupTextE = `Location FR: ${this.addForm.get('endFr').value} <br> Location AR:${this.addForm.get('endAr').value}`;
-         
+ 
 
+    const initialiszeroute = (): void => {
+      if (routingControl) {
+        this.map.removeControl(routingControl);
+        routingControl = null;
+      }
+
+      if (routingPlan) {
+        routingPlan.removeFrom(this.map);
+        routingPlan = null;
+      }
+    }
+    const updateRouting = (): void => {
+      if (startMarker && endMarker) {
+        //const popupTextS = `Location FR: ${this.addForm.get('startFr').value} <br> Location AR:${this.addForm.get('startAr').value}`;
+        //const popupTextE = `Location FR: ${this.addForm.get('endFr').value} <br> Location AR:${this.addForm.get('endAr').value}`;
+        const inputpopup = ``;
+        initialiszeroute();
         routingPlan = new L.Routing.Plan([startMarker.getLatLng(), endMarker.getLatLng()], {
 
           createMarker: (i, waypoints, n) => {
             if (i === 0) {
-             startMarker = L.marker(waypoints.latLng, { icon: this.smallIcon, draggable: true }).bindPopup(popupTextS).openPopup() 
-          
-            savedData.addLayer(startMarker)
-            return startMarker;
-              
+              startMarker = L.marker(waypoints.latLng, { icon: this.smallIcon, draggable: true }).on('dragend', onDragEndStart).bindPopup(this.componentRef).openPopup()
+              savedData.addLayer(startMarker)
+              return startMarker;
             } else if (i === n - 1) {
-               endMarker= L.marker(waypoints.latLng, { icon: this.redicon, draggable: true }).bindPopup(popupTextE).openPopup()  
-            
-              savedData.addLayer(endMarker);
+              endMarker = L.marker(waypoints.latLng, { icon: this.redicon, draggable: true }).on('dragend', onDragEndEnd).bindPopup('helo').openPopup()
               return endMarker;
             }
             return null;
           },
         });
+
         routingPlan.addTo(this.map);
 
         routingControl = L.Routing.control({
+          //router:(L.Routing as any).mapbox('pk.eyJ1Ijoib3VzczAxYW1hIiwiYSI6ImNsa2FheW41MzA1Z3ozZG13dGpiZjl4d2YifQ.zBUhApqgliMB7y1zR3ODWw'),
           plan: routingPlan,
           lineOptions: {
             styles: [{ color: 'blue', opacity: 0.6, weight: 9 },
@@ -303,35 +335,174 @@ export class AddPathComponent implements AfterViewInit {
             extendToWaypoints: false,
             missingRouteTolerance: 0,
           },
-          
+          addWaypoints: false,
         });
         routingControl.addTo(this.map);
+
+      }
+    };
+
+    const onDragEndStart = (event: L.LeafletEvent): void => {
+   
+      startMarker.options.draggable = true;
+      const latlng = (event.target as L.Marker).getLatLng();
+      startMarker.setLatLng(latlng);
+      markerDragged = true;
+    };
+
+    const onDragEndEnd = (event: L.LeafletEvent): void => {
+      endMarker.options.draggable = true;
+      const latlng = (event.target as L.Marker).getLatLng();
+      endMarker.setLatLng(latlng);
+      markerDragged = true;
+
+    };
+
+    if (!drawnFeatures) {
+      drawnFeatures = new L.FeatureGroup().addTo(this.map);
+
+      drawControl = new (L.Control as any).Draw({
+        edit: {
+          featureGroup: drawnFeatures,
+          remove: false
+        },
+        draw: {
+          polyline: {
+            shapeOptions: {
+              color: 'green',
+            },
+          },
+          polygon: false,
+          marker: false,
+          circlemarker: false,
+          circle: false,
+          rectangle: false,
+
+        }
+
+      });
+
+      this.map.addControl(drawControl);
+
+    };
+    
+
+    this.map.on('draw:created', (event: L.LeafletEvent) => {
+      const layer: L.Layer = event.layer;
+      if (lineExists){
+        lineExists =false;
+        return;
+      }
+      if (layer instanceof L.Polyline) {
+        drawnPolylines.push(layer);
+        drawnFeatures.addLayer(layer);
+        savedData.addLayer(drawnFeatures);
+        lineExists= true;
+          // @ts-ignore
+        const latlngs: L.LatLng[] = layer.getLatLngs(); 
+        startMarkerdraw = L.marker(latlngs[0]);
+        startMarkerdraw.setIcon(this.smallIcon)
+    endMarkerdraw = L.marker(latlngs[latlngs.length - 1]);
+    endMarkerdraw.setIcon(this.redicon)
+    startMarkerdraw.addTo(this.map);
+    endMarkerdraw.addTo(this.map);
+        let geoJSON = savedData.toGeoJSON();
+        let data = JSON.stringify(geoJSON);
+        this.addForm.get('data').setValue(data);
+        console.log(this.addForm.get('data').value);
+       
+      }
+    });
+    const updateMarkerPositions = (polyline: L.Polyline): void => {
+      // @ts-ignore
+      const latlngs: L.LatLng[] = polyline.getLatLngs();
+    
+      if (latlngs.length >= 2) {
+        startMarkerdraw.setLatLng(latlngs[0]);
+        endMarkerdraw.setLatLng(latlngs[latlngs.length - 1]);
+      }
+    };
+
+    this.map.on('draw:edited', (event: L.LeafletEvent) => {
+      // @ts-ignore
+      const layers: L.Layer[] = (event).layers.getLayers();
+    
+      for (const layer of layers) {
+        if (layer instanceof L.Polyline) {
+          // @ts-ignore
+          const oldLayer = drawnFeatures.getLayer(layer._leaflet_id);
+          if (oldLayer) {
+            drawnFeatures.removeLayer(oldLayer);
+          }
+    
+         
+          drawnFeatures.addLayer(layer);
+          updateMarkerPositions(layer);
+    
+          const geoJSON = savedData.toGeoJSON();
+          const data = JSON.stringify(geoJSON);
+          this.addForm.get('data').setValue(data);
+          console.log(drawnFeatures.getLayers().length);
+          console.log(this.addForm.get('data').value);
+        }
+      }
+    });
+    this.map.on('draw:drawvertex', () => {
+      if (!lineExists) {
+        if (startMarker && endMarker) {
+          isDrawing = false;
+          lineExists = true;
+        } else {
+          isDrawing = true;
+        }
+      } else {
+        isDrawing = false;
       }
       
-    };
- 
+    });
     this.map.on('click', (event: L.LeafletMouseEvent) => {
       const { lat, lng } = event.latlng;
+      if (lineExists) {
+        return;
+      }
+
+      if (isDrawing) {
+        isDrawing = false;
+        return;
+      }
+      savedData.clearLayers();
 
       if (!startMarker) {
-        startMarker = L.marker([lat, lng], { icon: this.smallIcon, draggable: true })    
+        startMarker = L.marker([lat, lng])
+
       } else if (!endMarker) {
-        endMarker = L.marker([lat, lng], { icon: this.redicon, draggable: true })
-      
-       
+        endMarker = L.marker([lat, lng])
+
       } else {
         return null;
       }
+      updategeojson()
 
+
+    });
+    const updategeojson = (): void => {
       updateRouting();
+      if (startMarker && endMarker){
       let geoJSON = savedData.toGeoJSON();
       let data = JSON.stringify(geoJSON);
       this.addForm.get('data').setValue(data);
-    });  
+      console.log(data);
+      }
+    }
+
 
     this.map.on('contextmenu', () => {
       clearMarkersAndRouting();
-      
+      drawnFeatures.clearLayers();
+      drawnPolylines.forEach((polyline) => this.map.removeLayer(polyline));
+      drawnPolylines = [];
+      lineExists = false;
+
     });
 
     const saveButton = L.Control.extend({
@@ -342,40 +513,19 @@ export class AddPathComponent implements AfterViewInit {
       onAdd: (map: L.Map) => {
         const button = L.DomUtil.create('button', 'save-button');
         button.innerHTML = 'Save';
-       
+        button.style.backgroundColor = 'white';
+        button.style.color = 'black';
+        button.style.padding = '6px 5px';
+        button.style.border = '1px solid black';
+        button.style.cursor = 'pointer';
         button.addEventListener('click', () => {
-          const geoJSON = savedData.toGeoJSON(); // Convert layer group to GeoJSON
-          const data = JSON.stringify(geoJSON);
-          // You can now use the 'data' variable to save the GeoJSON data as desired
-          console.log(data);
+          updategeojson();
         });
   
         return button;
       },
-    });
-    
-   
-    this.map.addControl(new saveButton());
-    const geojson = '{"type":"FeatureCollection","features":[{"type":"Feature","properties":{},"geometry":{"type":"Point","coordinates":[10.183166,36.856274]}},{"type":"Feature","properties":{},"geometry":{"type":"Point","coordinates":[10.168749,36.831821]}}]}';
-  
-    const loadbutton = L.Control.extend({
-      options:{
-        position :'topleft',
-      },
-      onAdd:(map :L.Map) =>{
-        const buttonl = L.DomUtil.create('button', 'load-button');
-        buttonl.innerHTML = 'Load';        
-        buttonl.addEventListener('click',()=>{
-           geoJSONLayer = L.geoJSON(JSON.parse(geojson)).addTo(map);
-          map.fitBounds(geoJSONLayer.getBounds());
-        });
-      
-return buttonl;
-      }
-    });
-    this.map.addControl(new loadbutton);   
-
-    
+    });   
+    this.map.addControl(new saveButton());   
   }
 
   getLineNames(): void {
