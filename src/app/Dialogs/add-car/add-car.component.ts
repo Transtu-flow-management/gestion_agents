@@ -36,7 +36,6 @@ export class AddCarComponent implements OnInit {
   driver: Conductor[] = [];
   brand: Brand[] = [];
   line: Lines[] = [];
-  path: Path[] =[];
   state : Condition[] =[];
   resaux: String[];
   entrpt = new FormControl<Depot>(null);
@@ -62,7 +61,6 @@ export class AddCarComponent implements OnInit {
       brand: new FormControl(this.brands, [Validators.required]),
       driver: new FormControl(this.conductors, [Validators.required]),
       line: new FormControl('', [Validators.required]),
-      path: new FormControl('', [Validators.required]),
       
     })
 
@@ -80,7 +78,6 @@ export class AddCarComponent implements OnInit {
     this.getLineNames();
     this.getconditions();
     this.getconductors();
-    this.getpaths();
 
     this.filteredOptions = this.entrpt.valueChanges.pipe(
       startWith(''),
@@ -153,8 +150,6 @@ export class AddCarComponent implements OnInit {
       const selectedstateId = formvalue.state;
     const selectedLine = this.line.find(line => line.id === selectedLineId);  
       formvalue.line = selectedLine;
-      const selectedpath =this.path.find(path => path.id === selectedpathId);
-      formvalue.path = selectedpath;
       const selectedstate =this.state.find(state => state.id === selectedstateId);
       formvalue.state = selectedstate;
 
@@ -230,12 +225,6 @@ export class AddCarComponent implements OnInit {
     }, error => {
       this.openfailToast("erreur l\'ors de l\'affichage de liste des conditions");
       console.log(error);
-    })
-  }
-
-  getpaths(): void {
-    this._carService.retreivePaths().subscribe((path) => {
-      this.path = path;
     })
   }
   getconductors():void{

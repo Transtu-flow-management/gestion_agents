@@ -12,8 +12,54 @@
 <div class="mt-20 ml-40 w-3/4 h-screen">
 
     <form [formGroup]="addForm" >
-       
-      
+        <div class="relative z-0 mt-4 w-full group gap-12 flex flex-row items-start justify-evenly ">
+            <div class="relative w-full">
+                <label for="name" class="text-lg text-gray-700 block mb-1 font-medium capitalize">début de la ligne</label>
+                <input type="text" name="name" formControlName="startFr" id="name" class="bg-[#F1F6F9] border border-gray-400 rounded py-3 px-3 block focus:ring-blue-500 focus:border-blue-500 text-gray-700 w-full" placeholder="Enter your name" />
+                <ng-container>
+                    <div *ngIf="isFormSubmitted && addForm.get('startFr').errors?.['required']  && addForm.get('startFr')"
+                        class="text-red-500 text-xs italic">Veillez verifier que le champ non vide </div>
+                    <div *ngIf="isFormSubmitted && addForm.get('startFr').errors?.['minlength']  && addForm.get('startFr').invalid && addForm.get('startFr')"
+                        class="text-red-500 text-xs italic">le nom doit contient minimum 4 lettres</div>
+                </ng-container>  
+            </div>
+            
+            <div class="relative w-full">
+                <label for="nameAr" class="text-lg text-gray-700 block mb-1 font-bold">بداية الخط</label>
+                <input type="text" name="nameAr" formControlName="startAr" id="name" class="bg-[#F1F6F9] border border-gray-400 rounded py-3 px-3 block focus:ring-blue-500 focus:border-blue-500 text-gray-700 w-full" placeholder="Enter your name" />
+                <ng-container>
+                    <div *ngIf="isFormSubmitted && addForm.get('startAr').errors?.['required']  && addForm.get('startAr')"
+                        class="text-red-500 text-xs italic">Veillez verifier que le champ non vide </div>
+                    <div *ngIf="isFormSubmitted && addForm.get('startAr').errors?.['minlength']  && addForm.get('startAr').invalid && addForm.get('startAr')"
+                        class="text-red-500 text-xs italic">le nom doit contient minimum 4 lettres</div>
+                </ng-container> 
+            </div>
+        </div>
+        <hr>
+        <div class="my-8"> <!-- Add spacing here --></div>
+        <div class="relative z-0 mt-4 w-full group gap-12 flex flex-row items-start justify-evenly ">
+            <div class="relative w-full">
+                <label for="startar" class="text-lg text-gray-700 block mb-1 font-medium capitalize">fin de la ligne</label>
+                <input type="text" name="startar" formControlName="endFr" id="name" class="bg-[#F1F6F9] border border-gray-400 rounded py-3 px-3 block focus:ring-blue-500 focus:border-blue-500 text-gray-700 w-full" placeholder="Enter your name" />
+                <ng-container>
+                    <div *ngIf="isFormSubmitted && addForm.get('endFr').errors?.['required']  && addForm.get('endFr')"
+                        class="text-red-500 text-xs italic">Veillez verifier que le champ non vide </div>
+                    <div *ngIf="isFormSubmitted && addForm.get('endFr').errors?.['minlength']  && addForm.get('endFr').invalid && addForm.get('endFr')"
+                        class="text-red-500 text-xs italic">le nom doit contient minimum 4 lettres</div>
+                </ng-container>  
+            </div>
+            
+            <div class="relative w-full">
+                <label for="endAr" class="text-lg text-gray-700 block mb-1 font-bold ">نهاية الخط</label>
+                <input type="text" name="endAr" formControlName="endAr" id="name" class="bg-[#F1F6F9] border border-gray-400 rounded py-3 px-3 block focus:ring-blue-500 focus:border-blue-500 text-gray-700 w-full" placeholder="Enter your name" />
+                <ng-container>
+                    <div *ngIf="isFormSubmitted && addForm.get('endAr').errors?.['required']  && addForm.get('endAr')"
+                        class="text-red-500 text-xs italic">Veillez verifier que le champ non vide </div>
+                    <div *ngIf="isFormSubmitted && addForm.get('endAr').errors?.['minlength']  && addForm.get('endAr').invalid && addForm.get('endAr')"
+                        class="text-red-500 text-xs italic">le nom doit contient minimum 4 lettres</div>
+                </ng-container> 
+            </div>
+        </div>
         <div class="my-8"> <!-- Add spacing here -->
             <div class="relative h-10 w-auto min-w-[200px] ">
                 <select formControlName="line"
@@ -33,9 +79,26 @@
 
             </ng-container>
         </div>
-       
-     
-      
+        <div class="my-4"></div> 
+        <div class=" rounded-lg ">
+            <span class="text-lg not-italic font-sans font-bold tracking-wide text-justify dark:text-[#111827] ">Sens d'itinéraire :</span>
+          
+        </div>
+        <mat-radio-group formControlName="type">
+            <div class="flex flex-wrap gap-4">
+          <mat-radio-button class="w-1/4" color="primary" [value]="0">
+            <p class="font-sans text-justify font-medium pt-3">Sens normal</p>
+          </mat-radio-button>
+          <mat-radio-button class="w-1/4" color="primary" [value]="1">
+            <p class="font-sans text-justify font-medium pt-3">Sens inverse</p>
+          </mat-radio-button>
+        </div>
+        </mat-radio-group>
+        <ng-container>
+            <div *ngIf="isFormSubmitted &&addForm.get('type').errors?.['required']  && addForm.get('type')" class="text-red-500 text-xs italic">
+                Selectionner type de traget</div>
+
+        </ng-container>
         <div class="rounded-lg pt-8 ">
             <p class="text-lg not-italic font-sans font-bold tracking-wide text-justify dark:text-[#111827] capitalize">Selectonner deux point pour former un traget :</p>
             <ng-container>
@@ -47,7 +110,10 @@
         <div class="my-4"></div> <!-- Add spacing here -->
         <div class="map-container">
             <div class="map-frame">
-                <div id="map"></div>
+                <div id="map">
+                    <div class="m-32">
+                    <h1>No Map Displayed, check netwrok Connection</h1></div>
+                </div>
             </div>
            
         </div>

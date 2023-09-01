@@ -13,6 +13,8 @@ import 'leaflet-routing-machine';
 import "leaflet-control-geocoder/dist/Control.Geocoder.js";
 import { WarningComponent } from 'src/app/alerts/warning/warning.component';
 import { DynamicPopupComponent } from '../../Pages/dynamic-popup/dynamic-popup.component';
+import { MatDialog } from '@angular/material/dialog';
+import { GenerateFromGpsComponent } from 'src/app/Dialogs/generate-from-gps/generate-from-gps.component';
 
 function allowedValues(control: FormControl) {
   const value = control.value;
@@ -44,13 +46,16 @@ export class AddPathComponent implements AfterViewInit {
   addForm: FormGroup;
   componentRef: any;
   isFormSubmitted = false;
-  constructor(private elementRef: ElementRef, private http: HttpClient,
+  constructor(private elementRef: ElementRef, private http: HttpClient,private dialog : MatDialog,
     private viewContainerRef: ViewContainerRef,
      private fb: FormBuilder, private _pathsertvice: PathService,
       private snackBar: MatSnackBar) {
     this.addForm = this.fb.group({
      
-    
+      startFr: new FormControl( '', [Validators.required, Validators.minLength(4)]),
+      startAr: new FormControl('', [Validators.required, Validators.minLength(4)]),
+      endFr: new FormControl( '', [Validators.required, Validators.minLength(4)]),
+      endAr: new FormControl( '', [Validators.required, Validators.minLength(4)]),
       type: new FormControl('', [Validators.required, allowedValues]),
       data:new FormControl('', [Validators.required]),
       line:new FormControl('', [Validators.required]),
@@ -312,7 +317,7 @@ export class AddPathComponent implements AfterViewInit {
 
           createMarker: (i, waypoints, n) => {
             if (i === 0) {
-              startMarker = L.marker(waypoints.latLng, { icon: this.smallIcon, draggable: true }).on('dragend', onDragEndStart).bindPopup(this.componentRef).openPopup()
+              startMarker = L.marker(waypoints.latLng, { icon: this.smallIcon, draggable: true }).on('dragend', onDragEndStart).bindPopup("").openPopup()
               savedData.addLayer(startMarker)
               return startMarker;
             } else if (i === n - 1) {
@@ -335,7 +340,7 @@ export class AddPathComponent implements AfterViewInit {
             extendToWaypoints: false,
             missingRouteTolerance: 0,
           },
-          addWaypoints: false,
+          addWaypoints: true,
         });
         routingControl.addTo(this.map);
 
@@ -495,6 +500,16 @@ export class AddPathComponent implements AfterViewInit {
       }
     }
 
+    const generatepathfromgps = (): void => {
+      const dialogref =this.dialog.open(GenerateFromGpsComponent,{
+        width:'50%',
+        height:'70%',
+        enterAnimationDuration:'1000ms',
+        exitAnimationDuration:'200ms',
+      });
+    }
+
+
 
     this.map.on('contextmenu', () => {
       clearMarkersAndRouting();
@@ -526,6 +541,31 @@ export class AddPathComponent implements AfterViewInit {
       },
     });   
     this.map.addControl(new saveButton());   
+
+    const generatepath = L.Control.extend({
+      options: {
+        position: 'topleft',
+      },
+  
+      onAdd: (map: L.Map) => {
+        const button = L.DomUtil.create('button', 'generate');
+        button.style.marginTop ='20px'
+        button.innerHTML = 'generate path';
+        button.style.backgroundColor = 'rgb(198, 207, 194)';
+        button.style.color = 'black';
+        button.style.fontFamily='roboto'
+        button.style.fontSize ='14px'
+        button.style.padding = '10px 12px';
+        button.style.border = '1px solid black';
+        button.style.cursor = 'pointer';
+        button.addEventListener('click', () => {
+          generatepathfromgps();
+        });
+  
+        return button;
+      },
+    });   
+    this.map.addControl(new generatepath()); 
   }
 
   getLineNames(): void {

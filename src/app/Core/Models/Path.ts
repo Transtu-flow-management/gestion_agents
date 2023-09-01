@@ -1,4 +1,5 @@
 import { Lines } from "./Lines";
+import { Stop } from "./Stop";
 
 export interface Path{
     id:string;
@@ -9,6 +10,7 @@ export interface Path{
     endAr:string;
     type:number;
     data:string;
+    stops:Stop[];
     dateOfInsertion:Date;
     dateOfModification:Date;
 

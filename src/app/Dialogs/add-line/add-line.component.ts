@@ -11,6 +11,7 @@ import { Depot } from 'src/app/Core/Models/depot';
 import { FailedToastComponent } from 'src/app/alerts/failed-toast/failed-toast.component';
 import { SuccessToastComponent } from 'src/app/alerts/success-toast/success-toast.component';
 import { WarningToastComponent } from 'src/app/alerts/warning-toast/warning-toast.component';
+import { WarningComponent } from 'src/app/alerts/warning/warning.component';
 
 @Component({
   selector: 'app-add-line',
@@ -31,7 +32,6 @@ export class AddLineComponent implements OnInit{
   constructor(private dialog :MatDialog,private fb:FormBuilder,private snackBar:MatSnackBar ,private _lineservice :LinesService,private _warehouseService:EntropotService){
      this.addForm = this.fb.group({
       nameFr: new FormControl('', [Validators.required,]),
-      name: new FormControl('', [Validators.required, ]),
       nameAr: new FormControl('', [Validators.required,]),
       start_fr: new FormControl('', [Validators.required, ]),
       start_ar: new FormControl('', [Validators.required, ]),
@@ -89,7 +89,7 @@ export class AddLineComponent implements OnInit{
 }
 
 openWarningToast(message:string):void{
- this.snackBar.openFromComponent(WarningToastComponent,{
+ this.snackBar.openFromComponent(WarningComponent,{
    data: {message:message},duration: 5000,
  horizontalPosition: "center",
     verticalPosition: "top",
@@ -104,10 +104,13 @@ add(): void {
   formValue.warehouse = selectedMaker;
 
   if (this.addForm.invalid){
+    console.log(this.addForm.value);
     return this.openWarningToast('Form invalide');
+   
   }
     this._lineservice.addline(formValue).subscribe(() => {
       this.openAddToast('ligne ajoutée avec succès');
+      this.close();
     }, (error) => {
       this.openfailToast('Erreur lors de l\'ajout d\'une ligne');
       console.log(error);

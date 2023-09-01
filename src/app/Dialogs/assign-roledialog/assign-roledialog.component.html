@@ -1,41 +1,38 @@
 <div class=" relative overflow-hidden overflow-y-scroll w-full h-full">
-    <div class="overflow-hidden rounded-lg pt-8 -mb-14 pl-20">
-      <p class="text-4xl not-italic font-sans font-bold tracking-wide text-justify dark:text-[#111827] capitalize">
-        Select Role to assign to user
-      </p>
-    </div>
-    <div class="rounded-lg mt-12 ml-20 mr-24 w-auto">
-      <div class="py-8 ">
-        <div class="sm:flex items-center justify-between">
-          <div class="flex items-center ">
-          </div>
+  <div class="overflow-hidden rounded-lg pt-8 -mb-14 pl-20">
+    <p class="text-4xl not-italic font-sans font-bold tracking-wide text-justify dark:text-[#111827] capitalize">
+      Select Role to assign to user
+    </p>
+  </div>
+  <div class="rounded-lg mt-12 ml-20 mr-24 w-auto">
+    <div class="py-8 ">
+      <div class="sm:flex items-center justify-between">
+        <div class="flex items-center ">
         </div>
       </div>
+    </div>
 
-      <div class="flex flex-col outline-2">
-        <span class="text-2xl not-italic font-sans font-bold tracking-wide text-justify dark:text-[#111827] capitalize pb-10">Select Role:</span>
+    <div class="flex flex-col outline-2">
+      <span
+        class="text-2xl not-italic font-sans font-bold tracking-wide text-justify dark:text-[#111827] capitalize pb-10">Select
+        Role:</span>
 
-        
-            <mat-radio-group [(ngModel)]="selected" (change)="onRoleSelectionChange()">
-                <div class="flex flex-wrap gap-4">
-              <mat-radio-button *ngFor="let role of roles" [value]="role.roleName" class="w-1/4" color="primary">
-                <p class="font-sans text-justify font-medium pt-3">{{ role.roleName }}</p>
-              </mat-radio-button>
-            </div>
-            </mat-radio-group>
-        
-          
-      
+
+      <mat-radio-group [(ngModel)]="selected" (change)="onRoleSelectionChange()">
+        <div class="flex flex-wrap gap-4">
+          <mat-radio-button *ngFor="let role of roles" [value]="role.roleName" class="w-1/4" color="primary">
+            <p class="font-sans text-justify font-medium pt-3">{{ role.roleName }}</p>
+          </mat-radio-button>
+        </div>
+      </mat-radio-group>
+    </div>
+
+    <div class="my-8"></div>
+    <div>
+      <button color="primary"
+        class="text-black-100 font-medium mt-8 bg-[#F8AF26] hover:shadow-2xl hover:bg-amber-700 focus:ring-4 focus:ring-amber-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center "
+        (click)="AddRole()">
+        Add Role
+      </button>
+    </div>
   </div>
-
-  <div class="my-8"></div>
-  <div>
-
-    <button color="primary"
-    class="text-black-100 font-medium mt-8 bg-[#F8AF26] hover:shadow-2xl hover:bg-amber-700 focus:ring-4 focus:ring-amber-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center "
-    (click)="AddRole()"
-    >
-      Add Role
-    </button>
-  </div>
-</div>

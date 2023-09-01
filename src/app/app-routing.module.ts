@@ -23,6 +23,7 @@ import { AddPathComponent } from './Core/navigations/add-path/add-path.component
 import { UpdatePathComponent } from './Core/navigations/update-path/update-path.component';
 import { AddStopComponent } from './Core/navigations/add-stop/add-stop.component';
 import { CarsComponent } from './Core/Pages/cars/cars.component';
+import { GenerateFromGpsComponent } from './Dialogs/generate-from-gps/generate-from-gps.component';
 
 const approute: Routes = [
   {path:'',redirectTo:'home',pathMatch:'full'},
