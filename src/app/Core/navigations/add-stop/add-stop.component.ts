@@ -203,6 +203,7 @@ export class AddStopComponent implements AfterViewInit {
     updateButton.textContent = 'Update';
     updateButton.addEventListener('click', () => {
       component.instance.selected = stop;
+      this.updateStop = stop;
       component.instance.updateStop();
     });
     wrapperDiv.appendChild(updateButton);
@@ -338,7 +339,6 @@ export class AddStopComponent implements AfterViewInit {
 
   addStop(): void {
     const formValue = this.addForm.value;
-    const updateStop= this.addForm.getRawValue();
     this.UpdateForm = this.fb.group({
       name_fr: new FormControl(this.addForm.get('name_fr').value, [Validators.required, Validators.minLength(2)]),
       name_ar: new FormControl(this.addForm.get('name_ar').value, [Validators.required, Validators.minLength(2)]),
@@ -351,9 +351,8 @@ export class AddStopComponent implements AfterViewInit {
     const stopData: Stop = this.UpdateForm.value;
     if (this.addForm.valid) {
       console.log("valu : ", formValue)
-      console.log("updt : ", updateStop)
-      if (updateStop != null) {
-        const id = updateStop.id;
+      if (this.updateStop != null) {
+        const id = this.updateStop.id;
         console.log("updated : ", id)
         if (id) {
           this._stopService.updatepstop(stopData, id).subscribe(() => {
@@ -364,7 +363,13 @@ export class AddStopComponent implements AfterViewInit {
           })
         }
       } else {
-        this.message = "Arret ajouté avec succéss";
+        this._stopService.addstop(formValue).subscribe(() => {
+          console.log("add : ", formValue)
+          this.message = "Arret ajouté avec succéss";
+        }, error => {
+          const message = `Erreur l\'ors de l\'ajout de nouvelle arrêt ${error.status}`;
+          this.openfailToast(message);
+        })
       }
     } else {
       this.openWarningToast("La Forme est invalide ou incomplet");
