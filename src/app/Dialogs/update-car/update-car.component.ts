@@ -33,6 +33,7 @@ export class UpdateCarComponent implements OnInit{
   driver: Conductor[] = [];
   brand: Brand[] = [];
   line: Lines[] = [];
+  path: Path[] =[];
   state : Condition[] =[];
   resaux: String[];
   entrpt = new FormControl<Depot>(null);
@@ -60,6 +61,7 @@ constructor(private _carService:CarService,private dialog: MatDialog, private fb
       brand: new FormControl(this.brands.value, [Validators.required]),
       driver: new FormControl(this.conductors.value, [Validators.required]),
       line: new FormControl(car.line.id, [Validators.required]),
+      path: new FormControl(car.path.id, [Validators.required]),
       depot : new FormControl(car.warehouse),
       carbrand: new FormControl(car.brand),
       cardriver :  new FormControl(car.driver),
@@ -77,6 +79,7 @@ constructor(private _carService:CarService,private dialog: MatDialog, private fb
     this.getLineNames();
     this.getconditions();
     this.getconductors();
+    this.getpaths();
 
     this.filteredOptions = this.entrpt.valueChanges.pipe(
       startWith(''),
@@ -194,7 +197,11 @@ this.brands.setValue(this.data.car.brand);
     })
   }
 
-
+  getpaths(): void {
+    this._carService.retreivePaths().subscribe((path) => {
+      this.path = path;
+    })
+  }
   getconductors():void{
     this._driverService.getallDrivers().subscribe(drivers => {
       this.driver = drivers;
@@ -231,7 +238,8 @@ this.brands.setValue(this.data.car.brand);
     const selectedLine = this.line.find(line => line.id === selectedLineId);
     car.line = selectedLine;
     const selectedpatheId = car.path;
-
+    const selectedpath = this.path.find(paths => paths.id === selectedpatheId);
+    car.path = selectedpath;
     const selectedstateId = car.state;
     const selectedstate = this.state.find(state => state.id === selectedstateId);
     car.state = selectedstate;

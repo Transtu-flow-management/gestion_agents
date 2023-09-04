@@ -18,5 +18,4 @@ export class AppComponent   {
 logout(){
   this.authservice.logout();
 }
-userPicture : String=''
 }

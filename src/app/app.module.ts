@@ -75,8 +75,7 @@ import { DynamicPopupComponent } from './Core/Pages/dynamic-popup/dynamic-popup.
 import { CarsComponent } from './Core/Pages/cars/cars.component';
 import { AddCarComponent } from './Dialogs/add-car/add-car.component';
 import { UpdateCarComponent } from './Dialogs/update-car/update-car.component';
-import { GenerateFromGpsComponent } from './Dialogs/generate-from-gps/generate-from-gps.component';
-import { UpdatepopupComponent } from './Core/navigations/updatepopup/updatepopup.component';
+import { StopPopupComponent } from './Core/navigations/stop-popup/stop-popup.component';
 export const API_URL = new InjectionToken<String>('API_URL');
 
 @NgModule({
@@ -128,8 +127,7 @@ export const API_URL = new InjectionToken<String>('API_URL');
     CarsComponent,
     AddCarComponent,
     UpdateCarComponent,
-    GenerateFromGpsComponent,
-    UpdatepopupComponent,
+    StopPopupComponent,
 
   ],
   imports: [

@@ -1,21 +1,19 @@
 import { Component } from '@angular/core';
-import { NavigationExtras, Router } from '@angular/router';
-import { Stop } from '../../Models/Stop';
+import { FailedToastComponent } from 'src/app/alerts/failed-toast/failed-toast.component';
+import { SuccessToastComponent } from 'src/app/alerts/success-toast/success-toast.component';
+import { ConfirmationComponent } from 'src/app/confirmation/confirmation.component';
 import { SelectedStopService } from '../../Services/selected-stop.service';
 import { StopserviceService } from '../../Services/stopservice.service';
-import { SuccessToastComponent } from 'src/app/alerts/success-toast/success-toast.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { ConfirmationComponent } from 'src/app/confirmation/confirmation.component';
 import { MatDialog } from '@angular/material/dialog';
-import { FailedToastComponent } from 'src/app/alerts/failed-toast/failed-toast.component';
+import { Stop } from '../../Models/Stop';
 
 @Component({
-  selector: 'app-updatepopup',
-  templateUrl: './updatepopup.component.html',
-  styleUrls: ['./updatepopup.component.css']
+  selector: 'app-stop-popup',
+  templateUrl: './stop-popup.component.html',
+  styleUrls: ['./stop-popup.component.css']
 })
-export class UpdatepopupComponent {
-
+export class StopPopupComponent {
   stops :Stop[] = [];
   map :L.Map;
   selected: Stop | undefined;

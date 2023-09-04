@@ -21,28 +21,25 @@ export class StopserviceService {
    
     return this.http.get<Stop[]>(gurl,{params});
   }
-  public getstopsall():Observable<Stop[]>{
-    const gurl= this.gs.uri + this.url +`/all`;   
-    return this.http.get<Stop[]>(gurl);
-  }
 
   public deletestop(id:string):Observable<any>{
     const durl = this.gs.uri +this.url + `/${id}`;
     return this.http.delete(durl);
   }
-  public addstop(stop:Stop):Observable<Stop>{
+  public addstop(paths:Stop):Observable<Stop>{
 
     const aurl= this.gs.uri + this.url +`/add`;
-    return this.http.post<Stop>(aurl,stop);
+    return this.http.post<Stop>(aurl,paths);
 
   }
-  public updatepstop(stop:Stop,id:string):Observable<Stop>{
+  public updatepstop(paths:Stop,id:string):Observable<Stop>{
     const updurl = this.gs.uri +this.url +`/update/${id}`;
-    return this.http.put<Stop>(updurl,stop);
+    return this.http.put<Stop>(updurl,paths);
   }
   public getallpaths():Observable<Path[]>{
     const gurl = this.gs.uri+`/paths/all`;
     return this.http.get<Path[]>(gurl);
+
   }
 
   

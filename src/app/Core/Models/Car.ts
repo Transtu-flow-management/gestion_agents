@@ -12,6 +12,7 @@ export interface Car {
     matricule:string;
     selectedNetwork:string;
     line:Lines;
+    path:Path;
     driver:Conductor;
     brand:Brand;
     mode:number;

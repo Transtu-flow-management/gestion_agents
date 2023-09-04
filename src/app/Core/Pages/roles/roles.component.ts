@@ -57,8 +57,11 @@ openRoleDialog(){
     exitAnimationDuration:'2000ms',
   });
   dialogRef.afterClosed().subscribe(result =>{
-    this.currentPage =0;
-    this.getRoles(this.currentPage,this.pageSize);
+    
+    if (result){
+      console.log(result);
+      this.Roles.push(result);
+    }
   })
 }
 openEditRoleDialog(role:Role):void{
@@ -67,10 +70,6 @@ const dialogref = this._dialog.open(UpdateroleComponent,{
     enterAnimationDuration:'1000ms',
     exitAnimationDuration:'1000ms',
     data: { role: role, assignedPermissions:role.permissions}
-})
-dialogref.afterClosed().subscribe(()=>{
-  this.currentPage =0;
-  this.getRoles(this.currentPage,this.pageSize);
 })
 }
 
