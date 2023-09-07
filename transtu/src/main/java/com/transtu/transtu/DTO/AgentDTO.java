@@ -2,13 +2,14 @@ package com.transtu.transtu.DTO;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Date;
 
 @Getter
 @Setter
 
-public class AgentDTO {
+public class AgentDTO implements Serializable {
     private Integer Id;
     private String name;
     private String surname;

@@ -12,6 +12,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -23,7 +24,7 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 @Getter
 @Setter
-public class Agent implements UserDetails {
+public class Agent implements UserDetails, Serializable {
     @Transient
     public static final String SEQUENCE_NAME = "agent_sequence";
     @Id
@@ -55,7 +56,6 @@ public class Agent implements UserDetails {
     public void deleteRole(Role role){
         if (role != null) {
             this.role = null;
-
         }
     }
     public Collection<? extends GrantedAuthority> getAuthorities() {

@@ -41,9 +41,6 @@ public Car CreateCar(Car car){
     if (car.getBrand()==null || car.getBrand().getId() ==null ){
         throw new IllegalArgumentException("brand must be provided");
     }
-    if (car.getPath() == null || car.getPath().getId() ==null){
-        throw new IllegalArgumentException("Path must be provided");
-    }
     if (car.getLine() == null || car.getLine().getId() ==null){
         throw new IllegalArgumentException("Line must be provided");
     }
@@ -72,18 +69,12 @@ public Car CreateCar(Car car){
         newcar.setSelectedNetwork(oldcar.getSelectedNetwork());
         newcar.setStopcount(oldcar.getStopcount());
         newcar.setMode(oldcar.getMode());
-        Path oldPath = oldcar.getPath();
         Line oldLine = oldcar.getLine();
         Conductor olddriver = oldcar.getDriver();
         Condition oldcondt = oldcar.getState();
         Brand oldbrand = oldcar.getBrand();
         Warehouse oldhouse = oldcar.getWarehouse();
-        if (oldPath!= null){
-            Optional<Path> pathOptional = pathRepo.findById(oldPath.getId());
-            if (pathOptional.isPresent()){
-                newcar.setPath(pathOptional.get());
-            }
-        }
+
         if (oldLine != null){
             Optional<Line> lineOptional = lineRepo.findById(oldLine.getId());
             if (lineOptional.isPresent()){

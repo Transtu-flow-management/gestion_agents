@@ -115,5 +115,4 @@
 		</plugins>
 		<finalName>spring-mongo</finalName>
 	</build>
-
 </project>

@@ -1,5 +1,7 @@
 package com.transtu.transtu.Document;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.transtu.transtu.DTO.PathDTO;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -23,9 +25,10 @@ public class Stop {
     private double lat;
     private double lng;
     private int stopnumber;
-    @DBRef
-    private Path path;
+    private PathDTO path;
     private String description;
     private Date dateOfInsertion;
     private Date dateOfModification;
+
+
 }

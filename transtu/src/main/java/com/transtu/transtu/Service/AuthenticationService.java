@@ -51,37 +51,45 @@ private final SequenceGeneratorService mongo;
         Date currentDate = new Date();
 
         Integer signid = mongo.generateSequence(SEQUENCE_NAME);
-        var user = Agent.builder().id(signid)
-
+        var user = Agent.builder()
+                .id(signid)
                 .name((request.getName()))
                 .surname(request.getSurname())
                 .username(request.getUsername())
                 .phone((request.getPhone()))
                 .address(request.getAddress())
-                .DateOfBirth(request.getDateOfBirth())
                 .password(passwordEncoder.encode(request.getPassword()))
                 //.roles(request.getRoles())
                 .dateOfInsertion(currentDate)
                 .warehouse(request.getWarehouse())
-                .build();
-        user.setImageUrl(fileName);
-        var savedUser = agentRepo.save(user);
+                .imageUrl(fileName);
+        if (request.getWarehouse() != null) {
+            user.warehouse(request.getWarehouse());
+        }
+        if (request.getDateOfBirth() != null) {
+            user.DateOfBirth(request.getDateOfBirth());
+        }
+
+        var savedUser = agentRepo.save(user.build());
         AgentDTO agentDTO = new AgentDTO();
         agentDTO.setImageUrl(savedUser.getImageUrl());
         agentDTO.setId(savedUser.getId());
         agentDTO.setSurname(savedUser.getSurname());
         agentDTO.setName(savedUser.getName());
         agentDTO.setAddress(savedUser.getAddress());
-        agentDTO.setDateOfBirth(savedUser.getDateOfBirth());
         agentDTO.setPhone(savedUser.getPhone());
         agentDTO.setUsername(savedUser.getUsername());
-        agentDTO.setWarehouseName(savedUser.getWarehouse().getName());
-
+        if (savedUser.getWarehouse() != null) {
+            agentDTO.setWarehouseName(savedUser.getWarehouse().getName());
+        }
+        if (savedUser.getDateOfBirth() != null) {
+            agentDTO.setDateOfBirth(savedUser.getDateOfBirth());
+        }
         agentDTO.setDateOfInsertion(savedUser.getDateOfInsertion());
         //String rolename = savedUser.getRoles().stream().findFirst().map(Role::getRoleName).orElse(null);
        // agentDTO.setRoleName(rolename);
-        var jwtToken = jwtService.generateToken(user);
-        var refreshToken = jwtService.generateRefreshToken(user);
+        var jwtToken = jwtService.generateToken(user.build());
+        var refreshToken = jwtService.generateRefreshToken(user.build());
         saveUserToken(savedUser, jwtToken);
         return AuthenticationResponse.builder()
                 .accessToken(jwtToken)

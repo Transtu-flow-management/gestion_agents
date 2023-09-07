@@ -13,6 +13,9 @@ import com.transtu.transtu.Repositoy.entropotRepo;
 import com.transtu.transtu.utils.StoregeService;
 import org.apache.catalina.webresources.WarResource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.core.io.Resource;
 import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.data.domain.Page;
@@ -42,11 +45,6 @@ public class AgentService implements UserDetailsService {
     private entropotRepo entropotRepo;
     @Autowired
     private StoregeService storegeService;
-    @Autowired
-    private AgentPageRepo agentPageRepo;
-
-    public AgentService() {
-    }
 
     public List<Agent> findAllAgents(){
         List<Agent> agents = agentRepo.findAll();
@@ -55,6 +53,7 @@ public class AgentService implements UserDetailsService {
    /* public Page<AgentDTO> getAllagents(Pageable pageable) {
         return agentRepo.findAll(pageable);
     }*/
+   @Cacheable(cacheNames = "cachedAgents", key = "'Agents_' + #pageable.pageNumber")
    public Page<AgentDTO> getAllagents(Pageable pageable) {
        Page<Agent> agentPage = agentRepo.findAll(pageable);
        List<AgentDTO> agentDTOs = convertDtoToEntity(agentPage.getContent());
@@ -70,19 +69,8 @@ public class AgentService implements UserDetailsService {
     public void DeleteAgents(){
         agentRepo.deleteAll();
     }
-    public Agent updateAgent(Integer id,Agent agent){
-        Agent agent1 = agentRepo.findById(id).orElseThrow(()->new NoSuchElementException(("Agent introuvable")));
-        agent1.setName(agent.getName());
-        agent1.setSurname(agent.getSurname());
-        //agent1.setRoles(agent.getRoles());
-        agent1.setImageUrl(agent.getImageUrl());
-        agent1.setPhone(agent.getPhone());
-        agent1.setUsername(agent.getUsername());
-        agent1.setDateOfBirth(agent.getDateOfBirth());
-        agent1.setPassword(agent.getPassword());
-        agent1.setDateOfModification(new Date());
-    return agentRepo.save(agent1);
-    }
+
+   @CachePut(key = "#id",value = "CachedAgents")
     public Agent patchAgent(int id, Map<String, Object> champs, MultipartFile file) {
         Optional<Agent> isExisting = agentRepo.findById(id);
         if (isExisting.isPresent()) {
@@ -214,17 +202,10 @@ public class AgentService implements UserDetailsService {
         endOfDay.set(Calendar.SECOND, 59);
         return agentRepo.findBydateOfInsertionBetween(startOfDay.getTime(), endOfDay.getTime());
     }
-
     public void AssignRoleToAgent(Integer agentid, Integer roleid) throws ChangeSetPersister.NotFoundException {
         Agent agent = agentRepo.findById(agentid).orElseThrow(()-> new ChangeSetPersister.NotFoundException());
         Role role = roleRepo.findById(roleid).orElseThrow(() -> new ChangeSetPersister.NotFoundException());
         agent.addRole(role);
-        agentRepo.save(agent);
-    }
-    public void deleteRoleFromAgenta(Integer agentid,Integer roleid){
-        Agent agent = agentRepo.findById(agentid).orElseThrow(()-> new NotFoundExcemptionhandler(agentid));
-        Role role = roleRepo.findById(roleid).orElseThrow(()-> new NotFoundExcemptionhandler((roleid)));
-        agent.deleteRole(role);
         agentRepo.save(agent);
     }
 

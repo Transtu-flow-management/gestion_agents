@@ -11,6 +11,7 @@ import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.IanaLinkRelations;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -32,6 +33,7 @@ public class WarehouseController {
     private LineRepo lineRepo;
 
     @PostMapping("/create")
+   // @PreAuthorize("hasAuthority('writeDepot')")
     private ResponseEntity<EntityModel<Warehouse>> addDepot(@RequestBody Warehouse warehouse){
     if(!entropotRepo.existsByName(warehouse.getName())){
     warehouse.setId(mongogen.generateSequence(SEQUENCE_NAME_Depot));}
@@ -39,27 +41,32 @@ public class WarehouseController {
     return ResponseEntity.created(createdDepot.getRequiredLink(IanaLinkRelations.SELF).toUri()).body(createdDepot);
 }
 @DeleteMapping
+//@PreAuthorize("hasAuthority('deleteDepot')")
     private ResponseEntity<?>DeleteAll(){
     entropotService.Deleteall();
     mongogen.resetSequence(SEQUENCE_NAME_Depot);
     return ResponseEntity.status(HttpStatus.GONE).build();
 }
 @GetMapping
+//@PreAuthorize("hasAuthority('readDepot')")
     private ResponseEntity<List<Warehouse>> getAll(){
         List<Warehouse> depots = entropotService.getAllDepots();
         return ResponseEntity.ok(depots);
     }
     @PutMapping("/update/{id}")
+   // @PreAuthorize("hasAuthority('updateDepot')")
     private ResponseEntity<Warehouse> updateDepot(@PathVariable Integer id, @RequestBody Warehouse warehouse){
         Warehouse updated = entropotService.updateDepot(id, warehouse);
         return ResponseEntity.ok(updated);
     }
 @GetMapping("/{id}")
+//@PreAuthorize("hasAuthority('readDepot')")
     private ResponseEntity<Warehouse> getcurrent(@PathVariable Integer id){
     Warehouse currentDepot = entropotService.getCurrent(id);
     return ResponseEntity.ok(currentDepot);
 }
 @DeleteMapping("/{id}")
+//@PreAuthorize("hasAuthority('deleteDepot')")
     private ResponseEntity<Warehouse> deleteDepot(@PathVariable Integer id,@RequestParam(required = false) boolean confirmDelete){
         Optional<Warehouse> removedDepo = entropotRepo.findById(id);
         if (removedDepo.isEmpty()){
@@ -74,6 +81,7 @@ public class WarehouseController {
         return ResponseEntity.status(HttpStatus.ACCEPTED).build();
     }
     @PostMapping("/{depid}/assignRes")
+   // @PreAuthorize("hasAuthority('writeDepot')")
     public ResponseEntity<?> assignRestoDepot(@PathVariable Integer depid, @RequestBody Networks networks){
         entropotService.assignRestoDep(depid, networks);
         return ResponseEntity.ok(HttpStatus.OK);

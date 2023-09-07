@@ -2,6 +2,7 @@ package com.transtu.transtu.Controller;
 
 import com.transtu.transtu.Document.Permissions;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,6 +13,7 @@ import java.util.stream.Collectors;
 @RestController
 @CrossOrigin(origins = "*")
 @RequestMapping("/api/permissions")
+//@PreAuthorize("hasAuthority('write')")
 public class PermissionsController {
     @GetMapping
     public ResponseEntity<List<Map<String, Object>>> getAllPermissions() {

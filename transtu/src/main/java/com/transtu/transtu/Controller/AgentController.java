@@ -10,6 +10,7 @@ import com.transtu.transtu.Service.AgentService;
 import com.transtu.transtu.Service.AuthenticationService;
 import com.transtu.transtu.Service.SequenceGeneratorService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.core.io.Resource;
 import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.data.domain.Page;
@@ -23,6 +24,7 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -52,8 +54,8 @@ public class AgentController {
     @Autowired
     private AgentRepo agentRepo;
 
-
     @GetMapping("/p")
+  //  @PreAuthorize("hasAuthority('read')")
    public Page<AgentDTO> getAgents(@RequestParam(defaultValue = "0") int page,
                                  @RequestParam(defaultValue = "5") int size
                                   ) {
@@ -61,21 +63,14 @@ public class AgentController {
             return service.getAllagents(pageable);
     }
    @GetMapping
+   //@PreAuthorize("hasAuthority('read')")
     private List<Agent> getall() {
 
         return service.findAllAgents();
     }
 
-
-    @PutMapping("/update/{agentid}")
-    private ResponseEntity<AgentDTO> updateagent(@PathVariable Integer agentid, @RequestBody Agent agentDTO) {
-
-        Agent updated = service.updateAgent(agentid, agentDTO);
-        AgentDTO updatedtDTO = service.convertDTOToDocument(updated);
-        return ResponseEntity.ok(updatedtDTO);
-    }
-
     @PatchMapping("/update/{agentid}")
+  //  @PreAuthorize("hasAuthority('update')")
     private ResponseEntity<AgentDTO> patched(@PathVariable int agentid,@RequestParam Map<String, Object> champs, @RequestParam(value = "image",required = false) MultipartFile file) {
         Agent patch = service.patchAgent(agentid, champs,file);
         AgentDTO patchedDTO = service.convertDTOToDocument(patch);
@@ -84,6 +79,7 @@ public class AgentController {
 
 
     @DeleteMapping("/deleteAll")
+   // @PreAuthorize("hasAuthority('delete')")
     private ResponseEntity<String> deleteAll() {
 
         service.DeleteAgents();
@@ -92,6 +88,8 @@ public class AgentController {
     }
 
     @DeleteMapping("/delete/{agentid}")
+   // @CacheEvict(key = "#agentid", value = "CachedAgents")
+   // @PreAuthorize("hasAuthority('delete')")
     public ResponseEntity<?> deleteUserById(@PathVariable("agentid") Integer agentid) {
         // Check if the user exists
         Optional<Agent> userOptional = agentRepo.findById(agentid);
@@ -104,16 +102,13 @@ public class AgentController {
     }
 
     @PostMapping("/{agentid}/role/{roleid}")
+   // @PreAuthorize("hasAuthority('assign')")
     public ResponseEntity<String> AssignRoleToAgent(@PathVariable Integer agentid, @PathVariable Integer roleid) throws ChangeSetPersister.NotFoundException {
         service.AssignRoleToAgent(agentid, roleid);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
-    @DeleteMapping("/{agentid}/role/{roleid}")
-    public ResponseEntity<?> DeleteRoleFromAgent(@PathVariable Integer agentid, @PathVariable Integer roleid) throws ChangeSetPersister.NotFoundException {
-        service.deleteRoleFromAgenta(agentid, roleid);
-        return ResponseEntity.status(HttpStatus.ACCEPTED).build();
-    }
     @GetMapping("/search")
+  //  @PreAuthorize("hasAuthority('read')")
     public List<AgentDTO> searchAgents(@RequestParam("query") String query) {
         Query searchQuery = new Query()
                 .addCriteria(Criteria.where("name").regex(query, "i"));
@@ -128,6 +123,7 @@ public class AgentController {
     }
 
     @GetMapping("/datesearch")
+   // @PreAuthorize("hasAuthority('read')")
     private List<AgentDTO>filterbydate(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date dateFilter){
         List<Agent> savefiltered = service.getAllConductorsWithDateFilter(dateFilter);
         List<AgentDTO> getfiltered = service.convertDtoToEntity(savefiltered);

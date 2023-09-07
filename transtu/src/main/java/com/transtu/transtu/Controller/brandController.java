@@ -13,6 +13,7 @@ import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.IanaLinkRelations;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -28,48 +29,57 @@ public class brandController {
     private BrandRepo brandRepo;
 
 @GetMapping("/all")
+//@PreAuthorize("hasAuthority('readBrand')")
 private List<Brand> getall(){
     return brandRepo.findAll();
 }
     @PostMapping("/create")
-    private ResponseEntity<EntityModel<Brand>> addDepot(@RequestBody Brand brand){
+   // @PreAuthorize("hasAuthority('addBrand')")
+    private ResponseEntity<EntityModel<Brand>> addBrand(@RequestBody Brand brand){
 
         EntityModel<Brand> createdbrand = brandService.createMarque(brand);
         return ResponseEntity.created(createdbrand.getRequiredLink(IanaLinkRelations.SELF).toUri()).body(createdbrand);
     }
     @DeleteMapping
+  //  @PreAuthorize("hasAuthority('deleteBrand')")
     private ResponseEntity<?>DeleteAll(){
         brandService.Deleteall();
         return ResponseEntity.status(HttpStatus.GONE).build();
     }
     @DeleteMapping("/all")
+   // @PreAuthorize("hasAuthority('deleteBrand')")
     private ResponseEntity<?>DeleteAllmakers(){
         brandService.Deleteallmakers();
         return ResponseEntity.status(HttpStatus.GONE).build();
     }
     @GetMapping
-    private Page<Brand> getConductors(@RequestParam (defaultValue = "0")int page,
+   // @PreAuthorize("hasAuthority('readBrand')")
+    private Page<Brand> getBrands(@RequestParam (defaultValue = "0")int page,
                                           @RequestParam(defaultValue = "2")int size
     ){
         Pageable pageable = PageRequest.of(page,size);
         return brandService.getAllbrands(pageable);
     }
     @PutMapping("/update/{id}")
+    //@PreAuthorize("hasAuthority('update_brand')")
     private ResponseEntity<Brand> updatebrand(@PathVariable String id, @RequestBody Brand brand){
         Brand updated = brandService.updatebrand(id, brand);
         return ResponseEntity.ok(updated);
     }
     @GetMapping("/{id}")
+   // @PreAuthorize("hasAuthority('readBrand')")
     private ResponseEntity<Brand> getcurrent(@PathVariable String id){
         Brand currentbrand = brandService.getCurrent(id);
         return ResponseEntity.ok(currentbrand);
     }
     @DeleteMapping("/{id}")
+   // @PreAuthorize("hasAuthority('deleteBrand')")
     private ResponseEntity<Brand> deletebrand(@PathVariable String id){
         return brandService.deleteMarque(id);
     }
 
     @GetMapping("/fabriquants")
+   // @PreAuthorize("hasAuthority('readBrand')")
     private ResponseEntity<List<CarBuilder>> getAllfab(){
         List<CarBuilder> CarBuilders = brandService.getallfabriquants();
         return ResponseEntity.ok(CarBuilders);

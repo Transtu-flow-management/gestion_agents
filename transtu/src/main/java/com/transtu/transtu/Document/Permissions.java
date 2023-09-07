@@ -4,29 +4,68 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
 @AllArgsConstructor
 @Getter
-public enum Permissions {
-
-    UPDATE("update","manage agents"),
-
-    READ("read","manage agents"),
-
+public enum Permissions implements Serializable {
     WRITE("write","manage agents"),
-    UPDATE_DEPOT("update entropot","manage warehouse"),
+    UPDATE("update","manage agents"),
+    READ("read","manage agents"),
+    DELETE_USER("delete","manage agents"),
+    Assign_ROLE("assign_Role","manage agents"),
+    Delete_ROLE("Delete_Role","manage agents"),
 
-    DELETE("delete","manage agents"),
+    DELETE_BRAND("deleteBrand","manage brands (marques)"),
+    ADD_BRAND("addBrand","manage brands (marques)"),
+    READ_BRAND("readBrand","manage brands (marques)"),
+    UPDATE_BRAND("update_brand","manage brands (marques)"),
 
-    DELETE_Agent("delete Agent","manage agents"),
+    DELETE_DEPOT("deleteDepot","manage depot "),
+    UPDATE_DEPOT("updateDepot","manage depot"),
+    READ_DEPOT("readDepot","manage depot"),
+    WRITE_DEPOT("writeDepot","manage depot"),
 
-    DELETE_BRAND("delete a brand","manage brands"),
 
-    DELETE_USER("delete a user","manage agents"),
-    DELETE_DEPOT("delete entropot","manage warehouse"),
-    READ_LINES("read line","manage lines"),
+    UPDATE_CAR("updateCar","manage Vehicules"),
+    READ_CAR("readCar","manage Vehicules"),
+    WRITE_CAR("writeCar","manage Vehicules"),
+    Del_CAR("deleteCar","manage Vehicules"),
+
+    Del_Con("deleteCondition","manage Conditions "),
+    UCond("updateCondition","manage Conditions"),
+    RCond("readCondition","manage Conditions"),
+    WCond("writeCondition","manage Conditions"),
+
+    DConductor("deleteChauffeur","manage Chauffeurs "),
+    UConductor("updateChauffeur","manage Chauffeurs"),
+    RConductor("readChauffeur","manage Chauffeurs"),
+    WConductor("writeChauffeur","manage Chauffeurs"),
+
+
+    ULINE("updateLigne","manage lignes"),
+    DLINE("deleteLigne","manage lignes "),
+    RLINE("readLigne","manage lignes"),
+    WLINE("writeLigne","manage lignes"),
+
+    DPATH("deleteTraget","manage iténiraire "),
+    UPATH("updateTraget","manage iténiraire"),
+    RPATH("readTraget","manage iténiraire"),
+    WPATH("writeTraget","manage iténiraire"),
+
+    DROLE("deleteRole","manage Roles "),
+    UROLE("updateRole","manage Roles"),
+    RROLE("readRole","manage Roles"),
+    WROLE("writeRole","manage Roles"),
+    AssignPERM("AssignPermissions","manage Roles"),
+
+    DSTOP("deleteArrêt","manage Arrêts "),
+    USTOP("updateArrêt","manage Arrêts"),
+    RSTOP("readArrêt","manage Arrêts"),
+    WSTOP("writeArrêt","manage Arrêts"),
+
     DEFAULT_PERMISSION("defaultPermission", "defaultGroup");
     private final String permissionName;
     private final String group;

@@ -6,6 +6,9 @@ import com.transtu.transtu.Document.Role;
 import com.transtu.transtu.Handlers.NotFoundExcemptionhandler;
 import com.transtu.transtu.Repositoy.RoleRepo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.hateoas.EntityModel;
@@ -35,17 +38,13 @@ public class RoleService {
         return roles;
     }
 
-    public EntityModel<Role> CreateRole(Role role) {
+    public Role CreateRole(Role role) {
         if (roleRepo.existsByRoleName(role.getRoleName())) {
             throw new IllegalArgumentException("Role avec le meme nom deja existant");
         }
         role.setDateOfCreation(new Date());
-
         Role savedRole = roleRepo.save(role);
-        WebMvcLinkBuilder selflink = WebMvcLinkBuilder.linkTo(RoleController.class).slash(savedRole.getId());
-        EntityModel<Role> roleentity = EntityModel.of(savedRole);
-        roleentity.add(selflink.withSelfRel());
-        return roleentity;
+        return savedRole;
     }
 
     public Role updateRole(Integer id, Role role) {
@@ -61,6 +60,7 @@ public class RoleService {
     }
 
     @Transactional
+
     public Role assignPermissionsToRole(Integer roleId, Set<String> permissionNames) {
         Role role = roleRepo.findById(roleId).orElseThrow(() -> new NotFoundExcemptionhandler(roleId));
 
@@ -71,10 +71,8 @@ public class RoleService {
 
         role.setPermissions(permissions);
         role.setContainsPermissions(!permissions.isEmpty());
-
         return roleRepo.save(role);
     }
-
     public void removePermissionFromRole(Integer roleId, Permissions permission) {
         Optional<Role> roleOptional = roleRepo.findById(roleId);
         if (roleOptional.isPresent()) {

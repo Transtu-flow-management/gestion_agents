@@ -27,8 +27,6 @@ public class Car {
     @DBRef
     private Brand brand;
     @DBRef
-    private Path path;
-    @DBRef
     private Line line;
     @DBRef
     private Warehouse warehouse;
