@@ -1,19 +1,16 @@
 package models
 
+
 type GPS struct{
 
-	id string             `json:"id,omitempty" validate:"required"`
-	vehicule_id string             `json:"vehicule_id,omitempty" validate:"required"`
-	line_id string             `json:"line_id,omitempty" validate:"required"`
-	driver_id string             `json:"driver_id,omitempty" validate:"required"`
-	latt float64             `json:"latt,omitempty" validate:"required"`
-	lng float64             `json:"lng,omitempty" validate:"required"`
-	alt float64             `json:"alt,omitempty" `
-	ip string             `json:"ip,omitempty" validate:"required"`
-	speed float32             `json:"speed,omitempty"`
-	vuesat float64             `json:"vuesat,omitempty"`
-	android_id string             `json:"android_id,omitempty"`
-	version string             `json:"version,omitempty"`
-
-
+	VehiculeID     string  `json:"VehiculeID"`
+	Lat            float64 `json:"lat"`
+	Lang           float64 `json:"lang"`
+	Alt            float64 `json:"alt"`
+	Speed          float64 `json:"speed"`
+	Bearing        float64 `json:"bearing"`
+	Acc            float64 `json:"acc"`
+	Addr           string  `json:"addr"`
+	RunningTime    string  `json:"runningTime"`
+	VersionAndroid string  `json:"versionandroid"`
 }

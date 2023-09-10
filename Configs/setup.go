@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"net/url"
 
 	"github.com/redis/go-redis/v9"
 )
@@ -13,9 +14,17 @@ var redisClient *redis.Client
 
 func ConnectDB() {
 	
+	
 	redisURL := EnvRedisURI()
+	parsedURL, err := url.Parse(redisURL)
+    if err != nil {
+        log.Fatalf("Failed to parse Redis URI: %v", err)
+    }
+
+    redisHost := parsedURL.Hostname()
+    redisPort := parsedURL.Port()
     options := &redis.Options{
-        Addr:     redisURL,
+        Addr:     redisHost + ":" + redisPort,
         Password: "",
         DB:       0, 
     }
