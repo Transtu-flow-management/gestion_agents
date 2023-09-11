@@ -18,7 +18,6 @@ import java.util.Date;
 public class Car {
     @Id
     private String id;
-    private String name;
     private String matricule;
     @DBRef
     private Conductor driver;

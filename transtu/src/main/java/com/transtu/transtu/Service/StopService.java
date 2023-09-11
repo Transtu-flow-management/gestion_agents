@@ -72,6 +72,7 @@ public class StopService {
         newStop.setName_fr(stop.getName_fr());
         newStop.setLat(stop.getLat());
         newStop.setLng(stop.getLng());
+        newStop.setStopType(stop.getStopType());
         newStop.setStopnumber(stop.getStopnumber());
         newStop.setDescription(stop.getDescription());
         newStop.setDateOfModification(new Date());
@@ -103,6 +104,7 @@ public class StopService {
             dto.setId(stop1.getId());
             dto.setLat(stop1.getLat());
             dto.setLng(stop1.getLng());
+            dto.setStopType(stop1.getStopType());
             dto.setDescription(stop1.getDescription());
             dto.setStopnumber(stop1.getStopnumber());
             dto.setName_fr(stop1.getName_fr());

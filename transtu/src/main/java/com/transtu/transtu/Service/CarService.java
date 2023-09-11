@@ -64,7 +64,6 @@ public Car CreateCar(Car car){
     }
     public Car updateCar(String id, Car oldcar){
     Car newcar = carRepo.findById(id).orElseThrow(()->new NotFoundHandler(id));
-        newcar.setName(oldcar.getName());
         newcar.setMatricule(oldcar.getMatricule());
         newcar.setSelectedNetwork(oldcar.getSelectedNetwork());
         newcar.setStopcount(oldcar.getStopcount());

@@ -25,6 +25,7 @@ public class Stop {
     private double lat;
     private double lng;
     private int stopnumber;
+    private byte stopType;
     private PathDTO path;
     private String description;
     private Date dateOfInsertion;
