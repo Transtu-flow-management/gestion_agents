@@ -32,8 +32,8 @@ func main() {
 	routes.Gpsroute(router)
 
 	router.PathPrefix("/swagger.yaml").Handler(http.FileServer(http.Dir("./")))
-	
-	// Serve Swagger UI at /docs
+
+	//Serve Swagger UI at /docs
 	opts := middleware.RedocOpts{SpecURL: "/swagger.yaml"}
 	docsHandler := middleware.Redoc(opts, nil)
 	router.Handle("/docs", docsHandler)

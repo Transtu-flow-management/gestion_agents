@@ -157,7 +157,6 @@ func StoreLocation(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		// Update the last known location
 		_, err := configs.GetRedisClient().GeoAdd(ctx, "GeoADDlocations", &redis.GeoLocation{
 			Name:      "vehicule:location:" + location.VehiculeID,
 			Latitude:  location.Lat,

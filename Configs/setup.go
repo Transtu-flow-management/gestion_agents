@@ -53,7 +53,7 @@ func ConnectDB() {
     }
     fmt.Println("Connected to Redis:", pong)
 }
-// GetRedisClient returns the Redis client instance.
+
 func GetRedisClient() *redis.Client {
     return redisClient
 }
