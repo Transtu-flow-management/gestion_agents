@@ -3,7 +3,7 @@ package models
 
 type GPS struct{
 
-	VehiculeID     string  `json:"VehiculeID"`
+	Matricule     string  `json:"matricule"`
 	Lat            float64 `json:"lat"`
 	Lang           float64 `json:"lang"`
 	Alt            float64 `json:"alt"`

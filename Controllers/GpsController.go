@@ -44,9 +44,9 @@ func HandleWebSocket(w http.ResponseWriter, r *http.Request) {
 			fmt.Println("Error reading data:", err)
 			return
 		}
-		if location.VehiculeID != currentVehicleID {
-			fmt.Println("Switching to vehicle ID:", location.VehiculeID)
-			currentVehicleID = location.VehiculeID
+		if location.Matricule != currentVehicleID {
+			fmt.Println("Switching to vehicle ID:", location.Matricule)
+			currentVehicleID = location.Matricule
 		}
 
 		go func(vehicleID string) {
@@ -110,7 +110,7 @@ func StoreLocation(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
-	key := "location:" + location.VehiculeID
+	key := "location:" + location.Matricule
 	data, err := json.Marshal(location)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -125,7 +125,7 @@ func StoreLocation(w http.ResponseWriter, r *http.Request) {
 
 	if prevLocation != "" {
 		// Calculate the distance between the new and previous locations using GEODIST
-		distance, err := configs.GetRedisClient().GeoDist(ctx, "GeoADDlocations", "vehicule:location:"+location.VehiculeID, key, "m").Result()
+		distance, err := configs.GetRedisClient().GeoDist(ctx, "GeoADDlocations", "vehicule:location:"+location.Matricule, key, "m").Result()
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
@@ -141,7 +141,7 @@ func StoreLocation(w http.ResponseWriter, r *http.Request) {
 
 			// Update the last known location
 			_, err := configs.GetRedisClient().GeoAdd(ctx, "GeoADDlocations", &redis.GeoLocation{
-				Name:      "vehicule:location:" + location.VehiculeID,
+				Name:      "vehicule:location:" + location.Matricule,
 				Latitude:  location.Lat,
 				Longitude: location.Lang,
 			}).Result()
@@ -158,7 +158,7 @@ func StoreLocation(w http.ResponseWriter, r *http.Request) {
 		}
 
 		_, err := configs.GetRedisClient().GeoAdd(ctx, "GeoADDlocations", &redis.GeoLocation{
-			Name:      "vehicule:location:" + location.VehiculeID,
+			Name:      "vehicule:location:" + location.Matricule,
 			Latitude:  location.Lat,
 			Longitude: location.Lang,
 		}).Result()
@@ -183,11 +183,11 @@ func StoreLocationwithoutCond(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Store the full data in Redis (you can choose your own key)
-	key := "location:" + location.VehiculeID
+	key := "location:" + location.Matricule
 
 	formattedData := fmt.Sprintf(
-		"{VehiculeID:%s, Lat:%f, Lang:%f, Alt:%f, Speed:%f, Bearing:%f, Acc:%f, Addr:%s, RunningTime:%s, VersionAndroid:%s}",
-		location.VehiculeID,
+		"{Matricule:%s, Lat:%f, Lang:%f, Alt:%f, Speed:%f, Bearing:%f, Acc:%f, Addr:%s, RunningTime:%s, VersionAndroid:%s}",
+		location.Matricule,
 		location.Lat,
 		location.Lang,
 		location.Alt,
@@ -209,7 +209,7 @@ func StoreLocationwithoutCond(w http.ResponseWriter, r *http.Request) {
 	lang := location.Lang
 	go func() {
 		_, err := configs.GetRedisClient().GeoAdd(ctx, "locations", &redis.GeoLocation{
-			Name:      "vehicule:location:" + location.VehiculeID,
+			Name:      "vehicule:location:" + location.Matricule,
 			Latitude:  lat,
 			Longitude: lang,
 		}).Result()
@@ -226,7 +226,7 @@ func StoreLocationwithoutCond(w http.ResponseWriter, r *http.Request) {
 		}
 		defer client.Disconnect(ctx)
 
-		collectionName := "vehicule_" + location.VehiculeID
+		collectionName := "vehicule_" + location.Matricule
 		collection := client.Database("GPS").Collection(collectionName)
 		_, err = collection.InsertOne(context.Background(), location)
 		if err != nil {
