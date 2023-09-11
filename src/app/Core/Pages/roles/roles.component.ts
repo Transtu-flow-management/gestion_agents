@@ -42,11 +42,13 @@ getRoles(page:number,size:number):void{
       this.totalPages =Roles.totalPages;
     },
     error =>{
-      this.openError('Erreur l\'ors de l\'affichage de liste des Roles','backend Error')
-      console.log(error)
+      const message = `Error fetching Roles : ${error.status}`
+      this.openfailToast(message)
     }
   )
 }
+
+
 openRoleDialog(){
   const dialogConfig = new MatDialogConfig();
   dialogConfig.disableClose = true;

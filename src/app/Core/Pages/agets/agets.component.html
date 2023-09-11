@@ -1,6 +1,6 @@
 <!-- component -->
 <div class="overflow-hidden rounded-lg pt-12 -mb-14 pl-20">
-  <p class="text-4xl not-italic font-sans font-bold tracking-wide text-justify dark:text-[#111827] capitalize">Agents</p>
+  <p class="text-4xl not-italic font-sans font-bold tracking-wide text-justify dark:text-[#111827] capitalize">utilisateurs</p>
 </div>
   <div class="overflow-hidden rounded-lg mt-24 ml-20 mr-24 w-auto">
 
@@ -39,7 +39,7 @@
             un Agent</span></button>
       </div>
     </div>
-    <div class="overflow-auto">
+    
     <table  class="w-full border-collapse bg-white text-center text- text-gray-600">
       <thead class="bg-[#DDDDDD]">
         <tr>
@@ -147,14 +147,14 @@
         
       </tbody>
     </table>
-  </div>
+
   </div>
     <div class="flex justify-center relative mt-4">
       <div class="flex items-center mr-64">
         <pagination-controls (pageChange)="onPageChange($event)" previousLabel="precedent" nextLabel="suivant"></pagination-controls>
       </div>
         <div class="flex mt-3">
-        <span class="flex justify-between mt-1 ml-16">items per page :</span><div class="overflow-hidden border border-gray-400 relative ml-7 rounded-lg bg-zinc-25 w-16 mb-4 p-1">
+        <span class="flex justify-between mt-1 ml-16">items per page :</span><div class=" border border-gray-400 relative ml-7 rounded-lg bg-zinc-25 w-16 mb-4 p-1">
           <mat-select [(ngModel)]="pageSize" (selectionChange)="onPageSizeChange($event.value)" class="text-base font-mono text-center ">
             <mat-option class="bg-blue-50 font-mono " *ngFor="let option of pageSizeOptions" [value]="option">{{ option }}</mat-option>
           </mat-select>

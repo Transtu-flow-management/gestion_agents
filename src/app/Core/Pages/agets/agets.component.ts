@@ -17,6 +17,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { FormControl } from '@angular/forms';
 import { SuccessToastComponent } from 'src/app/alerts/success-toast/success-toast.component';
 import { auto } from '@popperjs/core';
+import { FailedToastComponent } from 'src/app/alerts/failed-toast/failed-toast.component';
 
 @Component({
   selector: 'app-agets',
@@ -65,8 +66,10 @@ export class AgetsComponent implements OnInit, AfterViewInit {
         this.agents = agents;
         //this.getAgentImage(this.agents);
       },
-      () => {
-        this.openError('erreur lors de l\'affichage de liste des agents', 'Backend_Error');
+      (error) => {
+      const message = `Error fetching Users : ${error.status}`
+       this.openfailToast(message);
+
       }
     );
   }
@@ -133,25 +136,8 @@ export class AgetsComponent implements OnInit, AfterViewInit {
     });
   }
 
-  openError(message: string, title: string) {
-    const currentpage = this.router.url;
-    if (currentpage === '/agents') {
-      const dialogRef = this.dialog.open(ErrorsComponent, {
-        data: {
-          title: title,
-          message: message,
-        },
-      });
-      dialogRef.afterClosed().subscribe((result) => {
-        setTimeout(() => {
-          this.openError(message, title);
-        }, 3000);
-      });
-    }
-  }
-  opensnackbar(message: string) {
+  
 
-  }
 
   open = false;
   deleteagent(id: number): void {
@@ -209,7 +195,14 @@ export class AgetsComponent implements OnInit, AfterViewInit {
       }
     }
   }
-
+ openfailToast(message: string): void {
+    this.snackbar.openFromComponent(FailedToastComponent, {
+      data: { message: message }, duration: 5000,
+      horizontalPosition: "end",
+      verticalPosition: "bottom",
+      panelClass: ['snack-red', 'snack-size']
+    });
+  }
   convertBlobToString(blob: Blob): Promise<String> {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
