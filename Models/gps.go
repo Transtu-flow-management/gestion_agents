@@ -13,4 +13,5 @@ type GPS struct{
 	Addr           string  `json:"addr"`
 	RunningTime    string  `json:"runningTime"`
 	VersionAndroid string  `json:"versionandroid"`
+	
 }

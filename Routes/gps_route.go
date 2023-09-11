@@ -8,6 +8,7 @@ import (
 
 
 func Gpsroute(router *mux.Router){
+	
 	router.HandleFunc("/track",controllers.HandleWebSocket)
 	router.HandleFunc("/",controllers.StoreLocationwithoutCond).Methods("POST")
 }

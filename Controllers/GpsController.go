@@ -35,7 +35,7 @@ func HandleWebSocket(w http.ResponseWriter, r *http.Request) {
 	}
 	defer conn.Close()
 
-	// Initialize the current vehicle ID to an empty string
+	
 	currentVehicleID := ""
 
 	for {
@@ -44,17 +44,13 @@ func HandleWebSocket(w http.ResponseWriter, r *http.Request) {
 			fmt.Println("Error reading data:", err)
 			return
 		}
-
-		// Check if the received vehicle ID is different from the current one
 		if location.VehiculeID != currentVehicleID {
 			fmt.Println("Switching to vehicle ID:", location.VehiculeID)
 			currentVehicleID = location.VehiculeID
 		}
 
-		// Send real-time updates to the client only if the vehicle ID matches
 		go func(vehicleID string) {
 			for {
-				// Check if the vehicle ID for this connection has changed
 				if vehicleID != currentVehicleID {
 					fmt.Println("Stopping updates for old vehicle ID:", vehicleID)
 					return
@@ -97,8 +93,6 @@ func GetLocationData(vehicleID string) (string, float64, float64, error) {
 	if err != nil {
 		return "", 0.0, 0.0, err
 	}
-
-	// Check if there are results and extract the latitude and longitude
 	var lat, lang float64
 	if len(results) > 0 {
 		lat = results[0].Latitude
@@ -123,7 +117,6 @@ func StoreLocation(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Check if the vehicle has a previous location stored
 	prevLocation, err := configs.GetRedisClient().Get(ctx, key).Result()
 	if err != nil && err != redis.Nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)

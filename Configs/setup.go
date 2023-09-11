@@ -21,7 +21,6 @@ func ConnectDB() {
     if err != nil {
         log.Fatal(err)
     }
-
     ctx := context.Background()
     err = client.Connect(ctx)
     if err != nil {

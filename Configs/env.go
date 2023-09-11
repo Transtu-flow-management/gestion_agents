@@ -11,7 +11,6 @@ func EnvRedisURI() string {
     if err != nil {
         log.Fatal("Error loading .env file")
     }
-
     return os.Getenv("REDIS_URL")
 }
 func EnvMongoURI() string {
@@ -19,6 +18,5 @@ func EnvMongoURI() string {
     if err != nil {
         log.Fatal("Error loading .env file")
     }
-
     return os.Getenv("MONGO_URL")
 }
