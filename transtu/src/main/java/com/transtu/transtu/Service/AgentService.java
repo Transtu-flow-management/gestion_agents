@@ -50,9 +50,7 @@ public class AgentService implements UserDetailsService {
         List<Agent> agents = agentRepo.findAll();
        return agents;
     }
-   /* public Page<AgentDTO> getAllagents(Pageable pageable) {
-        return agentRepo.findAll(pageable);
-    }*/
+
    @Cacheable(cacheNames = "cachedAgents", key = "'Agents_' + #pageable.pageNumber")
    public Page<AgentDTO> getAllagents(Pageable pageable) {
        Page<Agent> agentPage = agentRepo.findAll(pageable);
