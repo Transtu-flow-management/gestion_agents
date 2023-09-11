@@ -54,7 +54,6 @@ export class AddCarComponent implements OnInit {
     this.addForm = this.fb.group({
 
       matricule: new FormControl('', Validators.required),
-      name: new FormControl('', Validators.required),
       selectedNetwork: [''],
       mode:new FormControl(''),
       state: new FormControl('', [Validators.required]),

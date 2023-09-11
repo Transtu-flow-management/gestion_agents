@@ -8,7 +8,6 @@ import { Depot } from "./depot";
 export interface Car {
 
     id:string;
-    name:string;
     matricule:string;
     selectedNetwork:string;
     line:Lines;

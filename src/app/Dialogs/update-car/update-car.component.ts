@@ -53,7 +53,6 @@ constructor(private _carService:CarService,private dialog: MatDialog, private fb
     this.updateForm = this.fb.group({
 
       matricule: new FormControl(car.matricule, Validators.required),
-      name: new FormControl(car.name, Validators.required),
       selectedNetwork: [car.selectedNetwork],
       mode:new FormControl(car.mode),
       state: new FormControl(car.state.id, [Validators.required]),
@@ -216,8 +215,7 @@ this.brands.setValue(this.data.car.brand);
     const entropotValue: Depot = this.entrpt.value;
     const brandValue: Brand = this.brands.value;
     const driverValue: Conductor = this.conductors.value;
-    return carform.name === checkvalues.name &&
-    carform.matricule === checkvalues.matricule &&
+    return carform.matricule === checkvalues.matricule &&
     carform.selectedNetwork === checkvalues.selectedNetwork &&
     entropotValue.id === checkvalues.warehouse.id &&
     brandValue.id === checkvalues.brand.id &&

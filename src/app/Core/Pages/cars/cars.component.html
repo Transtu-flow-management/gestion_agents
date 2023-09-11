@@ -24,11 +24,10 @@
       <table  class="min-w-full border-collapse bg-white text-center text-  text-red-900">
         <thead class="bg-[#DDDDDD] ">
           <tr>
-            <th scope="col" class=" font-medium text-gray-900">Nom</th>
+            <th scope="col" class="  font-medium text-gray-900">Matricule</th>
             <th scope="col" class="  font-medium text-gray-900">Marque</th>
             <th scope="col" class="  font-medium text-gray-900">Reseau</th>
             <th scope="col" class=" font-medium text-gray-900">Depot</th>
-            <th scope="col" class="  font-medium text-gray-900">Matricule</th>
             <th scope="col" class=" font-medium text-gray-900">Ligne</th>
             <th scope="col" class=" font-medium text-gray-900">Condition</th>
             <th scope="col" class=" font-medium text-gray-900">Conducteur</th>
@@ -40,7 +39,7 @@
           <tr class="hover:bg-gray-50 leading-none"*ngFor="let car of Cars |paginate:{itemsPerPage:pageSize,currentPage:currentPage,totalItems: totalElements}">
           <td class="px-2 ">
             <span class="font-medium text-gray-700">
-             {{car.name}}
+             {{car.matricule}}
             </span>
           </td>
           <td class="px-2 ">
@@ -57,12 +56,7 @@
             <span class="font-medium text-gray-700" [ngClass]="{ 'font-semibold text-red-700': car.warehouse.name==='Null' }">
              {{car.warehouse.name || 'Empty'}}
             </span>
-          </td>
-          <td class=" px-2">
-            <span class="font-medium text-gray-700">
-              {{car.matricule}}
-            </span>
-          </td>         
+          </td>     
             <td class=" px-2">
               <span class="font-medium text-gray-700" [ngClass]="{ 'font-semibold text-red-700': car.line.nameFr==='Null' }">
                 {{ car.line.nameFr  || 'Empty' }}
