@@ -14,3 +14,11 @@ func EnvRedisURI() string {
 
     return os.Getenv("REDIS_URL")
 }
+func EnvMongoURI() string {
+    err := godotenv.Load()
+    if err != nil {
+        log.Fatal("Error loading .env file")
+    }
+
+    return os.Getenv("MONGO_URL")
+}
