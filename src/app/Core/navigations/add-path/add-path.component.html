@@ -45,7 +45,7 @@
                 <input type="text" name="startar" formControlName="endFr" id="name" class="bg-[#F1F6F9] border border-gray-400 rounded py-3 px-3 block focus:ring-blue-500 focus:border-blue-500 text-gray-700 w-full" placeholder="station finale" />
                 <ng-container>
                     <div *ngIf="isFormSubmitted && addForm.get('endFr').errors?.['required']  && addForm.get('endFr')"
-                        class="text-red-500 text-xs italic">Veillez verifier que le champ non vide </div>
+                        class="text-red-500 text-xs italic">Veillez verifier que le champ non vide</div>
                     <div *ngIf="isFormSubmitted && addForm.get('endFr').errors?.['minlength']  && addForm.get('endFr').invalid && addForm.get('endFr')"
                         class="text-red-500 text-xs italic">le nom doit contient minimum 4 lettres</div>
                 </ng-container>  
