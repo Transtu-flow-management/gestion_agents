@@ -15,13 +15,16 @@ import (
 )
 
 var ctx = context.Background()
-var upgrader = websocket.Upgrader{
+var( upgrader = websocket.Upgrader{
     ReadBufferSize:  1024,
     WriteBufferSize: 1024,
     CheckOrigin: func(r *http.Request) bool {
         return true
     },
 }
+clients = make(map[*websocket.Conn]string)
+)
+
 func HandleWebSocket(w http.ResponseWriter, r *http.Request) {
     conn, err := upgrader.Upgrade(w, r, nil)
     if err != nil {
@@ -30,50 +33,9 @@ func HandleWebSocket(w http.ResponseWriter, r *http.Request) {
     }
     defer conn.Close()
 
-    // Create a channel to receive vehicle IDs from the client
-    vehicleIDCh := make(chan string)
+    // Initialize the current vehicle ID to an empty string
+    currentVehicleID := ""
 
-    // Start a goroutine to continuously send updates to the client
-    go func() {
-        for {
-            select {
-            case vehicleID := <-vehicleIDCh:
-                // Start a goroutine to handle updates for each vehicle ID
-                go func(vehicleID string) {
-                    for {
-                        // Retrieve the data and send updates periodically
-                        fullData, lat, lang, err := GetLocationData(vehicleID)
-                        if err != nil {
-                            fmt.Println("Error starting updates:", err)
-                            continue
-                        }
-
-                        // Create a response message
-                        response := struct {
-                            FullData  string  `json:"fullData"`
-                            Latitude  float64 `json:"lat"`
-                            Longitude float64 `json:"lang"`
-                        }{
-                            FullData:  fullData,
-                            Latitude:  lat,
-                            Longitude: lang,
-                        }
-
-                        // Send the response to the client
-                        if err := conn.WriteJSON(response); err != nil {
-                            fmt.Println("Error sending to client:", err)
-                            return
-                        }
-
-                        // Adjust the sleep duration as needed (e.g., sleep for 5 seconds)
-                        time.Sleep(5 * time.Second)
-                    }
-                }(vehicleID)
-            }
-        }
-    }()
-
-    // Continuously read vehicle IDs from the client
     for {
         var location models.GPS
         if err := conn.ReadJSON(&location); err != nil {
@@ -81,19 +43,53 @@ func HandleWebSocket(w http.ResponseWriter, r *http.Request) {
             return
         }
 
-        // Send the received vehicle ID to the goroutine for processing
-        vehicleIDCh <- location.VehiculeID
+        // Check if the received vehicle ID is different from the current one
+        if location.VehiculeID != currentVehicleID {
+            fmt.Println("Switching to vehicle ID:", location.VehiculeID)
+            currentVehicleID = location.VehiculeID
+        }
+
+        // Send real-time updates to the client only if the vehicle ID matches
+        go func(vehicleID string) {
+            for {
+                // Check if the vehicle ID for this connection has changed
+                if vehicleID != currentVehicleID {
+                    fmt.Println("Stopping updates for old vehicle ID:", vehicleID)
+                    return
+                }
+
+                fullData, lat, lang, err := GetLocationData(vehicleID)
+                if err != nil {
+                    fmt.Println("Error starting updates:", err)
+                    continue
+                }
+
+                response := struct {
+                    FullData  string  `json:"fullData"`
+                    Latitude  float64 `json:"lat"`
+                    Longitude float64 `json:"lang"`
+                }{
+                    FullData:  fullData,
+                    Latitude:  lat,
+                    Longitude: lang,
+                }
+
+                if err := conn.WriteJSON(response); err != nil {
+                    fmt.Println("Error sending to client:", err)
+                    return
+                }
+
+                time.Sleep(2 * time.Second)
+            }
+        }(currentVehicleID)
     }
 }
 func GetLocationData(vehicleID string) (string, float64, float64, error) {
-    // Retrieve the full JSON data
     fullDataKey := "location:" + vehicleID
     fullData, err := configs.GetRedisClient().Get(ctx, fullDataKey).Result()
     if err != nil {
         return "", 0.0, 0.0, err
-    }
-
-    // Retrieve the latitude and longitude from the geospatial set
+    }   
     geoLocationKey := "vehicule:location:" + vehicleID
     results, err := configs.GetRedisClient().GeoPos(ctx, "locations", geoLocationKey).Result()
     if err != nil {
@@ -211,7 +207,6 @@ func StoreLocationwithoutCond(w http.ResponseWriter, r *http.Request) {
         location.VersionAndroid,
     )
 
-    // Concurrently store data in Redis
     go func() {
         if err := configs.GetRedisClient().Set(ctx, key, formattedData, 0).Err(); err != nil {
             fmt.Printf("Error storing data in Redis: %s\n", err)
@@ -220,8 +215,6 @@ func StoreLocationwithoutCond(w http.ResponseWriter, r *http.Request) {
 
     lat := location.Lat
     lang := location.Lang
-
-    // Concurrently add data to Redis geo set
     go func() {
         _, err := configs.GetRedisClient().GeoAdd(ctx, "locations", &redis.GeoLocation{
             Name:      "vehicule:location:" + location.VehiculeID,
@@ -233,7 +226,6 @@ func StoreLocationwithoutCond(w http.ResponseWriter, r *http.Request) {
         }
     }()
 
-    // Concurrently store data in MongoDB
     go func() {
         client, err := mongo.Connect(ctx, options.Client().ApplyURI(configs.EnvMongoURI()))
         if err != nil {

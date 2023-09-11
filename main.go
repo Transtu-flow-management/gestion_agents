@@ -29,7 +29,7 @@ func main() {
 		})
 	})
 
-routes.Gpsroute(router)
+	routes.Gpsroute(router)
 
 	router.PathPrefix("/swagger.yaml").Handler(http.FileServer(http.Dir("./")))
 	// Serve Swagger UI at /docs
