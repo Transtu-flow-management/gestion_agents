@@ -76,6 +76,7 @@ import { CarsComponent } from './Core/Pages/cars/cars.component';
 import { AddCarComponent } from './Dialogs/add-car/add-car.component';
 import { UpdateCarComponent } from './Dialogs/update-car/update-car.component';
 import { StopPopupComponent } from './Core/navigations/stop-popup/stop-popup.component';
+import { GpsdataComponent } from './Core/Pages/gpsdata/gpsdata.component';
 export const API_URL = new InjectionToken<String>('API_URL');
 
 @NgModule({
@@ -128,6 +129,7 @@ export const API_URL = new InjectionToken<String>('API_URL');
     AddCarComponent,
     UpdateCarComponent,
     StopPopupComponent,
+    GpsdataComponent,
 
   ],
   imports: [
