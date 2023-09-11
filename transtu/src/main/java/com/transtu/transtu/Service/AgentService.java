@@ -57,13 +57,6 @@ public class AgentService implements UserDetailsService {
        List<AgentDTO> agentDTOs = convertDtoToEntity(agentPage.getContent());
        return new PageImpl<>(agentDTOs, pageable, agentPage.getTotalElements());
    }
-    /*public Agent createAgent(Agent agent){
-        String username = agent.getUsername();
-        if (agentRepo.existsByUsername(username)){
-            throw new IllegalArgumentException("username deja existant");
-        }
-        return agentRepo.save(agent);
-    }*/
     public void DeleteAgents(){
         agentRepo.deleteAll();
     }
