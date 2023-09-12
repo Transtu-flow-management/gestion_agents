@@ -21,6 +21,12 @@ export class CarService {
    
     return this.http.get<Car[]>(gurl,{params});
   }
+public findcars():Observable<Car[]>{
+  const gurl= this.gs.uri + this.url+`/all`;
+  return this.http.get<Car[]>(gurl);
+}
+
+
   public addcar(car:Car):Observable<Car>{
     const aurl= this.gs.uri + this.url +`/add`;
     return this.http.post<Car>(aurl,car);

@@ -21,7 +21,7 @@ export class CarsComponent implements OnInit{
   totalElements: number;
   term: string = '';
   currentPage = 0;
-  pageSize = 2;
+  pageSize = 5;
   isButtonDisabled= false;
   pageSizeOptions: number[] = [5, 10, 20];
   constructor(private _carservice:CarService,private dialog:MatDialog,private snackbar:MatSnackBar){}
@@ -113,6 +113,7 @@ deletecar(id:string):void{
       enterAnimationDuration: '1000ms',
       exitAnimationDuration: '200ms',
     });
+
     dialogref.afterClosed().subscribe(()=>{
       this.currentPage =0;
       this.fetchcars(this.currentPage,this.pageSize);

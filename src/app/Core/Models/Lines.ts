@@ -1,3 +1,4 @@
+import { Path } from "./Path";
 import { Depot } from "./depot";
 
 export interface Lines{
@@ -5,6 +6,7 @@ export interface Lines{
     nameFr:string;
     nameAr:string;
     start_fr:string;
+    path:Path
     start_ar:string;
     end_fr:string;
     end_ar:string;

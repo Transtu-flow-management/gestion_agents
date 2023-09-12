@@ -122,7 +122,7 @@ export class UpdateLineComponent implements OnInit {
   public update(): void {
     var line = this.updateForm.getRawValue();
     const entropotValue: Depot = this.entrpt.value;
-    console.log(JSON.stringify(entropotValue));
+
    
     if (entropotValue.id !== this.data.line.warehouse.id) {
       line.warehouse = entropotValue;
@@ -132,7 +132,8 @@ export class UpdateLineComponent implements OnInit {
         this.openToast('La ligne a été mis à jour')
         this.dialogRef.close();
       }, (error) => {
-        console.log("error updating", error);
+        const message = `error updating depot${error.status}`
+        this.openErrorToast(message);
       });
     }
     else {

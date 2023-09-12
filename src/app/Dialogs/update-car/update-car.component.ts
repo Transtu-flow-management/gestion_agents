@@ -60,7 +60,7 @@ constructor(private _carService:CarService,private dialog: MatDialog, private fb
       brand: new FormControl(this.brands.value, [Validators.required]),
       driver: new FormControl(this.conductors.value, [Validators.required]),
       line: new FormControl(car.line.id, [Validators.required]),
-      path: new FormControl(car.path.id, [Validators.required]),
+      path: new FormControl(car.path.id),
       depot : new FormControl(car.warehouse),
       carbrand: new FormControl(car.brand),
       cardriver :  new FormControl(car.driver),

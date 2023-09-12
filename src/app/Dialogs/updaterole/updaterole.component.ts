@@ -94,11 +94,13 @@ export class UpdateroleComponent  implements OnInit{
       return;
     }
 
+
     this._roleService.updateRole(this.data.role.id, role).pipe(
       switchMap(() => {
+       
         if (this.selectedPerm && this.selectedPerm.length > 0) {
           this.containsPermissions = true;
-          console.log(this.selectedPerm)
+
           return this._roleService.AssignPermssionsToRole(this.data.role.id, this.selectedPerm);
         }  else {
           return of(null);

@@ -393,7 +393,6 @@ export class AddStopComponent implements AfterViewInit {
       path: [this.addForm.get('path').value]
     });
     const stopData: Stop = this.UpdateForm.value;
-    console.log("selec : ",this.selectedstop)
     if (this.addForm.valid || this.selectedstop != null) {
 
       if (this.updateStop != null) {

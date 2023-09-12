@@ -3,6 +3,10 @@ import { GPS, gpsData } from '../../Models/Gps';
 import { GpsServiceService } from '../../Services/gps-service.service';
 import * as L from 'leaflet';
 import { error } from 'jquery';
+import { CarService } from '../../Services/car.service';
+import { Car } from '../../Models/Car';
+import { FailedToastComponent } from 'src/app/alerts/failed-toast/failed-toast.component';
+import { MatSnackBar } from '@angular/material/snack-bar';
 @Component({
   selector: 'app-gpsdata',
   templateUrl: './gpsdata.component.html',
@@ -12,13 +16,23 @@ export class GpsdataComponent implements OnInit{
 
   gpsData: gpsData; 
   vehicleID: string;
+  Cars : Car[] = [];
+
   map: L.Map;
   marker: L.Marker;
   smallIcon: L.Icon;
+  start: L.Icon;
+  end :L.Icon;
   lat: number = 0; 
   lng: number = 0; 
+  startMarkerdraw: L.Marker;
+  endMarkerdraw: L.Marker;
+  routingControl: L.Routing.Control;
+  routingPlan: L.Routing.Plan;
+  private geoJsonLayer: L.GeoJSON;
   dataReceived : boolean = false;
-  constructor(private _gpsservice:GpsServiceService,private elementRef: ElementRef){
+  constructor(private _gpsservice:GpsServiceService,private elementRef: ElementRef,
+    private _vehiculeservice: CarService,private snackBar:MatSnackBar){
     this.vehicleID ='';
   }
 
@@ -27,6 +41,8 @@ export class GpsdataComponent implements OnInit{
       this.createMap();
       this.initializeMarkerIcon();
       this.getDataFromServer();
+      this.getcars();
+     
   }
  
   createMap(): void {
@@ -34,7 +50,6 @@ export class GpsdataComponent implements OnInit{
       lat: 36.8392,
       lng: 10.1577
     };
-
     const zoomLevel = 12;
 
     this.map = L.map(this.elementRef.nativeElement.querySelector('#map'), {
@@ -58,6 +73,34 @@ export class GpsdataComponent implements OnInit{
       iconAnchor: [12, 41],
      
     });
+
+    this.smallIcon = new L.Icon({
+      iconUrl: '/assets/images/blue/bus.png',
+      iconRetinaUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-icon-2x.png',
+
+      iconAnchor: [12, 41],
+      popupAnchor: [1, -34],
+      shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-shadow.png',
+      shadowSize: [41, 41]
+    });
+
+    this.start = new L.Icon({
+      iconUrl: '/assets/images/station.png',
+      
+      iconAnchor: [12, 41],
+      popupAnchor: [1, -34],
+      iconSize :[60,60]
+  
+    });
+
+    this.end = new L.Icon({
+      iconUrl: '/assets/images/station.png',
+      iconAnchor: [12, 41],
+      popupAnchor: [1, -34],
+      iconSize :[60,60]
+     
+    });
+
     this.marker = L.marker([this.lat, this.lng],{icon:this.smallIcon}).addTo(this.map);
 
   }
@@ -65,9 +108,135 @@ export class GpsdataComponent implements OnInit{
     if (id!=""){
       this._gpsservice.send({VehiculeID:id});
       console.log("data sent :",id)
+      this.showpathOnmap();
+      
+    }
+  }
+
+  getcars():void{
+this._vehiculeservice.findcars().subscribe((cars)=>{
+  this.Cars = cars;
+  console.log(this.Cars)
+},(error)=>{
+  const message = `Error fetching cars${error.status}`;
+  this.openfailToast(message);
+})
+  }
+  openfailToast(message: string): void {
+    this.snackBar.openFromComponent(FailedToastComponent, {
+      data: { message: message }, duration: 5000,
+      horizontalPosition: "end",
+      verticalPosition: "bottom",
+      panelClass: ['snack-red', 'snack-size']
+    });
+  }
+  showpathOnmap(){
+   const selectedvehiucle = this.Cars.find(car => car.matricule ===this.vehicleID);
+   console.log("showed ooutisde : ",selectedvehiucle);
+    if (selectedvehiucle.path != null){
+      this.loadAndDisplayGeoJSON(selectedvehiucle.path.data);
+      console.log("showed : ",selectedvehiucle);
+    }else{
+      this.removeGeoJSONLayer();
     }
   }
   
+  loadAndDisplayGeoJSON(geoJsonString: string): void {
+
+    this.removeGeoJSONLayer(); // Remove any existing GeoJSON layer
+
+    try {
+      const geojsonData = JSON.parse(geoJsonString);
+      for (const feature of geojsonData.features) {
+        if (feature.geometry.type === 'LineString') {
+
+          const coordinates = feature.geometry.coordinates;
+          const firstC = coordinates[0];
+          const lastC = coordinates[coordinates.length - 1];
+          this.startMarkerdraw = L.marker([firstC[1], firstC[0]]).setIcon(this.start).addTo(this.map);
+          this.endMarkerdraw = L.marker([lastC[1], lastC[0]]).setIcon(this.end).addTo(this.map);
+        }
+      }
+      const features = geojsonData.features;
+      if (features[0].geometry.type === 'Point') {
+        const startCoordinates = features[0].geometry.coordinates;
+        const endCoordinates = features[features.length - 1].geometry.coordinates;
+        const startMarker = L.marker([startCoordinates[1], startCoordinates[0]]).setIcon(this.start);
+        const endMarker = L.marker([endCoordinates[1], endCoordinates[0]]).setIcon(this.end);
+        this.updateRouting(startMarker, endMarker);
+      }
+
+      this.geoJsonLayer = L.geoJSON(geojsonData).addTo(this.map);
+    } catch (error) {
+      console.error('Error parsing or loading GeoJSON:', error);
+    }
+  }
+  updateRouting(start: L.Marker, end: L.Marker): void {
+
+    this.initialiszeroute();
+    this.routingPlan = new L.Routing.Plan([start.getLatLng(), end.getLatLng()]);
+
+    this.routingPlan.addTo(this.map);
+
+    this.routingControl = L.Routing.control({
+      plan: this.routingPlan,
+      lineOptions: {
+        styles: [{ color: 'blue', opacity: 0.6, weight: 9 },
+        { color: 'white', opacity: 0.6, weight: 6 },
+        ],
+        extendToWaypoints: false,
+        missingRouteTolerance: 0,
+      },
+      addWaypoints: false,
+    });
+    this.routingControl.addTo(this.map);
+  }
+
+
+  removeGeoJSONLayer(): void {
+
+    if (this.routingControl && this.routingPlan) {
+      this.initialiszeroute();
+    }
+
+    if (this.marker) {
+      this.map.removeLayer(this.marker);
+      this.marker = null;
+    }
+    if (this.startMarkerdraw) {
+      this.map.removeLayer(this.startMarkerdraw);
+      this.startMarkerdraw = null;
+    }
+    if (this.endMarkerdraw) {
+      this.map.removeLayer(this.endMarkerdraw);
+      this.endMarkerdraw = null;
+    }
+    if (this.geoJsonLayer) {
+      this.map.removeLayer(this.geoJsonLayer);
+      this.geoJsonLayer = null;
+    }
+  }
+
+  initialiszeroute(): void {
+    if (this.routingControl) {
+      this.removeRoutingControl();
+    }
+
+    if (this.routingPlan) {
+      this.routingPlan.removeFrom(this.map);
+      this.routingPlan = null;
+    }
+  }
+
+  removeRoutingControl(): void {
+    if (this.routingControl) {
+      this.map.removeControl(this.routingControl);
+      this.routingControl = null;
+    }
+  }
+
+
+
   getDataFromServer() {
     this._gpsservice.receive().subscribe((data:gpsData) => {
       this.gpsData = data;
@@ -87,4 +256,5 @@ export class GpsdataComponent implements OnInit{
     // Close the WebSocket connection when the component is destroyed
     this._gpsservice.close();
   }
+
 }

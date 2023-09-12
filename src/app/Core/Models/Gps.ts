@@ -1,5 +1,5 @@
 export interface GPS {
-    VehiculeID: string;
+    matricule: string;
     Lat: number;
     Lang: number;
     Alt: number;
@@ -14,5 +14,6 @@ export interface GPS {
 export interface gpsData{
     fullData: string;  
     lat :number ;
-    lang  :number 
+    lang  :number;
+    speed: number; 
 }

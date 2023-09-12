@@ -13,5 +13,4 @@ export interface Path{
     stops:Stop[];
     dateOfInsertion:Date;
     dateOfModification:Date;
-
     }

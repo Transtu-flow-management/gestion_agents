@@ -58,13 +58,11 @@ openRoleDialog(){
     enterAnimationDuration:'1000ms',
     exitAnimationDuration:'2000ms',
   });
-  dialogRef.afterClosed().subscribe(result =>{
-    
-    if (result){
-      console.log(result);
-      this.Roles.push(result);
-    }
-  })
+  dialogRef.afterClosed().subscribe(() => {
+    this.currentPage =0;
+    this.getRoles(this.currentPage,this.pageSize);
+  });
+ 
 }
 openEditRoleDialog(role:Role):void{
 const dialogref = this._dialog.open(UpdateroleComponent,{
@@ -72,7 +70,11 @@ const dialogref = this._dialog.open(UpdateroleComponent,{
     enterAnimationDuration:'1000ms',
     exitAnimationDuration:'1000ms',
     data: { role: role, assignedPermissions:role.permissions}
-})
+});
+dialogref.afterClosed().subscribe(() => {
+  this.currentPage =0;
+  this.getRoles(this.currentPage,this.pageSize);
+});
 }
 
 openError(message:string,title:string){
@@ -135,6 +137,10 @@ deleteRole(id:Number):void{
       });
     }
   });
+  deleteDialog.afterClosed().subscribe(() => {
+    this.currentPage =0;
+    this.getRoles(this.currentPage,this.pageSize);
+  });
 }
 
 openDelToast(message: string) {
@@ -159,7 +165,7 @@ openfailToast(message: string): void {
   this.currentPage = page ;
   this.getRoles(this.currentPage-1,this.pageSize);
 
-  console.log(this.currentPage)
+
 }
 onPageSizeChange(value :number):void{
   this.pageSize = value;
