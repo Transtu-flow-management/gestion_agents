@@ -29,10 +29,11 @@ public class StopService {
     @Autowired
     private PathRepo pathRepo;
 
-    public Page<StopDTO> getallStops(Pageable pageable){
-        Page<Stop> agentPage = stopRepo.findAll(pageable);
-        List<StopDTO> stopDTOS = convertToStopDTO(agentPage.getContent());
-        return new PageImpl<>(stopDTOS, pageable, agentPage.getTotalElements());
+
+    public List<StopDTO>gAtallStops(){
+        List<Stop> stops = stopRepo.findAll();
+        List<StopDTO> stopDTOS = convertToStopDTO(stops);
+        return stopDTOS;
     }
     public List<Stop> findall(){
         return stopRepo.findAll();

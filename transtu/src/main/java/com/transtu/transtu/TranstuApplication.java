@@ -13,3 +13,4 @@ public class TranstuApplication {
 	// mongo db path := mongod --port 27030 --dbpath "C:\mongo\testmongo"
 }
 
+//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

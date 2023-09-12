@@ -24,15 +24,9 @@ public class StopController {
     private StopService stopService;
     @GetMapping
    // @PreAuthorize("hasAuthority('readArrêt')")
-    private Page<StopDTO> getal(@RequestParam(defaultValue = "0") int page,
-                                @RequestParam(defaultValue = "5") int size){
 
-        Pageable pageable = PageRequest.of(page,size);
-        return stopService.getallStops(pageable);
-    }
-    @GetMapping("/all")
-    private List<Stop> getall(){
-        return stopService.findall();
+    private List<StopDTO> getall(){
+        return stopService.gAtallStops();
     }
     @PostMapping("/add")
    // @PreAuthorize("hasAuthority('writeArrêt')")
