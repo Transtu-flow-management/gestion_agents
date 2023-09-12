@@ -31,13 +31,13 @@ import static com.transtu.transtu.Document.Role.SEQUENCE_NAME_Role;
 @RequestMapping("/api/roles")
 public class RoleController {
     @Autowired
-    private RoleService roleService;
-    @Autowired
     SequenceGeneratorService mongo;
     @Autowired
     private RoleRepo roleRepo;
     @Autowired
     private AgentRepo agentRepo;
+    @Autowired
+    private RoleService roleService;
 
     //utilisation de Hateoas method Restful API
     @PostMapping("/add")
@@ -80,7 +80,7 @@ public class RoleController {
         roleService.assignPermissionsToRole(roleid,permission);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
-    @CacheEvict(value = "cachedRoles", allEntries=true)
+   // @CacheEvict(value = "cachedRoles", allEntries=true)
     @DeleteMapping("/delete/{roleid}")
    // @PreAuthorize("hasAuthority('deleteRole')")
     public ResponseEntity<?>deleteRole(@PathVariable("roleid") Integer roleid,@RequestParam(required = false) boolean confirmDelete){

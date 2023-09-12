@@ -12,7 +12,6 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -24,7 +23,7 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 @Getter
 @Setter
-public class Agent implements UserDetails, Serializable {
+public class Agent implements UserDetails {
     @Transient
     public static final String SEQUENCE_NAME = "agent_sequence";
     @Id
@@ -48,7 +47,7 @@ public class Agent implements UserDetails, Serializable {
     private Role role;
     //@JsonFormat(pattern = "yyyy-MM-dd:HH:mm:ss", timezone = "UTC")
     private Date dateOfInsertion;
-   // @JsonFormat(pattern = "yyyy-MM-dd:HH:mm:ss", timezone = "UTC")
+    // @JsonFormat(pattern = "yyyy-MM-dd:HH:mm:ss", timezone = "UTC")
     private Date dateOfModification;
     public void addRole(Role role){
         this.role=role;
@@ -56,6 +55,7 @@ public class Agent implements UserDetails, Serializable {
     public void deleteRole(Role role){
         if (role != null) {
             this.role = null;
+
         }
     }
     public Collection<? extends GrantedAuthority> getAuthorities() {

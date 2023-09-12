@@ -26,6 +26,11 @@ public class CarController {
         Pageable pageable = PageRequest.of(page, size);
         return carService.getallCars(pageable);
     }
+    @GetMapping("/all")
+    // @PreAuthorize("hasAuthority('readCar')")
+    private List<Car>findll(){
+        return carService.findallCars();
+    }
 @PostMapping("/add")
 //@PreAuthorize("hasAuthority('writeCar')")
     private ResponseEntity<Car> newcar (@RequestBody Car car){
@@ -43,6 +48,11 @@ public class CarController {
     private ResponseEntity<Car> updatecar(@PathVariable String id, @RequestBody Car car){
         Car updated = carService.updateCar(id,car);
         return ResponseEntity.ok(updated);
+    }
+    @DeleteMapping
+    private ResponseEntity<?>deletelaal(){
+        carService.Deleteall();
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
 }

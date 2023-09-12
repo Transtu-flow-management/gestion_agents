@@ -24,6 +24,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.ContentDisposition;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -36,7 +37,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
-public class AgentService implements UserDetailsService {
+public class AgentService implements UserDetails {
     @Autowired
     private AgentRepo agentRepo;
     @Autowired
@@ -51,7 +52,7 @@ public class AgentService implements UserDetailsService {
        return agents;
     }
 
-   @Cacheable(cacheNames = "cachedAgents", key = "'Agents_' + #pageable.pageNumber")
+   //@Cacheable(cacheNames = "cachedAgents", key = "'Agents_' + #pageable.pageNumber")
    public Page<AgentDTO> getAllagents(Pageable pageable) {
        Page<Agent> agentPage = agentRepo.findAll(pageable);
        List<AgentDTO> agentDTOs = convertDtoToEntity(agentPage.getContent());
@@ -61,7 +62,7 @@ public class AgentService implements UserDetailsService {
         agentRepo.deleteAll();
     }
 
-   @CachePut(key = "#id",value = "CachedAgents")
+
     public Agent patchAgent(int id, Map<String, Object> champs, MultipartFile file) {
         Optional<Agent> isExisting = agentRepo.findById(id);
         if (isExisting.isPresent()) {
@@ -115,10 +116,7 @@ public class AgentService implements UserDetailsService {
         return null;
     }
 
-    @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return null;
-    }
+
     public AgentDTO convertDTOToDocument(Agent agent){
         AgentDTO agentDTO = new AgentDTO();
         agentDTO.setId(agent.getId());
@@ -210,4 +208,38 @@ public class AgentService implements UserDetailsService {
     }
 
 
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return null;
+    }
+
+    @Override
+    public String getPassword() {
+        return null;
+    }
+
+    @Override
+    public String getUsername() {
+        return null;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return false;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return false;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return false;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return false;
+    }
 }

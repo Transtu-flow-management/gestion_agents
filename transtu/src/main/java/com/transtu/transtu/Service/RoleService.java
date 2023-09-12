@@ -25,9 +25,6 @@ public class RoleService {
     @Autowired
     private RoleRepo roleRepo;
 
-    public Role getRolebyId(Integer id) {
-        return roleRepo.findById(id).orElseThrow(() -> new NoSuchElementException("Role introuvable"));
-    }
 
     public List<Role> getAllRoles() {
         return roleRepo.findAll();
@@ -60,7 +57,6 @@ public class RoleService {
     }
 
     @Transactional
-
     public Role assignPermissionsToRole(Integer roleId, Set<String> permissionNames) {
         Role role = roleRepo.findById(roleId).orElseThrow(() -> new NotFoundExcemptionhandler(roleId));
 

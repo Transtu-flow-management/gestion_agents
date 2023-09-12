@@ -28,6 +28,8 @@ public class Car {
     @DBRef
     private Line line;
     @DBRef
+    private Path path;
+    @DBRef
     private Warehouse warehouse;
     private String selectedNetwork; //bus metro tgm
     private Byte mode; //stnd , double

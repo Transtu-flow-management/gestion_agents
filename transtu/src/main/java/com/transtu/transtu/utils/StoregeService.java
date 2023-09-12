@@ -19,7 +19,7 @@ import java.util.Date;
 @Service
 public class StoregeService {
     Logger log = LoggerFactory.getLogger(this.getClass().getName());
-    private final Path rootLocation = Paths.get("storage");
+    private final Path rootLocation = Paths.get("transtu/storage");
     private final Path abspath = rootLocation.toAbsolutePath();
     public String CreateNameImage(MultipartFile file){
 

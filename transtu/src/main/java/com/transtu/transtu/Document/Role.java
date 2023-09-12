@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 @Getter
 @Setter
 @AllArgsConstructor
-public class Role implements Serializable {
+public class Role {
     @Id
     private Integer id;
     private String roleName;

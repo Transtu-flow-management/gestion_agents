@@ -88,7 +88,7 @@ public class AgentController {
     }
 
     @DeleteMapping("/delete/{agentid}")
-   // @CacheEvict(key = "#agentid", value = "CachedAgents")
+
    // @PreAuthorize("hasAuthority('delete')")
     public ResponseEntity<?> deleteUserById(@PathVariable("agentid") Integer agentid) {
         // Check if the user exists

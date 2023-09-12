@@ -9,7 +9,7 @@ import java.util.Date;
 @Getter
 @Setter
 
-public class AgentDTO implements Serializable {
+public class AgentDTO  {
     private Integer Id;
     private String name;
     private String surname;

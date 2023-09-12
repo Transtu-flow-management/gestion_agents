@@ -9,6 +9,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -31,7 +33,11 @@ private entropotRepo entropotRepo;
 public Page<Car> getallCars(Pageable pageable){
     return  carRepo.findAll(pageable);
 }
+public List<Car>findallCars(){
+    return carRepo.findAll();
+}
 public Car CreateCar(Car car){
+
     if (carRepo.existsByMatricule(car.getMatricule())){
         throw new IllegalArgumentException("matricule must be unique");
     }
@@ -50,8 +56,9 @@ public Car CreateCar(Car car){
     if (car.getWarehouse()== null || car.getWarehouse().getId()== null){
         throw new IllegalArgumentException("Warehouse must be provided");
     }
+
     car.setDateOfInsertion(new Date());
-    Car savedcar = carRepo.save((car));
+    Car savedcar = carRepo.save(car);
     return savedcar;
 }
     public void deleteCarbyid(String id){
@@ -69,6 +76,8 @@ public Car CreateCar(Car car){
         newcar.setStopcount(oldcar.getStopcount());
         newcar.setMode(oldcar.getMode());
         Line oldLine = oldcar.getLine();
+
+
         Conductor olddriver = oldcar.getDriver();
         Condition oldcondt = oldcar.getState();
         Brand oldbrand = oldcar.getBrand();
@@ -80,6 +89,7 @@ public Car CreateCar(Car car){
                 newcar.setLine(lineOptional.get());
             }
         }
+        Optional<Path> newPath = pathRepo.findByLine(oldLine);
         if (oldbrand != null){
             Optional<Brand> brandOptional = brandRepo.findById(oldbrand.getId());
             if (brandOptional.isPresent()){
@@ -105,11 +115,10 @@ public Car CreateCar(Car car){
             }
         }
         newcar.setDateOfModification(new Date());
-        return carRepo.save(newcar);
+        return carRepo.save(oldcar);
+}
 
-
-
+    public void Deleteall() {
+        carRepo.deleteAll();
     }
-
-
 }
