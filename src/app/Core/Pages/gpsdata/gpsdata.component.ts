@@ -1,5 +1,5 @@
 import { Component, OnInit,ElementRef } from '@angular/core';
-import { GPS, gpsData } from '../../Models/Gps';
+
 import { GpsServiceService } from '../../Services/gps-service.service';
 import * as L from 'leaflet';
 import { error } from 'jquery';
@@ -7,6 +7,7 @@ import { CarService } from '../../Services/car.service';
 import { Car } from '../../Models/Car';
 import { FailedToastComponent } from 'src/app/alerts/failed-toast/failed-toast.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { GPS } from '../../Models/Gps';
 @Component({
   selector: 'app-gpsdata',
   templateUrl: './gpsdata.component.html',
@@ -14,8 +15,8 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 })
 export class GpsdataComponent implements OnInit{
 
-  gpsData: gpsData; 
-  vehicleID: string;
+  gpsData: GPS; 
+  matricule: string;
   Cars : Car[] = [];
 
   map: L.Map;
@@ -25,6 +26,7 @@ export class GpsdataComponent implements OnInit{
   end :L.Icon;
   lat: number = 0; 
   lng: number = 0; 
+  speed : number = 0;
   startMarkerdraw: L.Marker;
   endMarkerdraw: L.Marker;
   routingControl: L.Routing.Control;
@@ -33,7 +35,7 @@ export class GpsdataComponent implements OnInit{
   dataReceived : boolean = false;
   constructor(private _gpsservice:GpsServiceService,private elementRef: ElementRef,
     private _vehiculeservice: CarService,private snackBar:MatSnackBar){
-    this.vehicleID ='';
+    this.matricule ='';
   }
 
   ngOnInit(): void {
@@ -75,18 +77,14 @@ export class GpsdataComponent implements OnInit{
     });
 
     this.smallIcon = new L.Icon({
-      iconUrl: '/assets/images/blue/bus.png',
-      iconRetinaUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-icon-2x.png',
-
+      iconUrl: '/assets/place-marker.gif',
       iconAnchor: [12, 41],
       popupAnchor: [1, -34],
-      shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-shadow.png',
-      shadowSize: [41, 41]
+      iconSize :[30,30]
     });
 
     this.start = new L.Icon({
       iconUrl: '/assets/images/station.png',
-      
       iconAnchor: [12, 41],
       popupAnchor: [1, -34],
       iconSize :[60,60]
@@ -100,13 +98,12 @@ export class GpsdataComponent implements OnInit{
       iconSize :[60,60]
      
     });
-
     this.marker = L.marker([this.lat, this.lng],{icon:this.smallIcon}).addTo(this.map);
 
   }
   senddata(id:string){
     if (id!=""){
-      this._gpsservice.send({VehiculeID:id});
+      this._gpsservice.send({matricule:id});
       console.log("data sent :",id)
       this.showpathOnmap();
       
@@ -131,8 +128,7 @@ this._vehiculeservice.findcars().subscribe((cars)=>{
     });
   }
   showpathOnmap(){
-   const selectedvehiucle = this.Cars.find(car => car.matricule ===this.vehicleID);
-   console.log("showed ooutisde : ",selectedvehiucle);
+   const selectedvehiucle = this.Cars.find(car => car.matricule ===this.matricule);
     if (selectedvehiucle.path != null){
       this.loadAndDisplayGeoJSON(selectedvehiucle.path.data);
       console.log("showed : ",selectedvehiucle);
@@ -199,10 +195,7 @@ this._vehiculeservice.findcars().subscribe((cars)=>{
       this.initialiszeroute();
     }
 
-    if (this.marker) {
-      this.map.removeLayer(this.marker);
-      this.marker = null;
-    }
+   
     if (this.startMarkerdraw) {
       this.map.removeLayer(this.startMarkerdraw);
       this.startMarkerdraw = null;
@@ -238,16 +231,38 @@ this._vehiculeservice.findcars().subscribe((cars)=>{
 
 
   getDataFromServer() {
-    this._gpsservice.receive().subscribe((data:gpsData) => {
+
+  
+    this._gpsservice.receive().subscribe((data:GPS) => {
+         
       this.gpsData = data;
       this.lat = data.lat;
       this.lng = data.lang;
+      const speedPattern = /Speed:([\f.]+)/;
+      const fulldata = data.fullData;
+      const parts = fulldata.split(',');
+      let speedPart = '';
+for (const part of parts) {
+  if (part.includes('Speed')) {
+    speedPart = part;
+    break;
+  }
+}const speedMatch = speedPart.match(/Speed:(\S+)/);
+if (speedMatch && speedMatch.length > 1) {
+  const speed = parseFloat(speedMatch[1]);
+  this.speed = speed;
+  console.log('Speed:', this.speed);
+} else {
+  console.error('Speed not found in the string');
+}
+
       this.dataReceived = true;
       console.log(this.gpsData);
       console.log(this.lat,this.lng);
+     
       this.marker.setLatLng([this.lat, this.lng]);
       this.map.panTo([this.lat, this.lng]);
-    },error =>{
+  },error =>{
       console.error("ws: error",error)
     });
   }

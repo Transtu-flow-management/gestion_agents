@@ -1,19 +1,14 @@
 export interface GPS {
     matricule: string;
-    Lat: number;
-    Lang: number;
-    Alt: number;
-    Speed: number;
-    Bearing: number;
-    Acc: number;
-    Addr: string;
-    RunningTime: string;
-    VersionAndroid: string;
-}
-
-export interface gpsData{
-    fullData: string;  
     lat :number ;
     lang  :number;
-    speed: number; 
+    alt: number;
+    speed: number;
+    bearing: number;
+    acc: number;
+    addr: string;
+    runningTime: string;
+    versionAndroid: string;
+    fullData: string;
 }
+
