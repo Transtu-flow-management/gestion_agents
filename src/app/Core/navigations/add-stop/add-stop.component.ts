@@ -335,8 +335,6 @@ export class AddStopComponent implements AfterViewInit {
     }
     this.stopMarkers = [];
   }
-
-
   initialiszeroute(): void {
     if (this.routingControl) {
       this.removeRoutingControl();
