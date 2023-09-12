@@ -196,5 +196,4 @@ this._entrpserv.retreiveReseaux().subscribe((resx)=>{
   console.log(error);
 })
   }
-
 }

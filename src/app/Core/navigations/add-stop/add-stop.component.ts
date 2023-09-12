@@ -26,12 +26,20 @@ import { SelectedStopService } from '../../Services/selected-stop.service';
 })
 export class AddStopComponent implements AfterViewInit {
 
+  stopTypes: { name: string, value: number }[] = [
+    { name: 'Station', value: 1 },
+    { name: 'Small Stop', value: 2 },
+    { name: 'Stop', value: 3 },
+    { name: 'No Stop', value: 4 }
+  ];
+
   addForm: FormGroup;
   UpdateForm: FormGroup;
-  updateStop : Stop;
+  updateStop: Stop;
+  stops: Stop[] = [];
   firstFormGroup: FormGroup;
   isFormSubmitted: boolean;
-  public message : string;
+  public message: string;
   paths: Path[] = [];
   map: L.Map;
   stopMarkers: L.Marker[] = []
@@ -45,11 +53,11 @@ export class AddStopComponent implements AfterViewInit {
   stopIcon: L.Icon;
   public latt: number;
   public long: number;
-  StartA:string;
-  StartB:string;
+  StartA: string;
+  StartB: string;
   private subscription: Subscription;
   constructor(private elementRef: ElementRef, private fb: FormBuilder, private http: HttpClient,
-    private _stopService: StopserviceService,private sharedDataService: SelectedStopService, private snackBar: MatSnackBar, private componentFactoryResolver: ComponentFactoryResolver, private injector: Injector,) {
+    private _stopService: StopserviceService, private sharedDataService: SelectedStopService, private snackBar: MatSnackBar, private componentFactoryResolver: ComponentFactoryResolver, private injector: Injector,) {
     this.firstFormGroup = this.fb.group({
       firstCtrl: ['', Validators.required],
     });
@@ -60,8 +68,11 @@ export class AddStopComponent implements AfterViewInit {
       lat: new FormControl(null, [Validators.required]),
       lng: new FormControl(null, [Validators.required]),
       stopnumber: new FormControl(null, [Validators.required]),
-      path:['']
+      stopType: new FormControl(null, [Validators.required]),
+      selectedStop: [''],
+      path: ['']
     });
+
     this.subscription = this.sharedDataService.selectedStop$.subscribe(stop => {
       if (stop) {
         this.addForm.patchValue(stop); // Populate form fields with selected stop data
@@ -74,6 +85,7 @@ export class AddStopComponent implements AfterViewInit {
     this.initializeMarkerIcon();
     this.enableClickToAddMarker();
     this.fetchAllPaths();
+    this.fetchstops();
   }
 
   createMap(): void {
@@ -144,9 +156,10 @@ export class AddStopComponent implements AfterViewInit {
   }
 
   enableClickToAddMarker(): void {
+    var popupText :string ;
     this.map.on('click', (event: L.LeafletMouseEvent) => {
       const { lat, lng } = event.latlng;
-      const popupText = `Location:${event.latlng}`;
+      popupText = `Location:${event.latlng}`;
       this.latt = lat;
       this.long = lng;
 
@@ -154,7 +167,14 @@ export class AddStopComponent implements AfterViewInit {
         this.map.removeLayer(this.marker);
       }
 
-      this.marker = L.marker([lat, lng], { icon: this.smallIcon, draggable: true })
+      this.marker = L.marker([lat, lng], { icon: this.smallIcon, draggable: true }).on('dragend', (dragEvent: L.LeafletEvent) => {
+        const newLatLng = dragEvent.target.getLatLng();
+        this.latt = newLatLng.lat;
+        this.long = newLatLng.lng;
+       popupText = `Location: ${this.latt.toFixed(7)}, ${this.long.toFixed(7)}`;
+        this.marker.setPopupContent(popupText); 
+    this.marker.openPopup();
+      })
         .addTo(this.map)
         .bindPopup(popupText)
         .openPopup();
@@ -162,9 +182,9 @@ export class AddStopComponent implements AfterViewInit {
         lat: this.long,
         lng: this.latt
       });
-      console.log(this.addForm.value)
 
     });
+
     this.map.on('contextmenu', () => {
       this.map.removeLayer(this.marker);
     });
@@ -177,9 +197,6 @@ export class AddStopComponent implements AfterViewInit {
       panelClass: ['snack-red', 'snack-size']
     });
   }
-
-
-
   fetchAllPaths(): void {
     this._stopService.getallpaths().subscribe(
       paths => {
@@ -194,24 +211,28 @@ export class AddStopComponent implements AfterViewInit {
   private createCustomPopup(stop: Stop) {
     const factory = this.componentFactoryResolver.resolveComponentFactory(StopPopupComponent);
     const component = factory.create(this.injector);
+    component.instance.StopName = stop.name_fr;
     component.changeDetectorRef.detectChanges();
     const wrapperDiv = document.createElement('div');
     wrapperDiv.appendChild(component.location.nativeElement);
 
     // Add update and delete buttons to the wrapperDiv
     const updateButton = document.createElement('button');
-    updateButton.textContent = 'Update';
+    updateButton.textContent = 'update';
+    updateButton.className = 'text-black-100 font-medium mt-8 mr-2 bg-[#F8AF26] hover:shadow-2xl hover:bg-amber-700 focus:ring-4 focus:ring-amber-300 font-medium rounded-lg text-sm w-full sm:w-auto px-4 py-2.5 text-center';
     updateButton.addEventListener('click', () => {
       component.instance.selected = stop;
+      
       this.updateStop = stop;
       component.instance.updateStop();
     });
     wrapperDiv.appendChild(updateButton);
-
     const deleteButton = document.createElement('button');
-    deleteButton.textContent = 'Delete';
+    deleteButton.textContent = 'delete';
+    deleteButton.className = 'text-black-100 font-medium mt-8 bg-[#F8AF26] hover:shadow-2xl hover:bg-amber-700 focus:ring-4 focus:ring-amber-300 font-medium rounded-lg text-sm w-full sm:w-auto px-4 py-2.5 text-center';
     deleteButton.addEventListener('click', () => {
       component.instance.selected = stop;
+      
       component.instance.deleteStop(stop.id);
     });
     wrapperDiv.appendChild(deleteButton);
@@ -221,11 +242,11 @@ export class AddStopComponent implements AfterViewInit {
 
   onCheckboxChange(path: Path, isChecked: boolean): void {
     if (isChecked) {
-      for (var p of this.paths){
-        if (p === path){
-         this.StartA = p.startFr;
-         this.StartB = p.endFr;
-         this.showStopMarkers(p.stops);
+      for (var p of this.paths) {
+        if (p === path) {
+          this.StartA = p.startFr;
+          this.StartB = p.endFr;
+          this.showStopMarkers(p.stops);
         }
       }
       this.addForm.get('path').setValue(path);
@@ -275,7 +296,6 @@ export class AddStopComponent implements AfterViewInit {
     this.routingPlan.addTo(this.map);
 
     this.routingControl = L.Routing.control({
-      //router:(L.Routing as any).mapbox('pk.eyJ1Ijoib3VzczAxYW1hIiwiYSI6ImNsa2FheW41MzA1Z3ozZG13dGpiZjl4d2YifQ.zBUhApqgliMB7y1zR3ODWw'),
       plan: this.routingPlan,
       lineOptions: {
         styles: [{ color: 'blue', opacity: 0.6, weight: 9 },
@@ -293,19 +313,18 @@ export class AddStopComponent implements AfterViewInit {
     this.clearMarkers();
 
     for (const stop of stops) {
-      if (stop != null) {
-      const marker = L.marker([stop.lat, stop.lng], { icon: this.stopIcon, draggable: true })
-        .bindPopup(() => this.createCustomPopup(stop))
-        .openPopup()
-        .addTo(this.map);
-
-      marker.on('dragend', (dragEvent: L.LeafletEvent) => {
-        const newLatLng = dragEvent.target.getLatLng();
-        this.addForm.get('lat').setValue(newLatLng.lat);
-        this.addForm.get('lng').setValue(newLatLng.lng);
-      });
-      this.stopMarkers.push(marker);
-    }
+      if (stop != null && stop.name_fr) {
+        const marker = L.marker([stop.lat, stop.lng], { icon: this.stopIcon, draggable: true })
+          .bindPopup(() => this.createCustomPopup(stop))
+          .openPopup()
+          .addTo(this.map);
+        marker.on('dragend', (dragEvent: L.LeafletEvent) => {
+          const newLatLng = dragEvent.target.getLatLng();
+          this.addForm.get('lat').setValue(newLatLng.lat);
+          this.addForm.get('lng').setValue(newLatLng.lng);
+        });
+        this.stopMarkers.push(marker);
+      }
     }
 
   }
@@ -336,6 +355,32 @@ export class AddStopComponent implements AfterViewInit {
       panelClass: ['snack-yellow', 'snack-size']
     });
   }
+  fetchstops(){
+    this._stopService.getstops().subscribe((stop)=>{
+      this.stops = stop;
+    })
+  }
+  selectedstop:any;
+  onStopSelected() {
+    const selectedStopName = this.addForm.get('selectedStop').value;
+    console.log("selected : ",selectedStopName)
+    const selectedStop = this.stops.find(stop => stop.name_fr === selectedStopName);
+    this.selectedstop = selectedStop;
+    if (selectedStop) {
+      const { lat, lng } = selectedStop;
+      if (this.marker) {
+        this.map.removeLayer(this.marker);
+      }
+      this.marker = L.marker([lat, lng],{icon:this.stopIcon,draggable:true}).addTo(this.map);
+      this.marker.bindPopup(()=>this.createCustomPopup(selectedStop)).openPopup(); 
+      this.marker.on('dragend', (dragEvent: L.LeafletEvent) => {
+        const newLatLng = dragEvent.target.getLatLng();
+        this.addForm.get('lat').setValue(newLatLng.lat);
+        this.addForm.get('lng').setValue(newLatLng.lng);
+      });
+      this.map.setView([lat, lng], 13);
+    }
+  }
 
   addStop(): void {
     const formValue = this.addForm.value;
@@ -346,14 +391,15 @@ export class AddStopComponent implements AfterViewInit {
       lat: new FormControl(this.addForm.get('lat').value, [Validators.required]),
       lng: new FormControl(this.addForm.get('lng').value, [Validators.required]),
       stopnumber: new FormControl(this.addForm.get('stopnumber').value, [Validators.required]),
+      stopType: new FormControl(this.addForm.get('stopType').value, [Validators.required]),
       path: [this.addForm.get('path').value]
     });
     const stopData: Stop = this.UpdateForm.value;
-    if (this.addForm.valid) {
-      console.log("valu : ", formValue)
+    console.log("selec : ",this.selectedstop)
+    if (this.addForm.valid || this.selectedstop != null) {
+
       if (this.updateStop != null) {
         const id = this.updateStop.id;
-        console.log("updated : ", id)
         if (id) {
           this._stopService.updatepstop(stopData, id).subscribe(() => {
             this.message = "Arrêt mis à jour avec success";
@@ -364,7 +410,6 @@ export class AddStopComponent implements AfterViewInit {
         }
       } else {
         this._stopService.addstop(formValue).subscribe(() => {
-          console.log("add : ", formValue)
           this.message = "Arret ajouté avec succéss";
         }, error => {
           const message = `Erreur l\'ors de l\'ajout de nouvelle arrêt ${error.status}`;
@@ -375,8 +420,6 @@ export class AddStopComponent implements AfterViewInit {
       this.openWarningToast("La Forme est invalide ou incomplet");
     }
   }
-
-
   removeRoutingControl(): void {
     if (this.routingControl) {
       this.map.removeControl(this.routingControl);

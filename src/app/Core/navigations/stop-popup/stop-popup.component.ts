@@ -16,7 +16,8 @@ import { Stop } from '../../Models/Stop';
 export class StopPopupComponent {
   stops :Stop[] = [];
   map :L.Map;
-  selected: Stop | undefined;
+  selected: Stop | undefined ;
+  StopName : string;
 constructor(private selectedstop : SelectedStopService,private stopservice : StopserviceService,private snackBar:MatSnackBar
   ,private dialog:MatDialog){
   this.selectedstop.selectedStop$.subscribe(stop=>{
@@ -52,7 +53,7 @@ openfailToast(message: string): void {
   
 
   deleteStop(id :string) {
-
+    console.log(id);
   const message = "Effacer l\'arrêt?";
     const title = "Delete stop"
     const deletedialog = this.dialog.open(ConfirmationComponent, {

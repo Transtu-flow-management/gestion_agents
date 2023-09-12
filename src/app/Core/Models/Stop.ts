@@ -7,6 +7,7 @@ export interface Stop{
    lat:number;
    lng:number;
    stopnumber:number;
+   stopType:number;
    path:Path;
    description:string;
    dateOfInsertion:Date;

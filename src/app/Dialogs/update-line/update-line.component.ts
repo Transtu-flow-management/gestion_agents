@@ -140,5 +140,4 @@ export class UpdateLineComponent implements OnInit {
       this.dismissdialog();
     }
   }
-
 }

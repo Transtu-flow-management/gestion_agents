@@ -211,7 +211,6 @@ this._warehouseService.getAllentrp().subscribe((wh)=>{
 })
 
 }
-
 }
 
 

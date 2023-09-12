@@ -120,7 +120,5 @@ public update():void{
    this.openErrorToast("Erreur l\'ors de mis à jour de la marque")
 
   });
-
 }
- 
 }

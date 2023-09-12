@@ -115,9 +115,4 @@ export class UpdateroleComponent  implements OnInit{
       }
     );
   }
- 
-
-  
-
-
 }

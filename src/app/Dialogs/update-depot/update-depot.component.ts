@@ -219,5 +219,4 @@ export class UpdateDepotComponent implements AfterViewInit {
     })
     return selectede;
   }
-
 }

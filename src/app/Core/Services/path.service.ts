@@ -41,5 +41,4 @@ export class PathService {
     const rsurl = this.gs.uri +`/lines/all`
     return this.http.get<String[]>(rsurl);
   }
-  
 }

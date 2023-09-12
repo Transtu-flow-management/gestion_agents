@@ -190,5 +190,4 @@ export class AgentdialogComponent implements OnInit {
       this.warehouselist = wh;
     })
   }
-
 }

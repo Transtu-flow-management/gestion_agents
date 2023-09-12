@@ -97,8 +97,6 @@ export class UserServiceService {
   hashPassword(password: any) {
     return shajs('sha256').update(password).digest('hex');
   }
-  
-
 }
 function throwwError(arg0: string) {
   throw new Error('Function not implemented.');

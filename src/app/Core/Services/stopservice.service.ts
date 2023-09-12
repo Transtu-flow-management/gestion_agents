@@ -13,13 +13,9 @@ export class StopserviceService {
   private url:string ='/stops' ;
   constructor(private http : HttpClient,private gs:GlobalService) { }
 
-  public getstops(page: number, size: number):Observable<Stop[]>{
+  public getstops():Observable<Stop[]>{
     const gurl= this.gs.uri + this.url;
-    let params = new HttpParams()
-    .set('page', page.toString())
-    .set('size', size.toString());
-   
-    return this.http.get<Stop[]>(gurl,{params});
+    return this.http.get<Stop[]>(gurl);
   }
 
   public deletestop(id:string):Observable<any>{
@@ -39,7 +35,6 @@ export class StopserviceService {
   public getallpaths():Observable<Path[]>{
     const gurl = this.gs.uri+`/paths/all`;
     return this.http.get<Path[]>(gurl);
-
   }
 
   
