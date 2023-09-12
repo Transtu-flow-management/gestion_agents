@@ -59,7 +59,7 @@ func HandleWebSocket(w http.ResponseWriter, r *http.Request) {
 				fullData, lat, lang, err := GetLocationData(vehicleID)
 				if err != nil {
 					fmt.Println("Error starting updates:", err)
-					continue
+					
 				}
 
 				response := struct {
