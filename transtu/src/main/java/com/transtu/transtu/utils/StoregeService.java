@@ -22,18 +22,21 @@ public class StoregeService {
     private final Path rootLocation = Paths.get("transtu/storage");
     private final Path abspath = rootLocation.toAbsolutePath();
     public String CreateNameImage(MultipartFile file){
-
         try {
-            int i = (int) new Date().getTime();
-            String ch=Integer.toString(i);
-            String fileName = ch.substring(0,ch.length()-1);
-            // String fileName = Integer.toString(new Random().nextInt(1000000000));
-            String ext=file.getOriginalFilename().substring(file.getOriginalFilename().indexOf('.'), file.getOriginalFilename().length());
-            String name=file.getOriginalFilename().substring(0,file.getOriginalFilename().indexOf('.'));
-            String original=name+fileName+ext;
-            System.out.println(abspath);
-            return original;
-        } catch (Exception e) {
+            if (file != null && !file.isEmpty()) {
+                int i = (int) new Date().getTime();
+                String ch = Integer.toString(i);
+                String fileName = ch.substring(0, ch.length() - 1);
+                String ext = file.getOriginalFilename().substring(file.getOriginalFilename().indexOf('.'), file.getOriginalFilename().length());
+                String name = file.getOriginalFilename().substring(0, file.getOriginalFilename().indexOf('.'));
+                String original = name + fileName + ext;
+                System.out.println(abspath);
+                return original;
+            } else {
+                return "NofileNameHere.png";
+            }
+        }
+            catch (Exception e) {
             throw new RuntimeException("FAIL!");
         }
 

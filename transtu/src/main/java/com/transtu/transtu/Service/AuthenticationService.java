@@ -46,10 +46,13 @@ private final SequenceGeneratorService mongo;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
     public AuthenticationResponse register(Agent request, MultipartFile file) {
-        String fileName=storegeService.CreateNameImage(file);
-        storegeService.store(file,fileName);
-        Date currentDate = new Date();
+        String fileName="";
+        if (file != null && !file.isEmpty()) {
+           fileName = storegeService.CreateNameImage(file);
+            storegeService.store(file, fileName);
+        }
 
+        Date currentDate = new Date();
         Integer signid = mongo.generateSequence(SEQUENCE_NAME);
         var user = Agent.builder()
                 .id(signid)
@@ -96,6 +99,9 @@ private final SequenceGeneratorService mongo;
                 .refreshToken(refreshToken)
                 .agent(agentDTO)
                 .build();
+    }
+    public boolean userExists(String email) {
+        return agentRepo.existsByUsername(email);
     }
 
     public AuthenticationResponse authenticate(AuthenticationRequest request) {

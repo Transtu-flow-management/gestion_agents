@@ -20,6 +20,7 @@ public class Conductor {
     private String name;
     private String surname;
     private String uid ;
+    private byte type;
     private Date dateOfInsertion;
     private Date dateOfModification;
 }

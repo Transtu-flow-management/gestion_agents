@@ -20,17 +20,15 @@ import java.util.Optional;
 @Service
 public class ConditionService {
     @Autowired private ConditionRepo conditionRepo;
-    @Cacheable(value = "cachedConditions" ,key = "'conditions'")
+
     public Page<Condition> getAll(Pageable p){
         System.out.println("getting condtions from db");
         return conditionRepo.findAll(p);
     }
-
     public List<Condition> getAllc(){
 
         return conditionRepo.findAll();
     }
-    @CacheEvict(key = "#condition.id",value = "cachedConditions")
     public Condition addCondition(Condition condition){
         if (conditionRepo.existsByName(condition.getName())){
             throw new IllegalArgumentException("condition exists");
@@ -39,7 +37,6 @@ public class ConditionService {
         Condition saved = conditionRepo.save(condition);
         return saved;
     }
-    @CachePut(key = "#id",value = "cachedConditions")
     public Condition updateCondition (String id,Condition condition){
         Condition newCondition = conditionRepo.findById(id).orElseThrow(()->new NotFoundHandler(id));
         newCondition.setName(condition.getName());
@@ -49,7 +46,6 @@ public class ConditionService {
         return conditionRepo.save(newCondition);
     }
     public void DeleteAll(){conditionRepo.deleteAll();}
-    @CacheEvict(key = "#id",value = "cachedConditions")
     public void deleteByCondId(String id){
         Optional<Condition> optionalCondition = conditionRepo.findById(id);
         if (optionalCondition.isPresent()){

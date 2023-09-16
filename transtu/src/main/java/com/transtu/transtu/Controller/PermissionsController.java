@@ -16,6 +16,7 @@ import java.util.stream.Collectors;
 //@PreAuthorize("hasAuthority('write')")
 public class PermissionsController {
     @GetMapping
+    @PreAuthorize("hasAuthority('write')")
     public ResponseEntity<List<Map<String, Object>>> getAllPermissions() {
         List<Map<String, Object>> permissionsList = new ArrayList<>();
         for (Permissions permission : Permissions.values()) {

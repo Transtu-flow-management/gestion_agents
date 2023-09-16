@@ -65,7 +65,6 @@ public class AgentController {
    @GetMapping
    //@PreAuthorize("hasAuthority('read')")
     private List<Agent> getall() {
-
         return service.findAllAgents();
     }
 

@@ -112,7 +112,7 @@
 					</excludes>
 				</configuration>
 			</plugin>
-		</plugins>
+		</plugins>dcscd
 		<finalName>spring-mongo</finalName>
 	</build>
 </project>

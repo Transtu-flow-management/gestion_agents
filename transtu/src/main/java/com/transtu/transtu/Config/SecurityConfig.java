@@ -34,7 +34,7 @@ public class SecurityConfig {
             try {
                 auth
                         .dispatcherTypeMatchers(DispatcherType.FORWARD,DispatcherType.ERROR).permitAll()
-                        .requestMatchers("/api/**").permitAll()
+                        .requestMatchers("/api/auth/authenticate").permitAll().requestMatchers("/api/auth/register").permitAll()
                         .anyRequest().authenticated().and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                         .authenticationProvider(authenticationProvider).addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
             } catch (Exception e) {

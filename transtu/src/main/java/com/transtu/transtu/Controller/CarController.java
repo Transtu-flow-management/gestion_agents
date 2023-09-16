@@ -16,35 +16,36 @@ import java.util.List;
 @RestController
 @CrossOrigin("*")
 @RequestMapping("/api/cars")
+@PreAuthorize("hasRole('ROLE_SUPERADMIN')")
 public class CarController {
 @Autowired
     private CarService carService;
     @GetMapping
-   // @PreAuthorize("hasAuthority('readCar')")
+    @PreAuthorize("hasAuthority('readCar')")
     private Page<Car> getAll(@RequestParam(defaultValue = "0") int page,
                              @RequestParam(defaultValue = "5") int size){
         Pageable pageable = PageRequest.of(page, size);
         return carService.getallCars(pageable);
     }
     @GetMapping("/all")
-    // @PreAuthorize("hasAuthority('readCar')")
+     //@PreAuthorize("hasAuthority('readCar')")
     private List<Car>findll(){
         return carService.findallCars();
     }
 @PostMapping("/add")
-//@PreAuthorize("hasAuthority('writeCar')")
+@PreAuthorize("hasAuthority('writeCar')")
     private ResponseEntity<Car> newcar (@RequestBody Car car){
    Car createdcar = carService.CreateCar(car);
     return ResponseEntity.ok(createdcar);
 }
     @DeleteMapping("/{id}")
-   // @PreAuthorize("hasAuthority('deleteCar')")
+    @PreAuthorize("hasAuthority('deleteCar')")
     private ResponseEntity<?> deletebyid (@PathVariable("id") String id){
         carService.deleteCarbyid(id);
         return ResponseEntity.status(HttpStatus.ACCEPTED).build();
     }
     @PutMapping("/update/{id}")
-    //@PreAuthorize("hasAuthority('updateCar')")
+    @PreAuthorize("hasAuthority('updateCar')")
     private ResponseEntity<Car> updatecar(@PathVariable String id, @RequestBody Car car){
         Car updated = carService.updateCar(id,car);
         return ResponseEntity.ok(updated);
