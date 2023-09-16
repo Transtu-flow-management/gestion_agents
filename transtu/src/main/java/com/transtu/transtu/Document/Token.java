@@ -10,6 +10,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document
 @Builder
 @RequiredArgsConstructor
+@AllArgsConstructor
 public class Token {
     @Transient
     public static final String SEQUENCE_NAME_TOKEN = "Token_sequence";
