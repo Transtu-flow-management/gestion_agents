@@ -1,0 +1,77 @@
+<div class="overflow-hidden rounded-lg pt-20 -mb-16 pl-20">
+    <p class="text-4xl not-italic font-sans font-bold tracking-wide text-justify dark:text-[#111827] capitalize">Archive des reclammations
+    </p>
+  </div>
+  <div class="overflow-hidden rounded-lg mt-24 ml-20 mr-24 w-auto">
+  <div class="py-4 ">
+    <div class="sm:flex items-center justify-between">
+      <button (click)="openRec()"
+        class="bg-[#F8AF26] px-3 py-2 text-sm shadow-sm font-medium tracking-wider text-black-100 rounded-full hover:shadow-2xl hover:bg-amber-700"><span class="flex items-center font-medium"> <mat-icon>add</mat-icon>Reclammation</span></button>
+    </div>
+  </div>
+
+  <table class="min-w-full border-collapse bg-white text-center text- text-gray-600">
+    <thead class="bg-[#DDDDDD] ">
+        <tr>
+
+            <th scope="col" class=" font-medium text-gray-900">Matricule de vehicule</th>
+            <th scope="col" class=" font-medium text-gray-900">Type d'incident</th>
+            <th scope="col" class="font-medium text-gray-900">Sujet</th>
+            <th scope="col" class=" font-medium text-gray-900">rédiger un rapport</th>
+            <th scope="col" class="px-4 py-4 font-medium text-gray-900">Date d'incident</th>
+        </tr>
+    </thead>
+    <tbody class="divide-y divide-gray-300 border-t border-gray-300 ">
+        <tr class="hover:bg-gray-50 " *ngFor="let reclam of reclams  |paginate:{itemsPerPage:pageSize,currentPage:currentPage,totalItems: totalElements}">
+         
+            <td class="px-2 ">
+                <span class="font-medium text-gray-700">
+                    <select>
+                        <option [value]="" disabled selected>selectionner la matricule de vehicule</option>
+                        <option>test</option>
+                    </select>
+                </span>
+            </td>
+            <td class="px-2 ">
+                <span class="font-medium text-gray-700">
+                    <select>
+                        <option [value]="" disabled selected>Selectionner l'incident</option>
+                       
+                    </select>
+                </span>
+            </td>
+
+            <td class="px-2 ">
+                <span class="font-medium text-gray-700">
+                    <select>
+                        <option [value]="" disabled selected>Selectionner l'incident</option>
+                        
+                    </select>
+                </span>
+            </td>
+            <td class="px-2 ">
+                <span class="font-medium text-gray-700">
+                   <input type="checkbox"> oui
+                </span>
+            </td>
+            <td class="px-2 ">
+                <span class="font-medium text-gray-700">
+                   <input type="datetime-local">
+                </span>
+            </td>
+         
+        </tr>
+
+    </tbody>
+</table>
+</div>
+<div class="flex mt-3">
+    <span class="flex justify-between mt-1 ml-16">items per page :</span>
+    <div class=" border border-gray-400 relative ml-7 rounded-lg bg-zinc-25 w-16 mb-4 p-1">
+      <mat-select [(ngModel)]="pageSize" (selectionChange)="onPageSizeChange($event.value)"
+        class="text-base font-mono text-center ">
+        <mat-option class="bg-blue-50 font-mono " *ngFor="let option of pageSizeOptions" [value]="option">{{ option
+          }}</mat-option>
+      </mat-select>
+    </div>
+  </div>

@@ -1,24 +1,3 @@
-<div class="flex h-screen">
-    <mat-sidenav-container class="flex-1">
-      <mat-sidenav mode="side" opened="true" #sidenav>
-       <app-sidebar></app-sidebar>
-      </mat-sidenav>
-  
-      <mat-sidenav-content class="flex-0 right-0" style="background-color: #EEEEEE;" [ngClass]="{ 'pushed': sidenav.opened }">
-        <mat-toolbar class="bg-[#001449]">
-          <div class="relative left-0 top-1 transform -translate-y-1 inline-flex" >
-            <button class="py-0 px-2 bg-gray-200 text-white rounded-lg" (click)="toggleSidenav()"><div [ngClass]="{ 'arrow': true, 'right': !sidenav.opened, 'left': sidenav.opened }"></div></button></div>
-            <div class="inline-flex items-center h-full ml-5 lg:w-4/5 lg:justify-end lg:ml-64">
-              <button (click)="logout()"
-                  class="px-4 py-2 text-xs font-bold text-white uppercase transition-all duration-150 bg-[#4361ee] rounded shadow outline-none active:bg-teal-600 hover:shadow-md focus:outline-none ease">
-                  Logout
-              </button>
-          </div>
-        </mat-toolbar>
-       
-        <div class="ml-4" ><router-outlet></router-outlet></div>
-      </mat-sidenav-content>
-    </mat-sidenav-container>
-  </div>
-  
+
+  <router-outlet></router-outlet>
 <!-- <app-footer class="example-footer "></app-footer> -->

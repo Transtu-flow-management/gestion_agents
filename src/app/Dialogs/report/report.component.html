@@ -1,0 +1,18 @@
+
+    <form [formGroup]="modalform">
+    <div class=" bg-white rounded-md px-6 py-10 w-full mx-auto">
+      <h1 class="text-center text-2xl font-bold text-gray-500 mb-10">Rédiger un rapport</h1>
+      <div class="space-y-4">
+       
+        <div>
+          <label for="description" class="block mb-2 text-lg font-serif">Description:</label>
+          <textarea id="description" formControlName="context" cols="30" rows="10" placeholder="décrire brievement l'incident" class="w-full font-serif  p-4 text-gray-600 bg-indigo-50 outline-none rounded-md"></textarea>
+        </div>
+        <div>
+          <label for="email" class="text-lx font-serif">Email:</label>
+          <input type="text" formControlName="email" placeholder="Email" id="email" class="ml-2 w-2/4 mb-3 outline-none py-4 px-2 text-md border-2 rounded-md" />
+        </div>
+        <button (click)="submitform()" class=" px-6 py-2 mx-auto block rounded-md text-lg font-semibold text-indigo-100 bg-indigo-600  ">Sauvegarder le rapport</button>
+      </div>
+    </div>
+</form>

@@ -50,8 +50,11 @@ export class AddPathComponent implements AfterViewInit {
       private snackBar: MatSnackBar) {
     this.addForm = this.fb.group({
      
-    
-      type: new FormControl('', [Validators.required, allowedValues]),
+      startFr: new FormControl('', [Validators.required,Validators.minLength(4)]),
+      startAr: new FormControl('', [Validators.required,Validators.minLength(4)]),
+      endFr: new FormControl('', [Validators.required,Validators.minLength(4)]),
+      endAr: new FormControl('', [Validators.required,Validators.minLength(4)]),
+      type:new FormControl('', [Validators.required]),
       data:new FormControl('', [Validators.required]),
       line:new FormControl('', [Validators.required]),
     })

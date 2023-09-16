@@ -1,0 +1,107 @@
+<div class="overflow-hidden rounded-lg pt-20 -mb-16 pl-20">
+    <p class="text-4xl not-italic font-sans font-bold tracking-wide text-justify dark:text-[#111827] capitalize">Reclammatiion
+    </p>
+  </div>
+  <div class="overflow-hidden rounded-lg mt-24 ml-20 mr-24 w-auto">
+  <div class="py-4 ">
+    <div class="sm:flex items-center justify-between">
+        <div *ngIf="success" class="flex bg-green-100 rounded-lg p-4 mb-4 text-sm text-green-700" role="alert">
+            <svg class="w-5 h-5 inline mr-3" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path></svg>
+            <div>
+                <span class="font-medium">Reclammation sauvegardé</span> La réclamamtion à été sauvegardé avec succés
+            </div>
+        </div>
+      <div class="flex items-center">
+        <button 
+        class="bg-[#F9FAFB] px-3 py-2 text-sm shadow-sm font-medium tracking-wider text-black-100 rounded-full hover:shadow-2xl hover:[#E3EBF7]" (click)="openArchive()"><span class="flex items-center font-medium"> <i class="bi bi-archive-fill"></i>Archive des Reclammations</span></button>
+      
+      </div>
+      </div>
+  </div>
+
+  
+
+<div class="w-full rounded-xl bg-white p-4 shadow-2xl shadow-white/40">
+    <form  [formGroup]="addForm">
+    <div class="mb-4 grid grid-cols-2 gap-4">
+      <div class="flex flex-col">
+        <label for="drp" class="mb-2 font-semibold">Selectionner la matricule de vehicule</label>
+            <select formControlName="car" name="drp" class="border border-gray-300 rounded-full text-gray-600 h-10 pl-5 pr-10 bg-white hover:border-gray-400 focus:outline-none appearance-none">
+              <option selected disabled>Matricule</option>
+              <option *ngFor="let car of Cars" [value]="car">{{car.matricule}}</option>
+              <option>Blue</option>
+            </select>
+            <ng-container>
+                <div
+                  *ngIf="isFormSubmitted && addForm.get('car').errors?.['required']  && addForm.get('car')"
+                  class="text-red-500 text-xs italic">Veillez selectionner la matricule </div>
+              
+              </ng-container>
+        </div>
+      <div class="flex flex-col">
+        <div class="flex flex-col">
+            <label for="type" class="mb-2 font-semibold">Selectionner le type d'incident</label>
+            
+                <svg class="w-2 h-2 absolute top-0 right-0 m-4 pointer-events-none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 412 232"><path d="M206 171.144L42.678 7.822c-9.763-9.763-25.592-9.763-35.355 0-9.763 9.764-9.763 25.592 0 35.355l181 181c4.88 4.882 11.279 7.323 17.677 7.323s12.796-2.441 17.678-7.322l181-181c9.763-9.764 9.763-25.592 0-35.355-9.763-9.763-25.592-9.763-35.355 0L206 171.144z" fill="#648299" fill-rule="nonzero"/></svg>
+                <select formControlName="type" name="type" class="border border-gray-300 rounded-full text-gray-600 h-10 pl-5 pr-10 bg-white hover:border-gray-400 focus:outline-none appearance-none">
+                  <option selected disabled>Incident</option>
+                  <option>Red</option>
+                  <option>Blue</option>
+                </select>
+                <ng-container>
+                    <div
+                      *ngIf="isFormSubmitted && addForm.get('type').errors?.['required']  && addForm.get('type')"
+                      class="text-red-500 text-xs italic">Veillez selectionner l'incident </div>
+                  
+                  </ng-container>
+            </div></div>
+    </div>
+
+    <div class="mb-4 flex flex-col">
+      <label for="text" class="mb-2  font-semibold">Sujet</label>
+      <div class="relative">
+     
+        <input type="text" formControlName="predifinedContext" id="text" class="w-full rounded-lg border border-slate-400 px-2 py-4 pl-8 hover:border-blue-500 focus:outline-none focus:ring focus:ring-blue-500/40 active:ring active:ring-blue-500/40" />
+      </div>
+      <ng-container>
+        <div
+          *ngIf="isFormSubmitted && addForm.get('predifinedContext').errors?.['required']  && addForm.get('predifinedContext')"
+          class="text-red-500 text-xs italic">Décire l'incident </div>
+      
+      </ng-container>
+    </div>
+    <div class="mb-4 flex flex-col">
+      <label for="date" class="mb-2 font-semibold">Date de l'incident</label>
+      <input type="datetime-local" formControlName="TimeOfIncident" id="date" class="w-full max-w-[200px] rounded-lg border border-slate-200 px-2 py-1 hover:border-blue-500 focus:outline-none focus:ring focus:ring-blue-500/40 active:ring active:ring-blue-500/40" />
+    </div>
+    <ng-container>
+        <div
+          *ngIf="isFormSubmitted && addForm.get('TimeOfIncident').errors?.['required']  && addForm.get('TimeOfIncident')"
+          class="text-red-500 text-xs italic">Sélectionner la date et le temps</div>
+      
+      </ng-container>
+    <div class="flex items-center">
+
+      <label for="privacy" class="mb-2 ">
+        <input type="checkbox" (change)="checkboxChanged($event)" name="privcay" id="privacy" class="mr-2 peer w-0 h-0" />
+        <h1 class="font-semibold">Rédiger un rapport?</h1>
+        <div class="w-6 h-6  items-center inline-block justify-center hover:border-blue-500 focus:ring transition-all focus:ring-blue-500/40 border border-slate-700 rounded-lg peer-checked:bg-blue-500 peer-checked:[&>svg]:block [&>svg]:hidden">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mx-auto text-white " viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+          </svg>
+        </div>
+        <ng-container>
+            <div
+              *ngIf="showerror"
+              class="text-red-500 text-xs italic">{{errormessage}}</div>
+            
+          </ng-container>
+      </label>
+    </div>
+    <div class="flex justify-end ">
+        <button (click)="addreclammation()"
+        class="bg-[#B3B9C2] px-3 py-2 text-sm shadow-sm font-medium tracking-wider text-black-100 rounded-full hover:shadow-2xl hover:[#C8CCD3]"><span class="flex items-center font-medium"> <i class="bi bi-save"></i>Sauvegarder</span></button>
+      </div>
+    </form>
+  </div>
+

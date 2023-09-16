@@ -25,6 +25,10 @@ export class UserServiceService {
 
     return this.http.get<Agent[]>(url, { params });
   }
+  getagetns():Observable<Agent[]>{
+    return this.http.get<Agent[]>(this.usersUrl);
+
+  }
 
   public createAgent(agent : Agent):Observable<Agent>{
     const url = `${this.usersUrl}/create`;
