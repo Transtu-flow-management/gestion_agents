@@ -13,6 +13,7 @@
             class="w-[200px] h-[200px] object-cover rounded-full"
             [alt]="updateForm.get('imageUrl').value"
             [src]="'http://localhost:5300/api/agents/files/' + updateForm.get('imageUrl').value"
+            (error)="onImageError($event)"
           />
         </ng-template>
 

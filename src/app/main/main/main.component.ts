@@ -19,11 +19,6 @@ export class MainComponent implements OnInit{
 logout(){
   this.authservice.logout();
 }
-ngOnInit(): void {
-  const agentJson = localStorage.getItem('agent');
-
-  const agent = JSON.parse(agentJson);
-  console.log(agent);
-
+ngOnInit(): void {  
 }
 }

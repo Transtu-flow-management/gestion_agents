@@ -19,7 +19,7 @@ constructor(private fb:FormBuilder,private RecS :ReclamService,@Inject(MAT_DIALO
     car : new FormControl(formData.car),
     type:new FormControl(formData.type),
     predifinedContext: new FormControl(formData.predifinedContext),
-    TimeOfIncident: new FormControl(formData.TimeOfIncident),
+    timeOfIncident: new FormControl(formData.timeOfIncident),
   })
 
 }
@@ -29,7 +29,9 @@ submitform():void{
   
   console.log(formvalue);
   if (this.modalform.valid){
-   console.log('valid')
+   this.RecS.createReclam(formvalue).subscribe(()=>{
+    console.log("validé");
+   })
   }
 }
 

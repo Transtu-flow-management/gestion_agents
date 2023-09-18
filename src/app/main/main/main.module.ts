@@ -2,7 +2,6 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MainComponent } from './main.component';
 import { HomeComponent } from 'src/app/Core/Pages/home/home.component';
-
 import { AddUserComponent } from 'src/app/Dialogs/add-user/add-user.component';
 import { AgetsComponent } from 'src/app/Core/Pages/agets/agets.component';
 import { AgentdialogComponent } from 'src/app/Dialogs/agentdialog/agentdialog.component';
@@ -37,9 +36,8 @@ import { CarsComponent } from 'src/app/Core/Pages/cars/cars.component';
 import { StopPopupComponent } from 'src/app/Core/navigations/stop-popup/stop-popup.component';
 import { GpsdataComponent } from 'src/app/Core/Pages/gpsdata/gpsdata.component';
 import { MatRadioModule } from '@angular/material/radio';
-
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
+import {  HttpClientModule } from '@angular/common/http';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatListModule } from '@angular/material/list';
@@ -75,24 +73,20 @@ import { UpdateCarComponent } from 'src/app/Dialogs/update-car/update-car.compon
 import { PermissionsGuard } from 'src/app/permissions.guard';
 import { ReclammationComponent } from 'src/app/Core/Pages/reclammation/reclammation.component';
 import { RecArchiveComponent } from 'src/app/Core/Pages/rec-archive/rec-archive.component';
+import { AccessdeniedComponent } from 'src/app/accessdenied/accessdenied.component';
+import { TypeTextPipe } from 'src/app/type-text.pipe';
 
 
 const approute: Routes = [
   {path :'',component:MainComponent,children:[
   {path: 'home', component: HomeComponent,canActivate:[AuthGuard]},
-  {path: 'add_user',component:AddUserComponent,canActivate:[PermissionsGuard],data:{
-    ['permissions']: ['write']
-  }},
-  {path:'permissions',component:PermissionsComponent,canActivate:[AuthGuard]},
-  {path:'agents',component:AgetsComponent,canActivate:[PermissionsGuard],data:{
-    ['authorities']: ['write', 'update','read','delete','assign_Role','Delete_Role']
-   
-  }},
-  {path:'roles',component:RolesComponent,canActivate:[AuthGuard]},
-  {path:'reclammation',component:ReclammationComponent,canActivate:[AuthGuard]},
-  {path:'archive',component:RecArchiveComponent},
+  {path:'permissions',component:PermissionsComponent,canActivate:[AuthGuard,PermissionsGuard],data:{authorities:['showPermission']}},
+  {path:'agents',component:AgetsComponent,canActivate:[AuthGuard],data:{authorities:['read','readRole']}},
+  {path:'roles',component:RolesComponent,canActivate:[AuthGuard,PermissionsGuard],data:{authorities:['writeRole','readRole','updateRole','deleteRole','AssignPermissions']}},
+  {path:'reclammation',component:ReclammationComponent,canActivate:[AuthGuard,PermissionsGuard],data:{authorities:['pcr_write']}},
+  {path:'archive',component:RecArchiveComponent,canActivate:[AuthGuard,PermissionsGuard],data:{authorities:['pcr_read']}},
   {path:'entropots',component:EntropotComponent,canActivate:[AuthGuard]},
-  {path:'conductors',component:ConductorsComponent,canActivate:[AuthGuard]},
+  {path:'conductors',component:ConductorsComponent,canActivate:[AuthGuard,PermissionsGuard],data:{authorities:['readChauffeur']}},
   {path:'brands',component:BrandsComponent,canActivate:[AuthGuard]},
   {path:'conditions',component:ConditionsComponent,canActivate:[AuthGuard]},
   {path:'add',component:TestComponent,canActivate:[AuthGuard]},
@@ -101,8 +95,11 @@ const approute: Routes = [
   {path:'addpath',component:AddPathComponent,canActivate:[AuthGuard]},
   {path:'updatepath',component:UpdatePathComponent,canActivate:[AuthGuard]},
   {path:'addstop',component:AddStopComponent,canActivate:[AuthGuard]},
-  {path:'cars',component:CarsComponent,canActivate:[AuthGuard]},
+  {path:'cars',component:CarsComponent,canActivate:[AuthGuard,PermissionsGuard],data:{authorities:['readCars']}},
   {path:'gps',component:GpsdataComponent,canActivate:[AuthGuard]},
+  {path: 'access-denied',
+  component:AccessdeniedComponent 
+},
   {path:'**',component:NotfoundComponent}],
 }
 ]
@@ -118,6 +115,7 @@ const approute: Routes = [
     EntropotComponent,
     BrandsComponent,
     ConductorsComponent,
+    TypeTextPipe,
     ConditionsComponent,
     LinesComponent,
     PathsComponent,
@@ -186,8 +184,6 @@ const approute: Routes = [
       MatSlideToggleModule,
       MatStepperModule,
       RouterModule.forChild(approute),
-
-
-  ]
+  ],
 })
 export class MainModule { }

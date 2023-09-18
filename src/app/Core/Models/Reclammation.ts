@@ -2,11 +2,11 @@ import { Car } from "./Car";
 
 export interface Reclammation{
     id:string;
-    car : Car;
+    car : string;
     type:number;
     predifinedContext:string;
     context:string;
-    TimeOfIncident :string;
+    timeOfIncident :string;
     DateOfCreation:Date;
     email:string;
 }

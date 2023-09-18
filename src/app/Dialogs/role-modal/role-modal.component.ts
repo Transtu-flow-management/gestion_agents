@@ -25,7 +25,7 @@ export class RoleModalComponent {
      private _roleservice: RoleService,private snackBar:MatSnackBar,
      private fb:FormBuilder) {
       this.addForm = this.fb.group({
-        roleName: new FormControl('', [Validators.required, Validators.minLength(4)]),
+        roleName: new FormControl('', [Validators.required, Validators.minLength(2)]),
       })
   }
 

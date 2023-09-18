@@ -18,6 +18,8 @@ import { FormControl } from '@angular/forms';
 import { SuccessToastComponent } from 'src/app/alerts/success-toast/success-toast.component';
 import { auto } from '@popperjs/core';
 import { FailedToastComponent } from 'src/app/alerts/failed-toast/failed-toast.component';
+import { GlobalService } from 'src/app/global.service';
+import { AuthService } from '../../Services/auth.service';
 
 @Component({
   selector: 'app-agets',
@@ -43,10 +45,12 @@ export class AgetsComponent implements OnInit, AfterViewInit {
   dateFilter = new FormControl(null);
   isfilterclicked=false;
   pageSizeOptions: number[] = [5, 10, 20,50];
+  agentPerm :any;
 
-  constructor(private agentservice: UserServiceService,
+  constructor(private agentservice: UserServiceService,private authserv:AuthService,
     private dialog: MatDialog,
     private roleservice: RoleService,
+    private gs: GlobalService,
     private router: Router,
     private snackbar: MatSnackBar) { }
   ngOnInit(): void {
@@ -54,7 +58,8 @@ export class AgetsComponent implements OnInit, AfterViewInit {
     this.getRoles();
     this.loadagentspages(this.currentPage, this.pageSize);
     this.fetchAgents();
-
+   this.gs.getUserDetails();
+    
   }
   ngAfterViewInit() {
 
@@ -72,6 +77,10 @@ export class AgetsComponent implements OnInit, AfterViewInit {
 
       }
     );
+  }
+  onImageError(event: Event) {
+    const imgElement = event.target as HTMLImageElement;
+    imgElement.src = '/assets/user.png'; // Replace with the path to your default image
   }
   public loadagentspages(page: number, pagesize: number): void {
     if (this.filteredAgents && this.filteredAgents.length > 0) {
@@ -94,7 +103,12 @@ export class AgetsComponent implements OnInit, AfterViewInit {
     }
   }
   
-  
+  hasAuthority(auth:string):boolean{
+    if(this.authserv.hasAuthority(auth)){
+      return true;
+    }
+    return false;
+  }
   
   
   openAddUserDialog(): void {
@@ -107,7 +121,7 @@ export class AgetsComponent implements OnInit, AfterViewInit {
     dialogref.afterClosed().subscribe(()=>{
       this.currentPage =0;
       this.loadagentspages(this.currentPage,this.pageSize);
-          })
+      })
   }
 
  

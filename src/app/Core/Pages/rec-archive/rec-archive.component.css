@@ -1,0 +1,19 @@
+.context-popup {
+    display: none;
+    position: absolute;
+    z-index: 1;
+    background-color: white;
+    border: 1px solid #ddd;
+    padding: 10px;
+    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+    min-width: 200px;
+    top: 30px;
+    left: 0;
+    right: 0;
+    margin: auto;
+    text-align: center;
+  }
+  
+  .context-popup.show {
+    display: block;
+  }

@@ -38,11 +38,12 @@
             (click)="getDatePickerValue()">filtrer</button>
         </div>
       </div>
-
+      <div>
       <button (click)="openAddUserDialog()"
         class="bg-[#F8AF26] px-3 py-2 text-sm shadow-sm font-medium tracking-wider text-black-100 rounded-full hover:shadow-2xl hover:bg-amber-700"><span
           class="flex items-center font-medium"> <mat-icon>add</mat-icon>Ajouter
           un Agent</span></button>
+        </div>
     </div>
   </div>
 
@@ -71,9 +72,11 @@
         </td>
         <td class="px-2">
           <div class="flex-shrink-0">
-
-            <img class="w-10 h-10 rounded-full" src="http://localhost:5300/api/agents/files/{{agent.imageUrl}}">
-            <!--<img  class="w-16 h-16 rounded-full" [src]="agent.imageUrl ">-->
+            <img
+              class="w-10 h-10 rounded-full"
+              [src]="'http://localhost:5300/api/agents/' + agent.imageUrl"
+              (error)="onImageError($event)"
+            >
           </div>
         </td>
         <td class="px-2">
@@ -101,10 +104,12 @@
             <div class="font-medium text-gray-900">{{agent.roleName}}</div>
           </ng-container>
           <ng-template #assignRoleBtn>
+            <div *ngIf="hasAuthority('assign_Role')">
             <button (click)="openAssignRole(agent.id)"
               class="bg-blue-200 px-2 py-1 text-sm shadow-sm font-medium tracking-wider text-blue-600 rounded-lg hover:shadow-2xl hover:bg-blue-300">
               <span>Assign Role</span>
             </button>
+          </div>
           </ng-template>
         </td>
         <td class="px-2">
@@ -129,7 +134,8 @@
           </span>
         </td>
         <td class="px-2">
-          <div class="flex justify-evenly ">
+          <div class="flex justify-evenly">
+            <div *ngIf="hasAuthority('update')">
             <button x-data="{ tooltip: 'Edit' }" (click)="openEditAgentDialog(agent)">
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                 stroke="currentColor" class="h-6 w-6" x-tooltip="tooltip">
@@ -138,6 +144,8 @@
               </svg>
               <p>Modify</p>
             </button>
+          </div>
+          <div *ngIf="hasAuthority('delete')">
             <button x-data="{ tooltip: 'Delete' }" (click)="deleteagent(agent.id)">
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                 stroke="currentColor" class="h-6 w-6" x-tooltip="tooltip">
@@ -146,6 +154,7 @@
               </svg>
               <p>Delete</p>
             </button>
+          </div>
           </div>
         </td>
       </tr>

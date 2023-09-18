@@ -9,13 +9,12 @@ import { AuthService } from './Core/Services/auth.service';
 export class PermissionsGuard implements CanActivate {
   constructor(private authService:AuthService,private router:Router){}
   canActivate(
-    route: ActivatedRouteSnapshot,
-    state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
+    route: ActivatedRouteSnapshot
+    ): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
     
-      const requiredAuthorities: string[] = route.data['authorities'] || [];
-    
-    
-      if (this.authService.hasAuthorities(requiredAuthorities)) {
+   
+
+      if (this.authService.hasAuthorities(route.data['authorities'])) {
         return true; 
       } else {
         this.router.navigate(['/access-denied']);

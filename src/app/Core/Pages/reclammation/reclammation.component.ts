@@ -25,12 +25,12 @@ export class ReclammationComponent implements OnInit{
   showerror : boolean = false;
   success : boolean = false;
   incident= [
-    {title :'incident 1',value:1},
-    {title:'incident 2',value:2},
-    {title :'incident 3',value:3},
-    {title:'incident 4',value:4},
-    {title :'incident 5',value:5},
-    {title:'incident 6',value:6},
+    {title :'exemple incident 1',value:1},
+    {title:'exemple incident 2',value:2},
+    {title :'exemple incident 3',value:3},
+    {title:'exemple incident 4',value:4},
+    {title :'exemple incident 5',value:5},
+    {title:'exemple incident 6',value:6},
   ]
   sujet= [
     {title :'sujet prédifinit 1',value:1},
@@ -50,9 +50,9 @@ constructor(private router:Router,private dialog:MatDialog,private fb:FormBuilde
 
   this.addForm = this.fb.group({
     car : new FormControl('',Validators.required),
-    type:new FormControl('',Validators.required),
+    type:new FormControl(null,Validators.required),
     predifinedContext: new FormControl('',Validators.required),
-    TimeOfIncident: new FormControl('',Validators.required),
+    timeOfIncident: new FormControl('',Validators.required),
   })
 
 
@@ -70,10 +70,11 @@ this.Cars = cars;
    addreclammation(){
 this.isFormSubmitted = true;
     const formvalue = this.addForm.value;
-    const datetimeControl = this.addForm.get('TimeOfIncident');
+    const datetimeControl = this.addForm.get('timeOfIncident');
     const formattedDatetime = new Date(datetimeControl.value).toLocaleString();
     formvalue.TimeOfIncident = formattedDatetime;
     if (this.addForm.valid){
+      console.log(formvalue);
         this.recS.createReclam(formvalue).subscribe(()=>{
           this.success = true;
         },(error)=>{

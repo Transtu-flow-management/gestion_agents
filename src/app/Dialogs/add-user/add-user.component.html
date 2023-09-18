@@ -121,14 +121,7 @@
            
             <mat-datepicker #picker></mat-datepicker>
         </div>
-        <ng-container>
-          <div class="mb-8"
-            *ngIf="isFormSubmitted && addForm.get('phone').errors?.['required']  && addForm.get('phone')"
-            class="text-red-500 text-xs italic">Veillez verifier que le champ non vide </div>
-          <div
-            *ngIf="isFormSubmitted && addForm.get('phone').errors?.['minlength']  && addForm.get('phone').invalid && addForm.get('phone')"
-            class="text-red-500 text-xs italic">le numero doit etre de 8 chiffres au minimum</div>
-        </ng-container>
+       
       </div>
       <div class="w-full lg:w-6/12 px-4">
         <div class="relative w-full mb-3">

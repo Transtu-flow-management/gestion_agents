@@ -10,7 +10,7 @@ import { loginDTO } from '../DTO/login';
   templateUrl: './signin.component.html',
   styleUrls: ['./signin.component.css']
 })
-export class SigninComponent implements OnInit {
+export class SigninComponent{
   isLoading = false; 
   constructor (private authservice : AuthService, private formBuilder: FormBuilder,private router: Router ) { 
     this.nameForm = this.formBuilder.group({
@@ -24,9 +24,7 @@ public nameForm = new FormGroup({
   password: new FormControl('', [Validators.required, Validators.minLength(6)]),
 });
 
-ngOnInit(): void {
-    
-}
+
 
   onsubmit() {
     
@@ -37,8 +35,8 @@ ngOnInit(): void {
       const credentials: loginDTO = { username, password };
   
       this.authservice.authenticate(credentials).subscribe(
-        () => {
-
+        (response) => {
+          this.authservice.saveUser(response);
           this.router.navigate(['/home']);
         },
         error => {

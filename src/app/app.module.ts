@@ -18,7 +18,7 @@ import {MatSnackBarModule} from '@angular/material/snack-bar';
 import {MatRadioModule} from '@angular/material/radio';
 import{NgxPaginationModule} from 'ngx-pagination'
 import { environment } from './environment';
-import { HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
 
@@ -35,9 +35,10 @@ import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import {MatStepperModule} from '@angular/material/stepper';
 import { SpinnerComponent } from './Core/spinner/spinner.component';
 import { AccessdeniedComponent } from './accessdenied/accessdenied.component';
-import { AuthInterceptor } from './Core/Services/auth.interceptor';
-import { RecArchiveComponent } from './Core/Pages/rec-archive/rec-archive.component';
+import {  httpInterceptorProviders } from './Core/Services/auth.interceptor';
 import { ReportComponent } from './Dialogs/report/report.component';
+import { ShowreportComponent } from './Dialogs/showreport/showreport.component';
+
 
 
 export const API_URL = new InjectionToken<String>('API_URL');
@@ -50,6 +51,7 @@ export const API_URL = new InjectionToken<String>('API_URL');
     SpinnerComponent,
     AccessdeniedComponent,
     ReportComponent,
+    ShowreportComponent,
  
   ],
   imports: [
@@ -82,7 +84,7 @@ export const API_URL = new InjectionToken<String>('API_URL');
   ],
 
   
-  providers: [{provide: API_URL, useValue: environment.apiUrl ,useClass: AuthInterceptor,multi:true},SearchPipe],
+  providers: [ httpInterceptorProviders ,SearchPipe],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

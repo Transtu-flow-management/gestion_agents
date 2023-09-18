@@ -14,6 +14,7 @@ import { format } from 'date-fns';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { Depot } from 'src/app/Core/Models/depot';
 import { EntropotService } from 'src/app/Core/Services/entropot.service';
+import { WarningComponent } from 'src/app/alerts/warning/warning.component';
 
 @Component({
   selector: 'app-add-user',
@@ -128,7 +129,7 @@ export class AddUserComponent implements OnInit{
   addUser(): void {
     this.isFormSubmitted= true;
     const dateOfBirth = this.addForm.value.dateOfBirth;
-const formattedDateOfBirth = format(dateOfBirth, 'yyyy-MM-dd');
+
     let formdata = new FormData();
     if (this.addForm.invalid) {
       this.openWarningToast("Vérifiez que tous les champs sont remplis");
@@ -143,8 +144,12 @@ const formattedDateOfBirth = format(dateOfBirth, 'yyyy-MM-dd');
     formdata.append('password',this.addForm.value.password);
     formdata.append('address',this.addForm.value.address);
     formdata.append('phone',this.addForm.value.phone);
-    formdata.append('file',this.fileupload[0]);
-    formdata.append('dateOfBirth', formattedDateOfBirth);
+    if (this.fileupload){  formdata.append('file',this.fileupload[0]);}
+  
+    if (dateOfBirth) {
+      const formattedDateOfBirth = format(dateOfBirth, 'yyyy-MM-dd');
+      formdata.append('dateOfBirth', formattedDateOfBirth);
+    }
     formdata.append('warehouse',this.addForm.value.depot);
     
     this._service.register(formdata).subscribe((valid)=>{
@@ -181,7 +186,7 @@ openAddToast(message:string){
   })
  }
  openWarningToast(message:string):void{
-  this.snackBar.openFromComponent(WarningToastComponent,{
+  this.snackBar.openFromComponent(WarningComponent,{
     data: {message:message},duration: 5000,
   horizontalPosition: "center",
      verticalPosition: "top",

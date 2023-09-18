@@ -74,7 +74,7 @@ export class UserServiceService {
   }
   public getimage(filename :string):Observable<Blob>{
     
-    const url =`${this.usersUrl}/files/${filename}`;
+    const url =`${this.usersUrl}/${filename}`;
     return this.http.get(url,{ responseType: 'blob' });
   }
   public searchagent(query :String){

@@ -60,6 +60,11 @@ export class AgentdialogComponent implements OnInit {
 
   }
 
+  onImageError(event: Event) {
+    const imgElement = event.target as HTMLImageElement;
+    imgElement.src = '/assets/user.png'; // Replace with the path to your default image
+  }
+  
   ngOnInit(): void {
     this._roleservice.getRoles().subscribe((roles) => {
       this.roleList = roles;

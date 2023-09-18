@@ -10,60 +10,66 @@
     </div>
   </div>
 
-  <table class="min-w-full border-collapse bg-white text-center text- text-gray-600">
-    <thead class="bg-[#DDDDDD] ">
+   <table  class="min-w-full border-collapse bg-white text-center text-  text-red-900">
+      <thead class="bg-[#DDDDDD] ">
         <tr>
-
-            <th scope="col" class=" font-medium text-gray-900">Matricule de vehicule</th>
-            <th scope="col" class=" font-medium text-gray-900">Type d'incident</th>
-            <th scope="col" class="font-medium text-gray-900">Sujet</th>
-            <th scope="col" class=" font-medium text-gray-900">rédiger un rapport</th>
-            <th scope="col" class="px-4 py-4 font-medium text-gray-900">Date d'incident</th>
+          <th scope="col" class=" font-medium text-gray-900 ">Id</th>
+          <th scope="col" class="px-4 py-4 font-medium text-gray-900">Date d'incident</th>
+          <th scope="col" class=" font-medium text-gray-900">Vehicule</th>
+          <th scope="col" class=" font-medium text-gray-900">Incident</th>
+          <th scope="col" class="font-medium text-gray-900">Contexte</th>
+          <th scope="col" class=" font-medium text-gray-900">Contient un rapport</th>
+         
+          <th scope="col" class="px-4 py-4 font-medium text-gray-900">Date d'insertion</th>
         </tr>
-    </thead>
-    <tbody class="divide-y divide-gray-300 border-t border-gray-300 ">
+      </thead>
+      <tbody class="divide-y divide-gray-300 border-t border-gray-300 ">
         <tr class="hover:bg-gray-50 " *ngFor="let reclam of reclams  |paginate:{itemsPerPage:pageSize,currentPage:currentPage,totalItems: totalElements}">
+          <td class="px-2">
+            <span class="font-medium text-gray-700">
+                {{ "RECLAM_" + reclam.id.substr(-4) }}
+            </span>
+          </td>
+          <td class="px-2">
+            <span class="font-medium text-gray-700">
+                {{reclam.timeOfIncident}}
+            </span>
+          </td>
+          <td class="px-2 ">
+            <span class="font-medium text-gray-700">
+              {{reclam.car}} 
+            </span>
+          </td>
+          <td class="px-2 ">
+            <span class="font-medium text-gray-700">
+                {{ reclam.type | typeText: incident }}
+            </span>
+          </td>
+          <td class="px-2 ">
+            <span class="font-medium text-gray-700">
+                {{reclam.predifinedContext}}
+            </span>
+          </td>
+          <td class="px-2">
+            <span class="font-medium text-gray-700" *ngIf="reclam.context !== null && reclam.context.trim() !== ''; else nullText">
+            </span>
+            <button *ngIf="reclam.context" class="context-button" (click)="openContextModal(reclam.context,reclam.email)">
+                Afficher les details
+              </button>
+            <ng-template #nullText> <span class="font-medium text-gray-700">null</span></ng-template>
+          </td>
          
-            <td class="px-2 ">
-                <span class="font-medium text-gray-700">
-                    <select>
-                        <option [value]="" disabled selected>selectionner la matricule de vehicule</option>
-                        <option>test</option>
-                    </select>
-                </span>
-            </td>
-            <td class="px-2 ">
-                <span class="font-medium text-gray-700">
-                    <select>
-                        <option [value]="" disabled selected>Selectionner l'incident</option>
-                       
-                    </select>
-                </span>
-            </td>
-
-            <td class="px-2 ">
-                <span class="font-medium text-gray-700">
-                    <select>
-                        <option [value]="" disabled selected>Selectionner l'incident</option>
-                        
-                    </select>
-                </span>
-            </td>
-            <td class="px-2 ">
-                <span class="font-medium text-gray-700">
-                   <input type="checkbox"> oui
-                </span>
-            </td>
-            <td class="px-2 ">
-                <span class="font-medium text-gray-700">
-                   <input type="datetime-local">
-                </span>
-            </td>
-         
+          <td class="px-2 ">
+            <span
+            class="inline-flex items-center  bg-zinc-50 px-2 py-1 text-xs font-semibold text-stone-600">
+              {{reclam.dateOfCreation | date :'short' }}
+            </span>
+          </td>
+       
         </tr>
-
-    </tbody>
-</table>
+        
+      </tbody>
+    </table>
 </div>
 <div class="flex mt-3">
     <span class="flex justify-between mt-1 ml-16">items per page :</span>
