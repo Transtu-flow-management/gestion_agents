@@ -33,11 +33,12 @@
           <button [disabled]="isButtonDisabled" [ngClass]="{'bg-red-50 hover:bg-red-100': isButtonDisabled}" class= "bg-[#B7B78A] px-3 py-4 text-sm shadow-sm font-small tracking-wider text-gray-100 rounded-md hover:shadow-2xl hover:bg-amber-700" (click)="getDatePickerValue()">filtrer</button>
         </div>
          </div>
-       
+         <div *ngIf="hasAuthority('readCara')">
         <button (click)="openAddConductorDialog()"
           class="bg-[#F8AF26] px-3 py-2 text-sm shadow-sm font-medium tracking-wider text-black-100 rounded-full hover:shadow-2xl hover:bg-amber-700"><span class="flex items-center font-medium"> <mat-icon>add</mat-icon>Ajouter
             un Conduteur</span></button>
       </div>
+    </div>
     </div>
     <table  class="min-w-full border-collapse bg-white text-center text-  text-red-900">
       <thead class="bg-[#DDDDDD] ">
@@ -81,7 +82,9 @@
             </span>
           </td>
           <td class="px-2">
+           
             <div class="flex justify-evenly">
+              <div *ngIf="hasAuthority('updateChauffeur')">
               <button x-data="{ tooltip: 'Edit' }" (click)="openEditConductorDialog(conductor)" >
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                   stroke="currentColor" class="h-6 w-6" x-tooltip="tooltip">
@@ -90,6 +93,8 @@
                 </svg>
                 <p>Modify</p>
               </button>
+              </div>
+              <div *ngIf="hasAuthority('deleteChauffeur')">
               <button x-data="{ tooltip: 'Delete' }" (click)="deleteConductor(conductor.id)">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                   stroke="currentColor" class="h-6 w-6" x-tooltip="tooltip">
@@ -98,7 +103,9 @@
                 </svg>
                 <p>Delete</p>
               </button>
+              </div>
             </div>
+           
           </td>
         </tr>
         

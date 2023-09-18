@@ -21,15 +21,16 @@ users : Agent[]=[];
 cars : Car[] = [];
 driver : Conductor[]=[];
 numberOfAgents :number;
+enmacrche : number;
+enpanne : number;
   userinfo: any;
-  constructor(private as: UserServiceService,private carservice:CarService,private cs :ConductorService,private gs:GlobalService){
+  constructor(private as: UserServiceService,private carservice:CarService,private cs :ConductorService,){
     this.countagents();
     this.countCars();
   }
 ngOnInit(): void {
 
-  this.userinfo = this.gs.getUserDetails();
-  console.log(this.userinfo)
+
 }
 countDrivers(){
   this.cs.getallDrivers().subscribe((drv)=>{
@@ -46,7 +47,8 @@ countagents(){
 countCars(){
   this.carservice.findcars().subscribe((cars)=>{
     this.cars = cars;
-    console.log(this.cars)
+    this.enmacrche = (this.cars.filter((c)=> c.state.name ==='marche').length /this.cars.filter((c)=> c.state).length)*100
+    this.enpanne = (this.cars.filter((c)=> c.state.name ==='en panne').length/this.cars.filter((c)=> c.state).length)*100
   })
 }
 

@@ -29,7 +29,7 @@ export class UpdateConductorComponent {
     this.updateForm = this.fb.group({
       name: new FormControl(conductor.name, [Validators.required, Validators.minLength(6)]),
       surname: new FormControl(conductor.surname, [Validators.required, Validators.minLength(6)]),
-      uid: new FormControl(conductor.uid, [Validators.required, Validators.minLength(4)]),
+      uid: new FormControl(conductor.uid,Validators.required),
     });
 
   }
@@ -76,6 +76,7 @@ openWarningToast(message:string):void{
    public update():void{
     this.isFormSubmitted = true;
     var condcutor = this.updateForm.getRawValue();
+    console.log(condcutor);
 if (!this.isFormUnchanged()){
   this._conductorservice.updateconductor(this.data.conductor.id,condcutor).subscribe(()=>{
     this.openToast('Le conduteur a été mis à jour');

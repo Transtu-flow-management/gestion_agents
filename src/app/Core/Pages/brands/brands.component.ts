@@ -48,7 +48,8 @@ export class BrandsComponent implements OnInit {
     dialogref.afterClosed().subscribe(result =>{
     
       if (result){
-        this.brands.push(result);
+        this.currentPage =0;
+       this.fetchBrands(this.currentPage,this.pageSize);
       }
     })
   }
@@ -59,8 +60,14 @@ export class BrandsComponent implements OnInit {
       enterAnimationDuration: '1000ms',
       exitAnimationDuration: '200ms',
       data: { brand: brand },
-
     });
+    dialogref.afterClosed().subscribe(result =>{
+    
+      if (result){
+        this.currentPage =0;
+       this.fetchBrands(this.currentPage,this.pageSize);
+      }
+    })
   }
   deletebrand(id: string): void {
     const deldialog = this.dialog.open(ConfirmationComponent, {

@@ -108,6 +108,10 @@ this.fetchlines(this.currentPage,this.pageSize);
       exitAnimationDuration:'200ms',
       data :{ line:line},
     });
+    dialogref.afterClosed().subscribe(()=>{
+      this.currentPage =0;
+      this.fetchlines(this.currentPage,this.pageSize);
+          })
   }
   openDelToast(message: string) {
     this.snackBar.openFromComponent(SuccessToastComponent, {

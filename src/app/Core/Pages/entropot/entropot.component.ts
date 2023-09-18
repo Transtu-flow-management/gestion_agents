@@ -28,13 +28,14 @@ constructor(private _enttservice :EntropotService,
 openAddentropotDialog():void{
   const dialogref = this.dialog.open(AddDepoComponent,{
     width:'50%',
+    height:'99%',
     enterAnimationDuration:'1000ms',
     exitAnimationDuration:'200ms',
   });
   dialogref.afterClosed().subscribe(result =>{
-    if (result){
-      this.depots.push(result);
-    }
+   
+     this.fetchEntropots()
+    
   })
 }
 ngOnInit(): void {
@@ -98,10 +99,14 @@ public deleteEntrp(id: number): void {
 openEditDepotDialog(depot:Depot):void{
   const dialogref = this.dialog.open(UpdateDepotComponent,{
     width: '50%',
+    height:'99%',
     data :{depot:depot},
     enterAnimationDuration:'1000ms',
     exitAnimationDuration:'2000ms',
   });
+  dialogref.afterClosed().subscribe(() =>{
+     this.fetchEntropots()
+  })
 }
 openToast(message: string): void {
   const dialogRef = this.dialog.open(SuccessToastComponent, {

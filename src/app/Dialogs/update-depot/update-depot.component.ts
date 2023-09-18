@@ -187,9 +187,11 @@ export class UpdateDepotComponent implements AfterViewInit {
   }
 
   getAddressFromCoordinates(lat: number, lng: number, radius: number): Promise<string> {
-    const url = `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lng}&radius=${radius}`;
-
-    return this.http.get(url)
+    const apiUrl  = `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lng}&radius=${radius}`;
+    const httpOptions = {
+      withCredentials: false // Désactive les credentials
+    };
+    return this.http.get(apiUrl ,httpOptions)
       .toPromise()
       .then((response: any) => {
         if (response?.address) {

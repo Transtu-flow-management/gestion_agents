@@ -88,7 +88,7 @@ add(): void {
   this.isFormSubmitted = true;
   const formValue = this.addForm.value;
   const selectedMaker = this.fabriquant.value;
-  formValue.builder = selectedMaker;
+  formValue.builder = selectedMaker.name;
 
   if (this.addForm.valid) {
     console.log(formValue);

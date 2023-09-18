@@ -113,11 +113,10 @@ deletecar(id:string):void{
       enterAnimationDuration: '1000ms',
       exitAnimationDuration: '200ms',
     });
-
     dialogref.afterClosed().subscribe(()=>{
       this.currentPage =0;
       this.fetchcars(this.currentPage,this.pageSize);
-          })
+          });
   }
   openEditCar(car:Car):void{
     const dialogref =this.dialog.open(UpdateCarComponent,{

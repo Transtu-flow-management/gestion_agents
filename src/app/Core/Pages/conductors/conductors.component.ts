@@ -12,6 +12,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { SuccessToastComponent } from 'src/app/alerts/success-toast/success-toast.component';
 import { error } from 'jquery';
 import { FailedToastComponent } from 'src/app/alerts/failed-toast/failed-toast.component';
+import { AuthService } from '../../Services/auth.service';
 
 @Component({
   selector: 'app-conductors',
@@ -33,7 +34,7 @@ export class ConductorsComponent implements OnInit {
   filterValue: string = ''
   dateFilter = new FormControl(null);
   
-  constructor(private _conductorservice: ConductorService, 
+  constructor(private _conductorservice: ConductorService,private authserv:AuthService,
     private dialog: MatDialog,
     private snackBar:MatSnackBar) {
       this.pageSize = this.pageSizeOptions[0]
@@ -112,6 +113,16 @@ this.fetchConductors(this.currentPage,this.pageSize);
       exitAnimationDuration:'200ms',
       data :{ conductor:conductor},
     });
+    dialogref.afterClosed().subscribe(()=>{
+      this.currentPage =0;
+      this.fetchConductors(this.currentPage,this.pageSize);
+          })
+  }
+  hasAuthority(auth:string):boolean{
+    if(this.authserv.hasAuthority(auth)){
+      return true;
+    }
+    return false;
   }
   openDelToast(message: string) {
     this.snackBar.openFromComponent(SuccessToastComponent, {

@@ -56,9 +56,7 @@
         <div
           *ngIf="isFormSubmitted && updateForm.get('surname').errors?.['required']  && updateForm.get('surname')"
           class="text-red-500 text-xs italic">Veillez verifier que le champ non vide </div>
-        <div
-          *ngIf="isFormSubmitted && updateForm.get('surname').errors?.['minlength']  && updateForm.get('surname').invalid && updateForm.get('surname')"
-          class="text-red-500 text-xs italic">le nom doit contient minimum 6 lettres</div>
+       
       </ng-container></div>
       <div class="my-8"></div> <!-- Add spacing  -->
       <div class="relative z-0 mt-4 w-full group max-w-xs">

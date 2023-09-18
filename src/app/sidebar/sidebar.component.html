@@ -26,7 +26,9 @@
   </div>
 
   <div class="my-4 bg-gray-500 h-[2px]"></div>
+
   <mat-accordion multi>
+   
     <mat-expansion-panel
       class="mt-2 flex items-start rounded-md px-4 duration-300 cursor-pointer  text-white bg-[#001449] pl-3.5"
       [@expandedState]="isExpanded1 ? 'expanded' : 'collapsed'" (opened)="isExpanded1 = true"
@@ -40,6 +42,7 @@
                 d="M11 5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm-9 8c0 1 1 1 1 1h5.256A4.493 4.493 0 0 1 8 12.5a4.49 4.49 0 0 1 1.544-3.393C9.077 9.038 8.564 9 8 9c-5 0-6 3-6 4Zm9.886-3.54c.18-.613 1.048-.613 1.229 0l.043.148a.64.64 0 0 0 .921.382l.136-.074c.561-.306 1.175.308.87.869l-.075.136a.64.64 0 0 0 .382.92l.149.045c.612.18.612 1.048 0 1.229l-.15.043a.64.64 0 0 0-.38.921l.074.136c.305.561-.309 1.175-.87.87l-.136-.075a.64.64 0 0 0-.92.382l-.045.149c-.18.612-1.048.612-1.229 0l-.043-.15a.64.64 0 0 0-.921-.38l-.136.074c-.561.305-1.175-.309-.87-.87l.075-.136a.64.64 0 0 0-.382-.92l-.148-.045c-.613-.18-.613-1.048 0-1.229l.148-.043a.64.64 0 0 0 .382-.921l-.074-.136c-.306-.561.308-1.175.869-.87l.136.075a.64.64 0 0 0 .92-.382l.045-.148ZM14 12.5a1.5 1.5 0 1 0-3 0 1.5 1.5 0 0 0 3 0Z" />
             </svg>
           </div>
+  
           <div>
             <span class="text-[16px] text-gray-200 font-bold">Manage Agent</span>
           </div>
@@ -63,15 +66,19 @@
       <i class="bi bi-people-fill"></i>
       <span class="text-[15px] ml-4 text-gray-200 font-bold" routerLink="/permissions">Permissions</span>
     </div>
+    
     </mat-expansion-panel>
   </mat-accordion>
+
   <div class="my-4 bg-gray-500 h-[2px]"></div>
+  <div  *ngIf="hasAuthority('readDepot')">
   <mat-accordion multi>
     <mat-expansion-panel
       class="mt-2 flex items-start rounded-md px-4 duration-300 cursor-pointer text-white bg-[#001449] pl-3.5"
       [@expandedState]="isExpanded2 ? 'expanded' : 'collapsed'" (opened)="isExpanded2 = true"
       (closed)="isExpanded2 = false">
       <mat-expansion-panel-header>
+        
         <mat-panel-title class="text-white flex items-start">
           <div class="mr-2">
             <i class="bi bi-buildings-fill"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
@@ -80,41 +87,51 @@
                   d="M15 .5a.5.5 0 0 0-.724-.447l-8 4A.5.5 0 0 0 6 4.5v3.14L.342 9.526A.5.5 0 0 0 0 10v5.5a.5.5 0 0 0 .5.5h9a.5.5 0 0 0 .5-.5V14h1v1.5a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5V.5ZM2 11h1v1H2v-1Zm2 0h1v1H4v-1Zm-1 2v1H2v-1h1Zm1 0h1v1H4v-1Zm9-10v1h-1V3h1ZM8 5h1v1H8V5Zm1 2v1H8V7h1ZM8 9h1v1H8V9Zm2 0h1v1h-1V9Zm-1 2v1H8v-1h1Zm1 0h1v1h-1v-1Zm3-2v1h-1V9h1Zm-1 2h1v1h-1v-1Zm-2-4h1v1h-1V7Zm3 0v1h-1V7h1Zm-2-2v1h-1V5h1Zm1 0h1v1h-1V5Z" />
               </svg></i>
           </div>
+          
           <div>
             <span class="text-[16px] text-gray-200 font-bold">Entropôt </span>
           </div>
         </mat-panel-title>
       </mat-expansion-panel-header>
+
       <div
         class="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-[#001469] text-white"
         routerLinkActive="text-[15px] ml-3 text-gray-200 font-bold bg-[#001499]">
+        
         <i class="bi bi-building"></i>
         <span class="text-[15px] ml-4 text-gray-200 font-bold" routerLink="/entropots">Depots</span>
       </div>
+
       <div
       class="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-[#001469] text-white"
       routerLinkActive="text-[15px] ml-3 text-gray-200 font-bold bg-[#001499]">
+      <div *ngIf="hasAuthority('readCar')">
       <i class="bi bi-bus-front-fill"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bus-front-fill" viewBox="0 0 16 16">
         <path d="M16 7a1 1 0 0 1-1 1v3.5c0 .818-.393 1.544-1 2v2a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5V14H5v1.5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5v-2a2.496 2.496 0 0 1-1-2V8a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1V2.64C1 1.452 1.845.408 3.064.268A43.608 43.608 0 0 1 8 0c2.1 0 3.792.136 4.936.268C14.155.408 15 1.452 15 2.64V4a1 1 0 0 1 1 1v2ZM3.552 3.22A43.306 43.306 0 0 1 8 3c1.837 0 3.353.107 4.448.22a.5.5 0 0 0 .104-.994A44.304 44.304 0 0 0 8 2c-1.876 0-3.426.109-4.552.226a.5.5 0 1 0 .104.994ZM8 4c-1.876 0-3.426.109-4.552.226A.5.5 0 0 0 3 4.723v3.554a.5.5 0 0 0 .448.497C4.574 8.891 6.124 9 8 9c1.876 0 3.426-.109 4.552-.226A.5.5 0 0 0 13 8.277V4.723a.5.5 0 0 0-.448-.497A44.304 44.304 0 0 0 8 4Zm-3 7a1 1 0 1 0-2 0 1 1 0 0 0 2 0Zm8 0a1 1 0 1 0-2 0 1 1 0 0 0 2 0Zm-7 0a1 1 0 0 0 1 1h2a1 1 0 1 0 0-2H7a1 1 0 0 0-1 1Z"/>
       </svg></i>
       <span class="text-[15px] ml-4 text-gray-200 font-bold capitalize" routerLink="/cars">Vehicules</span>
     </div>
+  </div>
       <div
         class="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-[#001469] text-white"
         routerLinkActive="text-[15px] ml-3 text-gray-200 font-bold bg-[#001499]">
         <i class="bi bi-tags-fill"></i>
         <span class="text-[15px] ml-4 text-gray-200 font-bold" routerLink="/brands">marques</span>
       </div>
+      <div *ngIf="hasAuthority('readChauffeur')">
       <div
         class="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-[#001469] text-white"
         routerLinkActive="text-[15px] ml-3 text-gray-200 font-bold bg-[#001499]">
         <i class="bi bi-file-earmark-person-fill"></i>
+       
         <span class="text-[15px] ml-4 text-gray-200 font-bold" routerLink="/conductors">Conduteurs</span>
+      </div>
       </div>
     </mat-expansion-panel>
   </mat-accordion>
-
+  </div>
   <div class="my-4 bg-gray-500 h-[2px]"></div>
+
   <mat-accordion multi>
     <mat-expansion-panel
       class="mt-2 flex items-start rounded-md px-4 duration-300 cursor-pointer text-white bg-[#001449] pl-3.5"
@@ -166,24 +183,31 @@
           </div>
         </mat-panel-title>
       </mat-expansion-panel-header>
+      <div *ngIf="hasAuthority('readLigne')">
       <div
         class="p-2.5 mt-3 flex items-center w-full rounded-md duration-300 cursor-pointer hover:bg-[#001469] text-white"
         routerLinkActive="text-[15px] ml-3 text-gray-200 font-bold bg-[#001499]">
+       
         <i class="bi bi-arrow-left-right"></i>
         <span class="text-[15px] ml-4 text-gray-200 font-bold capitalize" routerLink="/lines">lignes</span>
       </div>
+      </div>
+      <div *ngIf="hasAuthority('readTraget')">
       <div
       class="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-[#001469] text-white"
       routerLinkActive="text-[15px] ml-3 text-gray-200 font-bold bg-[#001499]">
       <i class="bi bi-cursor-fill"></i>
       <span class="text-[15px] ml-4 text-gray-200 font-bold capitalize" routerLink="/paths">Traget</span>
     </div>
+      </div>
+      <div *ngIf="hasAuthority('readArrêt')">
     <div
       class="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-[#001469] text-white"
       routerLinkActive="text-[15px] ml-3 text-gray-200 font-bold bg-[#001499]">
       <i class="bi bi-geo-fill"></i>
       <span class="text-[15px] ml-4 text-gray-200 font-bold capitalize" routerLink="/addstop">Arrêts</span>
     </div>
+      </div>
     <div
       class="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-[#001469] text-white"
       routerLinkActive="text-[15px] ml-3 text-gray-200 font-bold bg-[#001499]">

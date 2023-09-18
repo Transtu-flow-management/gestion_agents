@@ -95,7 +95,7 @@ const approute: Routes = [
   {path:'addpath',component:AddPathComponent,canActivate:[AuthGuard]},
   {path:'updatepath',component:UpdatePathComponent,canActivate:[AuthGuard]},
   {path:'addstop',component:AddStopComponent,canActivate:[AuthGuard]},
-  {path:'cars',component:CarsComponent,canActivate:[AuthGuard,PermissionsGuard],data:{authorities:['readCars']}},
+  {path:'cars',component:CarsComponent,canActivate:[AuthGuard,PermissionsGuard],data:{authorities:['readCar']}},
   {path:'gps',component:GpsdataComponent,canActivate:[AuthGuard]},
   {path: 'access-denied',
   component:AccessdeniedComponent 

@@ -112,7 +112,7 @@ public update():void{
     else{
       brand.builder = this.data.brand.builder;
     }
-
+    console.log(brand);
   this._brandservice.updatebrand(this.data.brand.id,brand).subscribe(()=>{
     this.openToast('La marque a été mis à jour')
     this.dialogRef.close();

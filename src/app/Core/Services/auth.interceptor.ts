@@ -26,7 +26,7 @@ private isRefreshing = false;
       const token = this.authService.getAccessToken();
       if (token){
       req = req.clone({
-        withCredentials:true,
+
         setHeaders: {
           Authorization: `Bearer ${token}`,
         },

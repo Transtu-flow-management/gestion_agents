@@ -1,6 +1,7 @@
 {
     "/api": {
-      "target": "http://localhost:3000",
-      "secure": false
+      "target": "https://nominatim.openstreetmap.org",
+      "secure": false, 
+      "changeOrigin": true
     }
   }
