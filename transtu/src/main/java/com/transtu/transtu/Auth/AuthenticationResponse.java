@@ -18,7 +18,7 @@ public class AuthenticationResponse{
     @JsonProperty("refresh_token")
     private String refreshToken;
     @JsonProperty("agent")
-    private AgentDTO agent;
+    private Agent agent;
 
 
 }

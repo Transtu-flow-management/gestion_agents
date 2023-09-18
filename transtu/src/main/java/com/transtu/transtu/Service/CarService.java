@@ -10,32 +10,30 @@ import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 @Service
 public class CarService {
-
 @Autowired
-    private CarRepo carRepo;
+private CarRepo carRepo;
 @Autowired
-private PathRepo pathRepo;
+private  PathRepo pathRepo;
 @Autowired
-private LineRepo lineRepo;
+private  LineRepo lineRepo;
 @Autowired
-private ConditionRepo conditionRepo;
+private  ConditionRepo conditionRepo;
 @Autowired
-private ConductorRepo conductorRepo;
+private  ConductorRepo conductorRepo;
 @Autowired
-private BrandRepo brandRepo;
+private  BrandRepo brandRepo;
 @Autowired
-private entropotRepo entropotRepo;
-public Page<Car> getallCars(Pageable pageable){
-    return  carRepo.findAll(pageable);
-}
-public List<Car>findallCars(){
-    return carRepo.findAll();
-}
+private  entropotRepo entropotRepo;
+    public Page<Car> getallCars(Pageable pageable){
+        return  carRepo.findAll(pageable);
+    }
+    public List<Car>findallCars(){
+        return carRepo.findAll();
+    }
 public Car CreateCar(Car car){
 
     if (carRepo.existsByMatricule(car.getMatricule())){

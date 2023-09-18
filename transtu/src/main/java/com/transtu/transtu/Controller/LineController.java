@@ -14,14 +14,14 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@CrossOrigin("*")
+@CrossOrigin(originPatterns = "*")
 @RequestMapping("/api/lines")
 public class LineController {
     @Autowired
     private LineService lineService;
     @GetMapping
   //  @PreAuthorize("hasAuthority('readLigne')")
-    private Page<Line> getallLines(@RequestParam (defaultValue = "0")int page,
+    public Page<Line> getallLines(@RequestParam (defaultValue = "0")int page,
                                    @RequestParam(defaultValue = "4")int size){
         Pageable pageable = PageRequest.of(page,size);
 
@@ -29,30 +29,30 @@ public class LineController {
     }
     @GetMapping("/all")
     //@PreAuthorize("hasAuthority('readLigne')")
-    private List<Line> getall(){
+    public List<Line> getall(){
         return lineService.getAlllines();
     }
     @PostMapping("/add")
    // @PreAuthorize("hasAuthority('writeLigne')")
-    private ResponseEntity<Line> create(@RequestBody Line line){
+    public ResponseEntity<Line> create(@RequestBody Line line){
         Line created = this.lineService.createLine(line);
         return ResponseEntity.ok(created);
     }
     @PutMapping("/update/{id}")
    // @PreAuthorize("hasAuthority('updateLigne')")
-    private ResponseEntity<Line> updateline(@PathVariable String id,@RequestBody Line line){
+    public ResponseEntity<Line> updateline(@PathVariable String id,@RequestBody Line line){
         Line updated = lineService.updateLine(id,line);
         return ResponseEntity.ok(updated);
     }
     @DeleteMapping
   //  @PreAuthorize("hasAuthority('deleteLigne')")
-    private ResponseEntity<?>deleteAll(){
+    public ResponseEntity<?>deleteAll(){
        lineService.deleteAll();
        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
     @DeleteMapping("/{id}")
   //  @PreAuthorize("hasAuthority('deleteLigne')")
-    private ResponseEntity<?> deletebyid (@PathVariable("id") String id){
+    public ResponseEntity<?> deletebyid (@PathVariable("id") String id){
         lineService.deleteLinebyId(id);
         return ResponseEntity.status(HttpStatus.ACCEPTED).build();
     }

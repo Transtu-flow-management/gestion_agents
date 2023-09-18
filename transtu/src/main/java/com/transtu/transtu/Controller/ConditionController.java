@@ -17,46 +17,46 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@CrossOrigin("*")
+@CrossOrigin(originPatterns = "*")
 @RequestMapping("/api/conditions")
 public class ConditionController  {
     @Autowired
    ConditionService conditionService;
     @GetMapping
    // @PreAuthorize("hasAuthority('readCondition')")
-    private Page<Condition> getal(@RequestParam(defaultValue = "0") int page,
+    public Page<Condition> getal(@RequestParam(defaultValue = "0") int page,
                                   @RequestParam(defaultValue = "5") int size){
         Pageable pageable = PageRequest.of(page,size);
         return conditionService.getAll(pageable);
     }
     @GetMapping("/all")
    // @PreAuthorize("hasAuthority('readCondition')")
-    private List<Condition> getall(){
+    public List<Condition> getall(){
         return conditionService.getAllc();
     }
 
     @PostMapping("/add")
   //  @PreAuthorize("hasAuthority('writeCondition')")
-    private ResponseEntity<Condition> addcondition(@RequestBody Condition condition){
+    public ResponseEntity<Condition> addcondition(@RequestBody Condition condition){
       this.conditionService.addCondition(condition);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
     @PutMapping("/update/{id}")
   //  @PreAuthorize("hasAuthority('updateCondition')")
-    private ResponseEntity<Condition> updateCondtion (@PathVariable String id,@RequestBody Condition condition ){
+    public ResponseEntity<Condition> updateCondtion (@PathVariable String id,@RequestBody Condition condition ){
         this.conditionService.updateCondition(id,condition);
         return ResponseEntity.status(HttpStatus.ACCEPTED).build();
     }
     @DeleteMapping("/deleteall")
   //  @PreAuthorize("hasAuthority('deleteCondition')")
-    private ResponseEntity<?> deleteall(){
+    public ResponseEntity<?> deleteall(){
         this.conditionService.DeleteAll();
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
     @DeleteMapping("/{id}")
     //@PreAuthorize("hasAuthority('deleteCondition')")
-    private ResponseEntity<?> deletebrand(@PathVariable String id){
+    public ResponseEntity<?> deletebrand(@PathVariable String id){
         this.conditionService.deleteByCondId(id);
         return ResponseEntity.status(HttpStatus.GONE).build();
     }

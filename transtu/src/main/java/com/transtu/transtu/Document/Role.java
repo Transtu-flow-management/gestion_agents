@@ -37,14 +37,12 @@ public class Role {
         this.permissions = new ArrayList<>();
     }
 
-
-
     public List<SimpleGrantedAuthority> getAuthorities() {
         var authorities = getPermissions()
                 .stream()
                 .map(permission -> new SimpleGrantedAuthority(permission.getPermissionName()))
                 .collect(Collectors.toList());
-        authorities.add(new SimpleGrantedAuthority("ROLE_" + this.roleName));
+       // authorities.add(new SimpleGrantedAuthority("ROLE_" + this.roleName));
         return authorities;
     }
 

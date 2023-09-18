@@ -19,12 +19,11 @@ import java.util.Optional;
 import static com.transtu.transtu.Document.Conductor.SEQUENCE_Cond_NAME;
 
 @Service
-@RequiredArgsConstructor
 public class ConductorService {
+   @Autowired
+   private com.transtu.transtu.Repositoy.ConductorRepo conductorRepo;
     @Autowired
-    ConductorRepo conductorRepo;
-    @Autowired
-    private final SequenceGeneratorService mongo;
+    private SequenceGeneratorService mongo;
     public EntityModel<Conductor> create(Conductor conductor){
         String uniqueId = conductor.getUid();
         if (conductorRepo.existsByuid(uniqueId)){

@@ -20,7 +20,7 @@ import java.util.Optional;
 import static com.transtu.transtu.Document.Warehouse.SEQUENCE_NAME_Depot;
 
 @RestController
-@CrossOrigin("*")
+@CrossOrigin(originPatterns = "*")
 @RequestMapping("/api/depot")
 public class WarehouseController {
     @Autowired
@@ -34,7 +34,7 @@ public class WarehouseController {
 
     @PostMapping("/create")
    // @PreAuthorize("hasAuthority('writeDepot')")
-    private ResponseEntity<EntityModel<Warehouse>> addDepot(@RequestBody Warehouse warehouse){
+    public ResponseEntity<EntityModel<Warehouse>> addDepot(@RequestBody Warehouse warehouse){
     if(!entropotRepo.existsByName(warehouse.getName())){
     warehouse.setId(mongogen.generateSequence(SEQUENCE_NAME_Depot));}
     EntityModel<Warehouse> createdDepot = entropotService.createDepot(warehouse);
@@ -42,32 +42,32 @@ public class WarehouseController {
 }
 @DeleteMapping
 //@PreAuthorize("hasAuthority('deleteDepot')")
-    private ResponseEntity<?>DeleteAll(){
+public ResponseEntity<?>DeleteAll(){
     entropotService.Deleteall();
     mongogen.resetSequence(SEQUENCE_NAME_Depot);
     return ResponseEntity.status(HttpStatus.GONE).build();
 }
 @GetMapping
 //@PreAuthorize("hasAuthority('readDepot')")
-    private ResponseEntity<List<Warehouse>> getAll(){
+public ResponseEntity<List<Warehouse>> getAll(){
         List<Warehouse> depots = entropotService.getAllDepots();
         return ResponseEntity.ok(depots);
     }
     @PutMapping("/update/{id}")
    // @PreAuthorize("hasAuthority('updateDepot')")
-    private ResponseEntity<Warehouse> updateDepot(@PathVariable Integer id, @RequestBody Warehouse warehouse){
+    public ResponseEntity<Warehouse> updateDepot(@PathVariable Integer id, @RequestBody Warehouse warehouse){
         Warehouse updated = entropotService.updateDepot(id, warehouse);
         return ResponseEntity.ok(updated);
     }
 @GetMapping("/{id}")
 //@PreAuthorize("hasAuthority('readDepot')")
-    private ResponseEntity<Warehouse> getcurrent(@PathVariable Integer id){
+public ResponseEntity<Warehouse> getcurrent(@PathVariable Integer id){
     Warehouse currentDepot = entropotService.getCurrent(id);
     return ResponseEntity.ok(currentDepot);
 }
 @DeleteMapping("/{id}")
 //@PreAuthorize("hasAuthority('deleteDepot')")
-    private ResponseEntity<Warehouse> deleteDepot(@PathVariable Integer id,@RequestParam(required = false) boolean confirmDelete){
+public ResponseEntity<Warehouse> deleteDepot(@PathVariable Integer id,@RequestParam(required = false) boolean confirmDelete){
         Optional<Warehouse> removedDepo = entropotRepo.findById(id);
         if (removedDepo.isEmpty()){
             return ResponseEntity.notFound().build();

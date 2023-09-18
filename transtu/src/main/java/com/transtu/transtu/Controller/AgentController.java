@@ -38,24 +38,22 @@ import java.util.Optional;
 import static com.transtu.transtu.Document.Agent.SEQUENCE_NAME;
 
 
-@CrossOrigin("*")
+@CrossOrigin(originPatterns = "*")
 @RestController
 @RequestMapping("/api/agents")
 public class AgentController {
-
-    private BCryptPasswordEncoder passwordEncoder;
     @Autowired
     private MongoOperations mongoOperations;
     @Autowired
     private AgentService service;
     private AuthenticationService authservice;
     @Autowired
-    SequenceGeneratorService mongo;
+   private SequenceGeneratorService mongo;
     @Autowired
     private AgentRepo agentRepo;
 
     @GetMapping("/p")
-  //  @PreAuthorize("hasAuthority('read')")
+   @PreAuthorize("hasAuthority('read')")
    public Page<AgentDTO> getAgents(@RequestParam(defaultValue = "0") int page,
                                  @RequestParam(defaultValue = "5") int size
                                   ) {
@@ -63,14 +61,14 @@ public class AgentController {
             return service.getAllagents(pageable);
     }
    @GetMapping
-   //@PreAuthorize("hasAuthority('read')")
-    private List<Agent> getall() {
+   @PreAuthorize("hasAuthority('read')")
+   public List<Agent> getall() {
         return service.findAllAgents();
     }
 
     @PatchMapping("/update/{agentid}")
-  //  @PreAuthorize("hasAuthority('update')")
-    private ResponseEntity<AgentDTO> patched(@PathVariable int agentid,@RequestParam Map<String, Object> champs, @RequestParam(value = "image",required = false) MultipartFile file) {
+   @PreAuthorize("hasAuthority('update')")
+    public ResponseEntity<AgentDTO> patched(@PathVariable int agentid,@RequestParam Map<String, Object> champs, @RequestParam(value = "image",required = false) MultipartFile file) {
         Agent patch = service.patchAgent(agentid, champs,file);
         AgentDTO patchedDTO = service.convertDTOToDocument(patch);
         return ResponseEntity.ok(patchedDTO);
@@ -78,7 +76,7 @@ public class AgentController {
 
 
     @DeleteMapping("/deleteAll")
-   // @PreAuthorize("hasAuthority('delete')")
+    @PreAuthorize("hasAuthority('delete')")
     private ResponseEntity<String> deleteAll() {
 
         service.DeleteAgents();
@@ -88,7 +86,7 @@ public class AgentController {
 
     @DeleteMapping("/delete/{agentid}")
 
-   // @PreAuthorize("hasAuthority('delete')")
+    @PreAuthorize("hasAuthority('delete')")
     public ResponseEntity<?> deleteUserById(@PathVariable("agentid") Integer agentid) {
         // Check if the user exists
         Optional<Agent> userOptional = agentRepo.findById(agentid);
@@ -101,7 +99,7 @@ public class AgentController {
     }
 
     @PostMapping("/{agentid}/role/{roleid}")
-   // @PreAuthorize("hasAuthority('assign')")
+    @PreAuthorize("hasAuthority('assign_Role')")
     public ResponseEntity<String> AssignRoleToAgent(@PathVariable Integer agentid, @PathVariable Integer roleid) throws ChangeSetPersister.NotFoundException {
         service.AssignRoleToAgent(agentid, roleid);
         return ResponseEntity.status(HttpStatus.OK).build();
@@ -115,7 +113,7 @@ public class AgentController {
         List<AgentDTO> agentDTOs = service.convertDtoToEntity(agents);
         return  agentDTOs;
     }
-    @GetMapping("/files/{filename:.+}")
+    @GetMapping("/{filename:.+}")
     @ResponseBody
     public ResponseEntity<Resource> getFile(@PathVariable String filename) {
         return service.getFile(filename);
@@ -123,10 +121,9 @@ public class AgentController {
 
     @GetMapping("/datesearch")
    // @PreAuthorize("hasAuthority('read')")
-    private List<AgentDTO>filterbydate(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date dateFilter){
+    public List<AgentDTO>filterbydate(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date dateFilter){
         List<Agent> savefiltered = service.getAllConductorsWithDateFilter(dateFilter);
         List<AgentDTO> getfiltered = service.convertDtoToEntity(savefiltered);
         return getfiltered;
     }
-
 }

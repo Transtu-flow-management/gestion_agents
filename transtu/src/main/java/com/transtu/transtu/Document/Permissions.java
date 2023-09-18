@@ -17,7 +17,7 @@ public enum Permissions implements Serializable {
     DELETE_USER("delete","manage agents"),
     Assign_ROLE("assign_Role","manage agents"),
     Delete_ROLE("Delete_Role","manage agents"),
-
+    READ_PERM("showPermission","manage agents"),
     DELETE_BRAND("deleteBrand","manage brands (marques)"),
     ADD_BRAND("addBrand","manage brands (marques)"),
     READ_BRAND("readBrand","manage brands (marques)"),
@@ -65,6 +65,10 @@ public enum Permissions implements Serializable {
     USTOP("updateArrêt","manage Arrêts"),
     RSTOP("readArrêt","manage Arrêts"),
     WSTOP("writeArrêt","manage Arrêts"),
+    PCRR("pcr_read","PCR"),
+    PCRW("pcr_write","PCR"),
+    PCRD("pcr_Delete","PCR"),
+
 
     DEFAULT_PERMISSION("defaultPermission", "defaultGroup");
     private final String permissionName;

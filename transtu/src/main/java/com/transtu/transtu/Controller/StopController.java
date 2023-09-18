@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@CrossOrigin("*")
+@CrossOrigin(originPatterns = "*")
 @RequestMapping("/api/stops")
 public class StopController {
     @Autowired
@@ -25,30 +25,30 @@ public class StopController {
     @GetMapping
    // @PreAuthorize("hasAuthority('readArrêt')")
 
-    private List<StopDTO> getall(){
+    public List<StopDTO> getall(){
         return stopService.gAtallStops();
     }
     @PostMapping("/add")
    // @PreAuthorize("hasAuthority('writeArrêt')")
-    private ResponseEntity<Path> addStop(@RequestBody Stop stop){
+    public ResponseEntity<Path> addStop(@RequestBody Stop stop){
         this.stopService.createStop(stop);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
     @PutMapping("/update/{id}")
    // @PreAuthorize("hasAuthority('updateArrêt')")
-    private ResponseEntity<Stop> updateStop (@RequestBody Stop stop,@PathVariable String id ){
+    public ResponseEntity<Stop> updateStop (@RequestBody Stop stop,@PathVariable String id ){
         this.stopService.updateStop(stop,id);
         return ResponseEntity.status(HttpStatus.ACCEPTED).build();
     }
     @DeleteMapping
    // @PreAuthorize("hasAuthority('deleteArrêt')")
-    private ResponseEntity<?>deleteAll(){
+    public ResponseEntity<?>deleteAll(){
         stopService.deleteAll();
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
     @DeleteMapping("/{id}")
    // @PreAuthorize("hasAuthority('deleteArrêt')")
-    private ResponseEntity<?> deletebyid (@PathVariable("id") String id){
+    public ResponseEntity<?> deletebyid (@PathVariable("id") String id){
         stopService.deleteStopbyId(id);
         return ResponseEntity.status(HttpStatus.ACCEPTED).build();
     }

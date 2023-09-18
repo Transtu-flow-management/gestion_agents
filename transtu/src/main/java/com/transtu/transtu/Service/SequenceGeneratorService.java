@@ -15,8 +15,8 @@ import static org.springframework.data.mongodb.core.query.Query.query;
 
 @Service
 public class SequenceGeneratorService {
-    @Autowired
-    private MongoOperations mongoTemplate;
+@Autowired
+private MongoOperations mongoTemplate;
     public int generateSequence(String sequenceName){
 
         Sequence counter = mongoTemplate.findAndModify(

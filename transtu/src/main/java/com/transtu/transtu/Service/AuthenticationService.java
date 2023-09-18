@@ -4,14 +4,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.transtu.transtu.Auth.AuthenticationRequest;
 import com.transtu.transtu.Auth.AuthenticationResponse;
 import com.transtu.transtu.DTO.AgentDTO;
-import com.transtu.transtu.DTO.SignUpRequest;
+
+import jakarta.servlet.http.Cookie;
 import com.transtu.transtu.Document.Agent;
-import com.transtu.transtu.Document.Role;
+
 import com.transtu.transtu.Document.Token;
 import com.transtu.transtu.Document.TokenType;
 import com.transtu.transtu.Repositoy.AgentRepo;
 import com.transtu.transtu.Repositoy.TokenRepository;
-import com.transtu.transtu.utils.StoregeService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -33,25 +33,26 @@ import static com.transtu.transtu.Document.Token.SEQUENCE_NAME_TOKEN;
 @Service
 @RequiredArgsConstructor
 public class AuthenticationService {
-    @Autowired
+
     private final AgentRepo agentRepo;
-@Autowired
+
 private final SequenceGeneratorService mongo;
-    @Autowired
+
     private final TokenRepository tokenRepository;
     private final PasswordEncoder passwordEncoder;
     @Autowired
-    public StoregeService storegeService;
-    @Autowired
+    private StoregeService storegeService ;
+
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
     public AuthenticationResponse register(Agent request, MultipartFile file) {
-        String fileName="";
+        String fileName=null;
         if (file != null && !file.isEmpty()) {
            fileName = storegeService.CreateNameImage(file);
             storegeService.store(file, fileName);
+        }else {
+            fileName = "NO_FILE_PROVIDED";
         }
-
         Date currentDate = new Date();
         Integer signid = mongo.generateSequence(SEQUENCE_NAME);
         var user = Agent.builder()
@@ -97,14 +98,14 @@ private final SequenceGeneratorService mongo;
         return AuthenticationResponse.builder()
                 .accessToken(jwtToken)
                 .refreshToken(refreshToken)
-                .agent(agentDTO)
+                .agent(savedUser)
                 .build();
     }
     public boolean userExists(String email) {
         return agentRepo.existsByUsername(email);
     }
 
-    public AuthenticationResponse authenticate(AuthenticationRequest request) {
+    public AuthenticationResponse authenticate(AuthenticationRequest request,HttpServletResponse response) {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         request.getUsername(),
@@ -117,12 +118,20 @@ private final SequenceGeneratorService mongo;
         var refreshToken = jwtService.generateRefreshToken(user);
         revokeAllUserTokens(user);
         saveUserToken(user, jwtToken);
+        addAccessTokenCookie(response,refreshToken);
         return AuthenticationResponse.builder()
                 .accessToken(jwtToken)
                 .refreshToken(refreshToken)
+                .agent(user)
                 .build();
     }
-
+    public void addAccessTokenCookie(HttpServletResponse response, String token) {
+        Cookie cookie = new Cookie("refreshToken", token);
+        cookie.setHttpOnly(true);
+        cookie.setPath("/");
+        cookie.setMaxAge(3600);
+        response.addCookie(cookie);
+    }
     private void saveUserToken(Agent user, String jwtToken) {
         Integer tokenid =mongo.generateSequence(SEQUENCE_NAME_TOKEN);
         var token = Token.builder()

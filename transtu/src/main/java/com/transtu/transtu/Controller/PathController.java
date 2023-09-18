@@ -16,45 +16,45 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@CrossOrigin("*")
+@CrossOrigin(originPatterns = "*")
 @RequestMapping("/api/paths")
 public class PathController {
     @Autowired
     private PathService pathService;
     @GetMapping
    // @PreAuthorize("hasAuthority('readTraget')")
-    private Page<Path> getal(@RequestParam(defaultValue = "0") int page,
+    public Page<Path> getal(@RequestParam(defaultValue = "0") int page,
                                 @RequestParam(defaultValue = "5") int size){
         Pageable pageable = PageRequest.of(page,size);
         return pathService.getAllpaths(pageable);
     }
     @GetMapping("/all")
     //@PreAuthorize("hasAuthority('readTraget')")
-    private List<Path>getall(){
+    public List<Path>getall(){
         return pathService.getall();
     }
 
     @PostMapping("/add")
     //@PreAuthorize("hasAuthority('writeTraget')")
-    private ResponseEntity<Path> addpath(@RequestBody Path path){
+    public ResponseEntity<Path> addpath(@RequestBody Path path){
         this.pathService.createPath(path);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
     @PutMapping("/update/{id}")
    // @PreAuthorize("hasAuthority('updateTraget')")
-    private ResponseEntity<Path> updatepath (@PathVariable String id,@RequestBody Path path ){
+    public ResponseEntity<Path> updatepath (@PathVariable String id,@RequestBody Path path ){
         this.pathService.updatePath(id,path);
         return ResponseEntity.status(HttpStatus.ACCEPTED).build();
     }
     @DeleteMapping
    // @PreAuthorize("hasAuthority('deleteTraget')")
-    private ResponseEntity<?>deleteAll(){
+    public ResponseEntity<?>deleteAll(){
         pathService.deleteAll();
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
     @DeleteMapping("/{id}")
    // @PreAuthorize("hasAuthority('deleteTraget')")
-    private ResponseEntity<?> deletebyid (@PathVariable("id") String id){
+    public ResponseEntity<?> deletebyid (@PathVariable("id") String id){
         pathService.deletePathbyId(id);
         return ResponseEntity.status(HttpStatus.ACCEPTED).build();
     }

@@ -17,7 +17,7 @@ import java.util.*;
 import static com.transtu.transtu.Document.Reseau.SEQUENCE_NAME_RES;
 
 @RestController
-@CrossOrigin("*")
+@CrossOrigin(originPatterns = "*")
 @RequestMapping("/api/resx")
 public class NetworkController {
     @Autowired

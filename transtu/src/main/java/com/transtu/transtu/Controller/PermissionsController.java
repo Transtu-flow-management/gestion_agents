@@ -11,12 +11,11 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.*;
 import java.util.stream.Collectors;
 @RestController
-@CrossOrigin(origins = "*")
+@CrossOrigin(originPatterns = "*",allowCredentials = "true")
 @RequestMapping("/api/permissions")
-//@PreAuthorize("hasAuthority('write')")
 public class PermissionsController {
     @GetMapping
-    @PreAuthorize("hasAuthority('write')")
+   @PreAuthorize("hasAuthority('showPermission')")
     public ResponseEntity<List<Map<String, Object>>> getAllPermissions() {
         List<Map<String, Object>> permissionsList = new ArrayList<>();
         for (Permissions permission : Permissions.values()) {
