@@ -3,8 +3,10 @@ package main
 import (
 	configs "e/Configs"
 	routes "e/Routes"
+	"fmt"
 	"log"
 	"net/http"
+	"os"
 
 	"github.com/go-openapi/runtime/middleware"
 	"github.com/gorilla/mux"
@@ -12,8 +14,6 @@ import (
 
 func main() {
 
-	//db connect
-	configs.ConnectDB()
 
 	router := mux.NewRouter()
 	router.Use(func(next http.Handler) http.Handler {
@@ -29,6 +29,7 @@ func main() {
 		})
 	})
 
+	port := getPortFromArgsOrEnv()
 	routes.Gpsroute(router)
 
 	router.PathPrefix("/swagger.yaml").Handler(http.FileServer(http.Dir("./")))
@@ -38,5 +39,21 @@ func main() {
 	docsHandler := middleware.Redoc(opts, nil)
 	router.Handle("/docs", docsHandler)
 
-	log.Fatal(http.ListenAndServe(":5600", router))
+	log.Printf("Listening on port %s...", port)
+	log.Fatal(http.ListenAndServe(":"+port, router))
+	
+	//db connect
+	configs.ConnectDB()
+}
+func getPortFromArgsOrEnv() string {
+	if len(os.Args) > 1 {
+		return os.Args[1]
+	}
+	var port string
+	fmt.Print("Enter the port to listen on (e.g., 5600): ")
+	fmt.Scan(&port)
+	if port != "" {
+		return port
+	}
+	return "5600"
 }

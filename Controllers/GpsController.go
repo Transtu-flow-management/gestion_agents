@@ -62,6 +62,7 @@ func HandleWebSocket(w http.ResponseWriter, r *http.Request) {
 					
 				}
 
+//codeBy oussama omrani
 				response := struct {
 					FullData  string  `json:"fullData"`
 					Latitude  float64 `json:"lat"`
@@ -131,7 +132,7 @@ func StoreLocation(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		// Check if the bus has moved 50 meters or more
+		
 		if distance >= 50.0 {
 			// Store new location data
 			if err := configs.GetRedisClient().Set(ctx, key, data, 0).Err(); err != nil {
@@ -139,7 +140,7 @@ func StoreLocation(w http.ResponseWriter, r *http.Request) {
 				return
 			}
 
-			// Update the last known location
+		
 			_, err := configs.GetRedisClient().GeoAdd(ctx, "GeoADDlocations", &redis.GeoLocation{
 				Name:      "vehicule:location:" + location.Matricule,
 				Latitude:  location.Lat,
@@ -151,7 +152,7 @@ func StoreLocation(w http.ResponseWriter, r *http.Request) {
 			}
 		}
 	} else {
-		// If no previous location is found, store the new location unconditionally
+
 		if err := configs.GetRedisClient().Set(ctx, key, data, 0).Err(); err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
