@@ -2,22 +2,18 @@ package com.transtu.transtu.Controller;
 
 import com.transtu.transtu.DTO.AgentDTO;
 import com.transtu.transtu.Document.Agent;
-import com.transtu.transtu.Document.Conductor;
-import com.transtu.transtu.Document.Role;
-import com.transtu.transtu.Repositoy.AgentPageRepo;
 import com.transtu.transtu.Repositoy.AgentRepo;
 import com.transtu.transtu.Service.AgentService;
 import com.transtu.transtu.Service.AuthenticationService;
 import com.transtu.transtu.Service.SequenceGeneratorService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.core.io.Resource;
 import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoOperations;
-import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 
 import org.springframework.data.mongodb.core.query.Query;
@@ -25,11 +21,9 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -60,6 +54,18 @@ public class AgentController {
         Pageable pageable = PageRequest.of(page, size);
             return service.getAllagents(pageable);
     }
+    @GetMapping("/sorted")
+    public Page<AgentDTO> getAgentsSorted(@RequestParam(defaultValue = "0") int page,
+                                    @RequestParam(defaultValue = "5") int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return service.getAllAgentsSorted(pageable);
+    }
+    @GetMapping("/sortedDate")
+    public Page<AgentDTO> getAgentsSortedDate(@RequestParam(defaultValue = "0") int page,
+                                          @RequestParam(defaultValue = "5") int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return service.getAllAgentsSortedDate(pageable);
+    }
    @GetMapping
    @PreAuthorize("hasAuthority('read')")
    public List<Agent> getall() {
@@ -72,6 +78,11 @@ public class AgentController {
         Agent patch = service.patchAgent(agentid, champs,file);
         AgentDTO patchedDTO = service.convertDTOToDocument(patch);
         return ResponseEntity.ok(patchedDTO);
+    }
+    @PutMapping("/profile/{id}")
+    public ResponseEntity<Agent> updated(@PathVariable int id,@RequestBody Agent agent){
+        Agent updated = service.updateAgent(id,agent);
+        return ResponseEntity.ok(updated);
     }
 
 
@@ -113,10 +124,13 @@ public class AgentController {
         List<AgentDTO> agentDTOs = service.convertDtoToEntity(agents);
         return  agentDTOs;
     }
-    @GetMapping("/{filename:.+}")
+    @GetMapping("img/{filename:.+}")
     @ResponseBody
     public ResponseEntity<Resource> getFile(@PathVariable String filename) {
-        return service.getFile(filename);
+        if (!filename.equals("NO_FILE_PROVIDED")) {
+            return service.getFile(filename);
+        }
+        return null;
     }
 
     @GetMapping("/datesearch")
@@ -126,4 +140,5 @@ public class AgentController {
         List<AgentDTO> getfiltered = service.convertDtoToEntity(savefiltered);
         return getfiltered;
     }
+
 }

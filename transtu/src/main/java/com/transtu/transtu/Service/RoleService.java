@@ -10,6 +10,7 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
@@ -27,12 +28,20 @@ public class RoleService {
 
 
     public List<Role> getAllRoles() {
-        return roleRepo.findAll();
+        List<Role> allRoles = roleRepo.findAll();
+        List<Role> filteredRoles = allRoles.stream()
+                .filter(role -> !role.getRoleName().equals("SUPERADMIN"))
+                .collect(Collectors.toList());
+        return filteredRoles;
     }
 
     public Page<Role> getAllRolesP(Pageable peg) {
         Page<Role> roles = roleRepo.findAll(peg);
-        return roles;
+        List<Role> filteredRoles = roles.getContent().stream()
+                .filter(role -> !role.getRoleName().equals("SUPERADMIN"))
+                .collect(Collectors.toList());
+
+        return new PageImpl<>(filteredRoles, peg, roles.getTotalElements());
     }
 
     public Role CreateRole(Role role) {

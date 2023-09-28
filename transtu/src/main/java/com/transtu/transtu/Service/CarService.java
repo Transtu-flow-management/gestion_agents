@@ -5,7 +5,9 @@ import com.transtu.transtu.Handlers.NotFoundHandler;
 import com.transtu.transtu.Repositoy.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -30,6 +32,18 @@ private  BrandRepo brandRepo;
 private  entropotRepo entropotRepo;
     public Page<Car> getallCars(Pageable pageable){
         return  carRepo.findAll(pageable);
+    }
+    private Sort.Order currentOrder = Sort.Order.asc("matricule");
+    private Sort.Order currentOrderbrand = Sort.Order.asc("brand");
+    public Page<Car> getallCarsSorted(Pageable pageable){
+        currentOrder = (currentOrder.isAscending()) ? Sort.Order.desc("matricule") : Sort.Order.asc("matricule");
+        Pageable sortedPageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(),  Sort.by(currentOrder));
+        return  carRepo.findAll(sortedPageable);
+    }
+    public Page<Car> getallCarsSortedBrand(Pageable pageable){
+        currentOrder = (currentOrderbrand.isAscending()) ? Sort.Order.desc("brand") : Sort.Order.asc("brand");
+        Pageable sortedPageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(),  Sort.by(currentOrder));
+        return  carRepo.findAll(sortedPageable);
     }
     public List<Car>findallCars(){
         return carRepo.findAll();

@@ -1,7 +1,5 @@
 package com.transtu.transtu.Controller;
 
-import com.transtu.transtu.Document.Car;
-import com.transtu.transtu.Document.Path;
 import com.transtu.transtu.Document.Reclammation;
 import com.transtu.transtu.Service.ReclammationService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,8 +17,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/reclam")
 public class ReclammationController {
     @Autowired
-    public ReclammationService reclammationService;
-
+    private ReclammationService reclammationService;
     @GetMapping
     @PreAuthorize("hasAuthority('pcr_read')")
     public Page<Reclammation> getAll(@RequestParam(defaultValue = "0") int page,
@@ -40,5 +37,12 @@ public class ReclammationController {
     public ResponseEntity<?> deletebyid (@PathVariable("id") String id){
         this.reclammationService.deleteReclambyId(id);
         return ResponseEntity.status(HttpStatus.ACCEPTED).build();
+    }
+    @PostMapping("/send")
+    public void Sendmail(@RequestBody Reclammation reclammation){
+        String sujet = reclammation.getPredifinedContext();
+        String text = reclammation.getContext();
+        String mail = reclammation.getEmail();
+        reclammationService.sendMail(sujet,text,mail);
     }
 }

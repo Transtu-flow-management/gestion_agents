@@ -36,10 +36,11 @@ public class Agent implements UserDetails {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate DateOfBirth;
     private String password;
+    @Transient
+    private String newPassword;
     private String phone;
     @DBRef
     private Warehouse warehouse;
-
     private String imageUrl;
     @JsonIgnore
     private Boolean isEnabled =false;

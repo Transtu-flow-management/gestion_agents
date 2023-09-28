@@ -36,21 +36,22 @@ public class AuthenticationService {
 
     private final AgentRepo agentRepo;
 
-private final SequenceGeneratorService mongo;
+    private final SequenceGeneratorService mongo;
 
     private final TokenRepository tokenRepository;
     private final PasswordEncoder passwordEncoder;
     @Autowired
-    private StoregeService storegeService ;
+    private StoregeService storegeService;
 
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
+
     public AuthenticationResponse register(Agent request, MultipartFile file) {
-        String fileName=null;
+        String fileName;
         if (file != null && !file.isEmpty()) {
-           fileName = storegeService.CreateNameImage(file);
+            fileName = storegeService.CreateNameImage(file);
             storegeService.store(file, fileName);
-        }else {
+        } else {
             fileName = "NO_FILE_PROVIDED";
         }
         Date currentDate = new Date();
@@ -59,14 +60,18 @@ private final SequenceGeneratorService mongo;
                 .id(signid)
                 .name((request.getName()))
                 .surname(request.getSurname())
-                .username(request.getUsername())
                 .phone((request.getPhone()))
                 .address(request.getAddress())
                 .password(passwordEncoder.encode(request.getPassword()))
-                //.roles(request.getRoles())
                 .dateOfInsertion(currentDate)
                 .warehouse(request.getWarehouse())
                 .imageUrl(fileName);
+        if (!userExists(request.getUsername())){
+            user.username(request.getUsername());
+        }
+        if (request.getRole() !=null){
+            user.role(request.getRole());
+        }
         if (request.getWarehouse() != null) {
             user.warehouse(request.getWarehouse());
         }
@@ -91,7 +96,7 @@ private final SequenceGeneratorService mongo;
         }
         agentDTO.setDateOfInsertion(savedUser.getDateOfInsertion());
         //String rolename = savedUser.getRoles().stream().findFirst().map(Role::getRoleName).orElse(null);
-       // agentDTO.setRoleName(rolename);
+        // agentDTO.setRoleName(rolename);
         var jwtToken = jwtService.generateToken(user.build());
         var refreshToken = jwtService.generateRefreshToken(user.build());
         saveUserToken(savedUser, jwtToken);
@@ -101,11 +106,12 @@ private final SequenceGeneratorService mongo;
                 .agent(savedUser)
                 .build();
     }
+
     public boolean userExists(String email) {
         return agentRepo.existsByUsername(email);
     }
 
-    public AuthenticationResponse authenticate(AuthenticationRequest request,HttpServletResponse response) {
+    public AuthenticationResponse authenticate(AuthenticationRequest request, HttpServletResponse response) {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         request.getUsername(),
@@ -118,13 +124,14 @@ private final SequenceGeneratorService mongo;
         var refreshToken = jwtService.generateRefreshToken(user);
         revokeAllUserTokens(user);
         saveUserToken(user, jwtToken);
-        addAccessTokenCookie(response,refreshToken);
+        addAccessTokenCookie(response, refreshToken);
         return AuthenticationResponse.builder()
                 .accessToken(jwtToken)
                 .refreshToken(refreshToken)
                 .agent(user)
                 .build();
     }
+
     public void addAccessTokenCookie(HttpServletResponse response, String token) {
         Cookie cookie = new Cookie("refreshToken", token);
         cookie.setHttpOnly(true);
@@ -132,8 +139,9 @@ private final SequenceGeneratorService mongo;
         cookie.setMaxAge(3600);
         response.addCookie(cookie);
     }
+
     private void saveUserToken(Agent user, String jwtToken) {
-        Integer tokenid =mongo.generateSequence(SEQUENCE_NAME_TOKEN);
+        Integer tokenid = mongo.generateSequence(SEQUENCE_NAME_TOKEN);
         var token = Token.builder()
                 .id(tokenid)
                 .agent(user)
@@ -164,7 +172,7 @@ private final SequenceGeneratorService mongo;
         final String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
         final String refreshToken;
         final String userEmail;
-        if (authHeader == null ||!authHeader.startsWith("Bearer")) {
+        if (authHeader == null || !authHeader.startsWith("Bearer")) {
             return;
         }
         refreshToken = authHeader.substring(7);
@@ -184,4 +192,7 @@ private final SequenceGeneratorService mongo;
             }
         }
     }
+
+
+
 }

@@ -46,7 +46,6 @@ private makerRepo builderRepo;
                 CarBuilder.setName(brand.getBuilder());
                 CarBuilder = builderRepo.save(CarBuilder);
                 brand.setBuilder(CarBuilder.getName());
-                System.out.println("The else block is executed");
             }
         }else
         {

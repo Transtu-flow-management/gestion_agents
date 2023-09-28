@@ -12,6 +12,7 @@ import java.util.List;
 @Repository
 public interface RoleRepo extends MongoRepository<Role,Integer> {
     Boolean existsByRoleName(String RoleName);
+    Role findByRoleName(String RoleName);
 
 
 

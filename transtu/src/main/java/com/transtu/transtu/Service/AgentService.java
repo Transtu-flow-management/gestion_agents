@@ -7,15 +7,15 @@ import com.transtu.transtu.Document.Warehouse;
 import com.transtu.transtu.Repositoy.AgentRepo;
 import com.transtu.transtu.Repositoy.RoleRepo;
 import com.transtu.transtu.Repositoy.entropotRepo;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.data.crossstore.ChangeSetPersister;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.*;
 import org.springframework.http.ContentDisposition;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ReflectionUtils;
 import org.springframework.web.multipart.MultipartFile;
@@ -24,6 +24,7 @@ import java.lang.reflect.Field;
 import java.util.*;
 
 @Service
+@RequiredArgsConstructor
 public class AgentService  {
     @Autowired
     public AgentRepo agentRepo;
@@ -31,6 +32,7 @@ public class AgentService  {
     private RoleRepo roleRepo;
     @Autowired
     private entropotRepo entropotRepo;
+    private final PasswordEncoder passwordEncoder;
     @Autowired
     private StoregeService storegeService;
 
@@ -45,11 +47,47 @@ public class AgentService  {
        List<AgentDTO> agentDTOs = convertDtoToEntity(agentPage.getContent());
        return new PageImpl<>(agentDTOs, pageable, agentPage.getTotalElements());
    }
+    private Sort.Order currentOrder = Sort.Order.asc("name");
+    private Sort.Order currentOrderDate = Sort.Order.asc("dateOfInsertion");
+    public Page<AgentDTO> getAllAgentsSorted(Pageable pageable) {
+        currentOrder = (currentOrder.isAscending()) ? Sort.Order.desc("name") : Sort.Order.asc("name");
+        Pageable sortedPageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(),  Sort.by(currentOrder));
+        Page<Agent> agentPage = agentRepo.findAll(sortedPageable);
+        List<AgentDTO> agentDTOs = convertDtoToEntity(agentPage.getContent());
+        return new PageImpl<>(agentDTOs, sortedPageable, agentPage.getTotalElements());
+    }
+    public Page<AgentDTO> getAllAgentsSortedDate(Pageable pageable) {
+        currentOrder = (currentOrderDate.isAscending()) ? Sort.Order.desc("dateOfInsertion") : Sort.Order.asc("dateOfInsertion");
+        Pageable sortedPageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(),  Sort.by(currentOrder));
+        Page<Agent> agentPage = agentRepo.findAll(sortedPageable);
+        List<AgentDTO> agentDTOs = convertDtoToEntity(agentPage.getContent());
+        return new PageImpl<>(agentDTOs, sortedPageable, agentPage.getTotalElements());
+    }
     public void DeleteAgents(){
         agentRepo.deleteAll();
     }
 
 
+    public Agent updateAgent(int id,Agent agent){
+        Optional<Agent> isExisting = agentRepo.findById(id);
+        Agent agentexist = isExisting.get();
+        String username = agentexist.getUsername();
+        Agent user = agentRepo.findByUsername(username);
+
+            if (passwordEncoder.matches(agent.getPassword(), user.getPassword())) {
+               agentexist.setPassword(passwordEncoder.encode(agent.getNewPassword()));
+            }else {
+                throw new IllegalArgumentException("Password missmatch");
+            }
+
+        agentexist.setName(agent.getName());
+        agentexist.setPhone(agent.getPhone());
+        agentexist.setSurname(agent.getSurname());
+        agentexist.setDateOfBirth(agent.getDateOfBirth());
+        agentexist.setAddress(agent.getAddress());
+        agentexist.setUsername(agent.getUsername());
+        return agentRepo.save(agentexist);
+    }
     public Agent patchAgent(int id, Map<String, Object> champs, MultipartFile file) {
         Optional<Agent> isExisting = agentRepo.findById(id);
         if (isExisting.isPresent()) {
@@ -83,7 +121,15 @@ public class AgentService  {
                         Optional<Warehouse> warehouseOptional = entropotRepo.findById(whID);
                         warehouseOptional.ifPresent(agent::setWarehouse);
                     }
-                } else {
+                }
+                else if (key.equals("password") && value !=null){
+                    String password = (String) value;
+                    if (password!=null){
+                    String hashedNewPassword = passwordEncoder.encode(password);
+                    agent.setPassword(hashedNewPassword);}
+                }
+                else
+                {
                     Field field = ReflectionUtils.findField(Agent.class, key);
                     if (field!=null){
                     field.setAccessible(true);

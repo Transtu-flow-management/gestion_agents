@@ -3,6 +3,7 @@ package com.transtu.transtu.Document;
 import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Transient;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.Date;
@@ -21,6 +22,8 @@ public class Conductor {
     private String surname;
     private String uid ;
     private byte type;
+    @DBRef
+    private Warehouse warehouse;
     private Date dateOfInsertion;
     private Date dateOfModification;
 }

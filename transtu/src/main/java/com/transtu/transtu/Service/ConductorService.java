@@ -1,12 +1,14 @@
 package com.transtu.transtu.Service;
 import com.transtu.transtu.Controller.ConductorController;
-import com.transtu.transtu.Document.Conductor;
+import com.transtu.transtu.DTO.AgentDTO;
+import com.transtu.transtu.Document.*;
 import com.transtu.transtu.Handlers.NotFoundExcemptionhandler;
+import com.transtu.transtu.Repositoy.AgentRepo;
 import com.transtu.transtu.Repositoy.ConductorRepo;
+import com.transtu.transtu.Repositoy.entropotRepo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.*;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.stereotype.Service;
@@ -24,6 +26,11 @@ public class ConductorService {
    private com.transtu.transtu.Repositoy.ConductorRepo conductorRepo;
     @Autowired
     private SequenceGeneratorService mongo;
+    @Autowired
+    private com.transtu.transtu.Repositoy.entropotRepo entropotRepo;
+    @Autowired
+    private AgentRepo agentRepo;
+
     public EntityModel<Conductor> create(Conductor conductor){
         String uniqueId = conductor.getUid();
         if (conductorRepo.existsByuid(uniqueId)){
@@ -40,8 +47,50 @@ public class ConductorService {
         return ConductorEntityModel;}
     }
 
-    public Page<Conductor> getAllConductors(Pageable pageable){
-       return conductorRepo.findAll(pageable);
+    public Page<Conductor> getAllConductors(Integer agentId, Pageable pageable) {
+        Agent agent = agentRepo.findById(agentId).orElseThrow(()-> new NotFoundExcemptionhandler(agentId));
+        boolean hasAllWarehousesPrivilege = hasAllWarehousesPrivilege(agent.getId());
+        if (agent != null ) {
+            if (agent.getWarehouse() != null){
+            Integer warehouseId = agent.getWarehouse().getId();
+                if (warehouseId !=null){
+                    return conductorRepo.findBywarehouseId(warehouseId, pageable);}
+            }
+            if (hasAllWarehousesPrivilege){
+                return conductorRepo.findAll(pageable);}
+
+        }
+        return Page.empty();
+    }
+    private Sort.Order currentOrder = Sort.Order.asc("name");
+    public Page<Conductor> getAllConductorsSorted(Integer agentId, Pageable pageable) {
+        Agent agent = agentRepo.findById(agentId).orElseThrow(()-> new NotFoundExcemptionhandler(agentId));
+        currentOrder = (currentOrder.isAscending()) ? Sort.Order.desc("name") : Sort.Order.asc("name");
+        Pageable sortedPageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(),  Sort.by(currentOrder));
+        boolean hasAllWarehousesPrivilege = hasAllWarehousesPrivilege(agent.getId());
+        if (agent != null ) {
+            if (agent.getWarehouse() != null){
+                Integer warehouseId = agent.getWarehouse().getId();
+                if (warehouseId !=null){
+                    return conductorRepo.findBywarehouseId(warehouseId, pageable);}
+            }
+            if (hasAllWarehousesPrivilege){
+                return conductorRepo.findAll(sortedPageable);}
+
+        }
+        return Page.empty();
+    }
+
+
+    private boolean hasAllWarehousesPrivilege(Integer agentId) {
+        Agent user = agentRepo.findById(agentId).orElseThrow(()-> new NotFoundExcemptionhandler(agentId));
+            if (user!=null){
+                Role userrole = user.getRole();
+                if (userrole!=null &&userrole.getPermissions().contains(Permissions.DEFAULT_PERMISSION)){
+                    return true;
+                }
+            }
+            return false;
     }
     public List<Conductor> getall(){
         return conductorRepo.findAll();
@@ -61,11 +110,18 @@ public class ConductorService {
         return conductorRepo.findBydateOfInsertionBetween(startOfDay.getTime(), endOfDay.getTime());
     }
     public Conductor updateConductor(Integer id,Conductor conductor){
-        Conductor newConductor = conductorRepo.findById(id).orElseThrow(()-> new NotFoundExcemptionhandler(id));
-        newConductor.setName(conductor.getName());
-        newConductor.setUid(conductor.getUid());
-        newConductor.setDateOfModification(new Date());
-        return conductorRepo.save(newConductor);
+        Conductor oldconductor = conductorRepo.findById(id).orElseThrow(()-> new NotFoundExcemptionhandler(id));
+        oldconductor.setName(conductor.getName());
+        oldconductor.setSurname(conductor.getSurname());
+        oldconductor.setUid(conductor.getUid());
+        oldconductor.setType(conductor.getType());
+        Warehouse oldwarehouse = conductor.getWarehouse();
+        if (oldwarehouse !=null){
+            Optional<Warehouse> warehouseOptional = entropotRepo.findById(oldwarehouse.getId());
+            oldconductor.setWarehouse(warehouseOptional.get());
+        }
+        oldconductor.setDateOfModification(new Date());
+        return conductorRepo.save(oldconductor);
     }
     public void deleteAll(){
         conductorRepo.deleteAll();

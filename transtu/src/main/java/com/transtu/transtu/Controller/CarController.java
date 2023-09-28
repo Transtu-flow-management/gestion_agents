@@ -29,6 +29,20 @@ public class CarController {
         Pageable pageable = PageRequest.of(page, size);
         return carService.getallCars(pageable);
     }
+    @GetMapping("/sorted")
+    @PreAuthorize("hasAuthority('readCar')")
+    public Page<Car> getAllSorted(@RequestParam(defaultValue = "0") int page,
+                            @RequestParam(defaultValue = "5") int size){
+        Pageable pageable = PageRequest.of(page, size);
+        return carService.getallCarsSorted(pageable);
+    }
+    @GetMapping("/sortedbrand")
+    @PreAuthorize("hasAuthority('readCar')")
+    public Page<Car> getAllSortedBrand(@RequestParam(defaultValue = "0") int page,
+                                  @RequestParam(defaultValue = "5") int size){
+        Pageable pageable = PageRequest.of(page, size);
+        return carService.getallCarsSortedBrand(pageable);
+    }
     @GetMapping("/all")
     public List<Car>findall(){
         return carService.findallCars();

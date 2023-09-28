@@ -1,5 +1,4 @@
 package com.transtu.transtu.Auth;
-import com.transtu.transtu.DTO.SignUpRequest;
 import com.transtu.transtu.Document.Agent;
 import com.transtu.transtu.Service.AuthenticationService;
 import com.transtu.transtu.Service.JwtService;
@@ -11,10 +10,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.security.Principal;
 
 @RestController
 @CrossOrigin(originPatterns = "*",allowCredentials = "true")
@@ -27,7 +29,7 @@ public class AuthenticationController {
         private final JwtService jwtService;
 
        @PostMapping("/register")
-       @PreAuthorize("hasAuthority('write')")
+       //@PreAuthorize("hasAuthority('write')")
         public ResponseEntity<AuthenticationResponse> register(Agent request, @RequestParam(required = false) MultipartFile file) {
             return ResponseEntity.ok(service.register(request,file));
         }
@@ -64,4 +66,5 @@ public class AuthenticationController {
         }
         return false;
     }
+
 }

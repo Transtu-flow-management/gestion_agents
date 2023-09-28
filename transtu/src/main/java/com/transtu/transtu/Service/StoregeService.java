@@ -61,7 +61,10 @@ public class StoregeService {
             Resource resource = new UrlResource(file.toUri());
             if (resource.exists() || resource.isReadable()) {
                 return resource;
-            } else {
+            } else if (!resource.exists() || !resource.isReadable()){
+                return null;
+            }
+            else {
                 throw new RuntimeException("Failed to find ressource!");
             }
         } catch (MalformedURLException e) {

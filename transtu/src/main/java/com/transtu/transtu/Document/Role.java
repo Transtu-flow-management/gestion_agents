@@ -42,9 +42,7 @@ public class Role {
                 .stream()
                 .map(permission -> new SimpleGrantedAuthority(permission.getPermissionName()))
                 .collect(Collectors.toList());
-       // authorities.add(new SimpleGrantedAuthority("ROLE_" + this.roleName));
+        authorities.add(new SimpleGrantedAuthority("ROLE_" + this.roleName));
         return authorities;
     }
-
-
 }

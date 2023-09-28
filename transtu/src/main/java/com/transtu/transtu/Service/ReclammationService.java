@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 import java.util.Date;
 import java.util.List;
@@ -20,6 +22,8 @@ import java.util.Optional;
 public class ReclammationService {
     @Autowired
     private ReclamRepo reclamRepo;
+    @Autowired
+    private JavaMailSender javaMailSender;
     @Autowired
     private CarRepo carRepo;
 public List<Reclammation>getAlltypes(){
@@ -56,6 +60,14 @@ public Reclammation updateReclammation(String id,Reclammation newReclam){
         }else {
             throw new NotFoundHandler(id);
         }
+    }
+    public void sendMail(String context,String text,String sender){
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setTo(sender);
+        message.setSubject(context);
+        message.setText(text);
+        javaMailSender.send(message);
+
     }
 
 }

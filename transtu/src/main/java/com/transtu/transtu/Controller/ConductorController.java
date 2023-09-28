@@ -1,5 +1,7 @@
 package com.transtu.transtu.Controller;
 
+import com.transtu.transtu.DTO.AgentDTO;
+import com.transtu.transtu.Document.Agent;
 import com.transtu.transtu.Document.Conductor;
 import com.transtu.transtu.Service.ConductorService;
 import com.transtu.transtu.Service.SequenceGeneratorService;
@@ -7,6 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.mongodb.core.MongoOperations;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.IanaLinkRelations;
@@ -26,14 +31,26 @@ import static com.transtu.transtu.Document.Conductor.SEQUENCE_Cond_NAME;
 public class ConductorController {
     @Autowired
     private com.transtu.transtu.Service.ConductorService conductorService;
+    @Autowired
+    private MongoOperations mongoOperations;
 
     @GetMapping
-    @PreAuthorize("hasAuthority('readChauffeur')")
-    public Page<Conductor> getConductors(@RequestParam (defaultValue = "0")int page,
+    @PreAuthorize("hasAnyAuthority('readChauffeur','defaultPermission')")
+    public Page<Conductor> getConductors(@RequestParam(name = "agentId") Integer agentId,
+                                         @RequestParam (defaultValue = "0")int page,
                                           @RequestParam(defaultValue = "5")int size
                                          ){
         Pageable pageable = PageRequest.of(page,size);
-            return conductorService.getAllConductors(pageable);
+        return conductorService.getAllConductors(agentId,pageable);
+    }
+    @GetMapping("/sorted")
+    @PreAuthorize("hasAnyAuthority('readChauffeur','defaultPermission')")
+    public Page<Conductor> getConductorsSorted(@RequestParam(name = "agentId") Integer agentId,
+                                         @RequestParam (defaultValue = "0")int page,
+                                         @RequestParam(defaultValue = "5")int size
+    ){
+        Pageable pageable = PageRequest.of(page,size);
+        return conductorService.getAllConductorsSorted(agentId,pageable);
     }
     @GetMapping("/all")
    // @PreAuthorize("hasAuthority('read')")
@@ -50,6 +67,17 @@ public class ConductorController {
     @GetMapping("/datesearch")
     public List<Conductor>filterbydate( @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date dateFilter){
         return conductorService.getAllConductorsWithDateFilter(dateFilter);
+    }
+    @GetMapping("/search")
+    //  @PreAuthorize("hasAuthority('read')")
+    public List<Conductor> searchConductor(@RequestParam("query") String query) {
+        Query searchQuery = new Query()
+                .addCriteria(new Criteria().orOperator(
+                        Criteria.where("name").regex(query, "i"),
+                        Criteria.where("uid").regex(query, "i")
+                ));
+        List<Conductor> condcutrs = mongoOperations.find(searchQuery, Conductor.class);
+        return  condcutrs;
     }
 
     @PutMapping("/update/{id}")
