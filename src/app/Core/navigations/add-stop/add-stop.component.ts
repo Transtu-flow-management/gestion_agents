@@ -311,7 +311,6 @@ export class AddStopComponent implements AfterViewInit {
 
   showStopMarkers(stops: Stop[]): void {
     this.clearMarkers();
-
     for (const stop of stops) {
       if (stop != null && stop.name_fr) {
         const marker = L.marker([stop.lat, stop.lng], { icon: this.stopIcon, draggable: true })

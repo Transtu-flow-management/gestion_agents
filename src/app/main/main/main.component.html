@@ -10,16 +10,15 @@
           <button class="py-0 px-2 bg-gray-200 text-white rounded-lg" (click)="toggleSidenav()"><div [ngClass]="{ 'arrow': true, 'right': !sidenav.opened, 'left': sidenav.opened }"></div></button></div>
           <div class=" inline-flex items-center h-full ml-10 lg:w-4/5 lg:justify-end lg:ml-64 ">
             <div class="bg-gray-100 flex flex-shrink-0 items-center ml-auto rounded-lg">
-              <div class="inline-flex items-center p-2 hover:bg-gray-100 focus:bg-gray-100 rounded-lg">
+              <div class="inline-flex items-center p-2 hover:bg-gray-100 focus:bg-gray-100 rounded-lg cursor-pointer"(click)="openSettings()">
                 <span class="sr-only">Agent Menu</span>
                 <div class="hidden md:flex md:flex-col md:items-end md:leading-tight">
                   <span class="font-semibold">{{userinfo.name}} {{userinfo.surname}}</span>
                   <span class="text-sm text-gray-600">{{userinfo.role.roleName}}</span>
                 </div>
                 <span class="h-12 w-12 ml-2 sm:ml-3 mr-2 bg-gray-100 rounded-full overflow-hidden">
-                  <img [src]="userPicture ? userPicture : 'assets/user.png'" alt="User Picture" class="h-full w-full object-cover">
+                  <img [src]="userPicture ? userPicture : 'assets/user.png'" [alt]="userPicture" class="h-full w-full object-cover">
                 </span>
-               
               </div>
              
             </div>

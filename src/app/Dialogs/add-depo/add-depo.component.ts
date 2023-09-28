@@ -43,7 +43,7 @@ export class AddDepoComponent implements AfterViewInit {
       lattitude:  new FormControl(null, [Validators.required]),
       capacite: new FormControl(null, [Validators.required, this.capaciteValidator,Validators.pattern('^[0-9]*$')]),
       adresse: new FormControl('', [Validators.required, Validators.minLength(6)]),
-      selectedReseau :[''], 
+      selectedReseau :new FormControl('',Validators.required), 
     })
   }
   capaciteValidator(control: AbstractControl): ValidationErrors | null {

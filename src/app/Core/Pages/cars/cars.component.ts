@@ -23,6 +23,8 @@ export class CarsComponent implements OnInit{
   currentPage = 0;
   pageSize = 5;
   isButtonDisabled= false;
+  currentOrder = { field: 'matricule', direction: 'asc' }; 
+  currentOrderBrand = { field: 'brand', direction: 'asc' }; 
   pageSizeOptions: number[] = [5, 10, 20];
   constructor(private _carservice:CarService,private dialog:MatDialog,private snackbar:MatSnackBar){}
 
@@ -51,6 +53,28 @@ export class CarsComponent implements OnInit{
     );
   
 }
+sortByName() {
+  this.currentOrder.field = 'matricule';
+     this.currentOrder.direction = (this.currentOrder.direction === 'asc') ? 'desc' : 'asc';
+       this._carservice.getCarsSorted(this.currentPage, this.pageSize).subscribe((res: any) => {
+         this.Cars = res.content;
+         this.totalElements = res.totalElements;
+         this.totalPages = res.totalPages;
+       }, (error) => {
+         console.log("error getting agent pages", error);
+       });
+   }
+   sortByBrand() {
+    this.currentOrder.field = 'brand';
+       this.currentOrderBrand.direction = (this.currentOrderBrand.direction === 'asc') ? 'desc' : 'asc';
+         this._carservice.getCarsSortedBrand(this.currentPage, this.pageSize).subscribe((res: any) => {
+           this.Cars = res.content;
+           this.totalElements = res.totalElements;
+           this.totalPages = res.totalPages;
+         }, (error) => {
+           console.log("error getting agent pages", error);
+         });
+     }
 openDelToast(message: string) {
   this.snackbar.openFromComponent(SuccessToastComponent, {
     data: { message: message },

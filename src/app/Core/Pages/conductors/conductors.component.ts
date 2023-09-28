@@ -13,6 +13,7 @@ import { SuccessToastComponent } from 'src/app/alerts/success-toast/success-toas
 import { error } from 'jquery';
 import { FailedToastComponent } from 'src/app/alerts/failed-toast/failed-toast.component';
 import { AuthService } from '../../Services/auth.service';
+import { GlobalService } from 'src/app/global.service';
 
 @Component({
   selector: 'app-conductors',
@@ -25,16 +26,20 @@ export class ConductorsComponent implements OnInit {
   filteredconductor: Conductor[] = [];
   totalPages: number;
   totalElements: number;
+  searchResults: Conductor[] = [];
   term: string = '';
   currentPage = 0;
+  currentagent :number =0;
   pageSize = 2;
   isButtonDisabled= false;
   pageSizeOptions: number[] = [5, 10, 20,50];
-  isfilterclicked=false;
+    isfilterclicked=false;
   filterValue: string = ''
   dateFilter = new FormControl(null);
+userinfo:any;
+currentOrder = { field: 'name', direction: 'asc' }; 
   
-  constructor(private _conductorservice: ConductorService,private authserv:AuthService,
+  constructor(private _conductorservice: ConductorService,private authserv:AuthService,private gs:GlobalService,
     private dialog: MatDialog,
     private snackBar:MatSnackBar) {
       this.pageSize = this.pageSizeOptions[0]
@@ -42,16 +47,23 @@ export class ConductorsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.fetchConductors(this.currentPage, this.pageSize)
+    this.userinfo = this.gs.getUserDetails();
+    this.currentagent = this.userinfo.id;
+    this.fetchConductors(this.currentPage, this.pageSize,this.currentagent);
   }
  
-  fetchConductors(page: number, pageSize: number) {
+  fetchConductors(page: number, pageSize: number,agentId:number) {
     if (this.filteredconductor && this.filteredconductor.length > 0) {
       this.conductors = this.filteredconductor.slice(page * this.pageSize, (page + 1) * this.pageSize);
       this.totalElements = this.filteredconductor.length;
       this.totalPages = Math.ceil(this.totalElements / this.pageSize);
-    } else {
-      this._conductorservice.getconductors(page, pageSize).subscribe(
+    }else  if (this.searchResults && this.searchResults.length > 0) {
+      this.conductors = this.searchResults.slice(page * this.pageSize, (page + 1) * this.pageSize);
+      this.totalElements = this.searchResults.length;
+      this.totalPages = Math.ceil(this.totalElements / this.pageSize);
+    }  
+    else {
+      this._conductorservice.getconductors(page, pageSize,agentId).subscribe(
         (conductors: any) => {
           this.conductors = conductors.content;
           this.totalElements = conductors.totalElements;
@@ -74,7 +86,20 @@ export class ConductorsComponent implements OnInit {
       this.filteredconductor = res;
       this.totalElements = this.filteredconductor.length;
       this.totalPages = Math.ceil(this.totalElements / this.pageSize);
-      this.fetchConductors(this.currentPage, this.pageSize);
+      this.fetchConductors(this.currentPage, this.pageSize,this.currentagent);
+    })
+  }
+  searchAgent(query: String) {
+    this._conductorservice.searchagent(query).subscribe((res) => {
+      this.searchResults = res;
+      this.currentPage = 0;
+      this.totalElements = this.searchResults.length;
+      this.totalPages = Math.ceil(this.totalElements / this.pageSize);
+      this.fetchConductors(this.currentPage, this.pageSize,this.currentagent);
+      console.log(this.term);
+
+    }, (error) => {
+      console.log("error searching for conductor", error);
     })
   }
   enableButton(){
@@ -91,8 +116,19 @@ export class ConductorsComponent implements OnInit {
     this.applyDateFilter();
     this.isButtonDisabled= true;
   }
-   
   }
+  sortByName() {
+    this.currentOrder.field = 'name';
+       this.currentOrder.direction = (this.currentOrder.direction === 'asc') ? 'desc' : 'asc';
+         this._conductorservice.getconductorsSorted(this.currentPage, this.pageSize,this.currentagent).subscribe((res: any) => {
+          this.conductors = res.content;
+          this.totalElements = res.totalElements;
+          this.totalPages = res.totalPages;
+         }, (error) => {
+           console.log("error getting agent pages", error);
+         });
+       
+     }
   openAddConductorDialog() {
     const dialogref = this.dialog.open(AddConductorComponent, {
       height: '60%',
@@ -102,7 +138,7 @@ export class ConductorsComponent implements OnInit {
     })
     dialogref.afterClosed().subscribe(()=>{
 this.currentPage =0;
-this.fetchConductors(this.currentPage,this.pageSize);
+this.fetchConductors(this.currentPage,this.pageSize, this.currentagent);
     })
   }
   openEditConductorDialog(conductor: Conductor) { 
@@ -115,7 +151,7 @@ this.fetchConductors(this.currentPage,this.pageSize);
     });
     dialogref.afterClosed().subscribe(()=>{
       this.currentPage =0;
-      this.fetchConductors(this.currentPage,this.pageSize);
+      this.fetchConductors(this.currentPage,this.pageSize,this.currentagent);
           })
   }
   hasAuthority(auth:string):boolean{
@@ -157,7 +193,7 @@ this.fetchConductors(this.currentPage,this.pageSize);
               if (this.currentPage < 0) {
                 this.currentPage = 0;
               }
-              this.fetchConductors(this.currentPage, this.pageSize);
+              this.fetchConductors(this.currentPage, this.pageSize,this.currentagent);
             }
         },()=>{
           this.openfailToast("Erreur l\'ors de supprission");
@@ -166,16 +202,17 @@ this.fetchConductors(this.currentPage,this.pageSize);
 
     })
   }
+  
 
   onPageChange(page: number) {
     this.currentPage = page;
-    this.fetchConductors(this.currentPage - 1, this.pageSize);
+    this.fetchConductors(this.currentPage - 1, this.pageSize,this.currentagent);
     console.log(this.currentPage)
   }
 
   onPageSizeChange(value :number):void{
     this.pageSize = value;
-    this.fetchConductors(this.currentPage,this.pageSize);
+    this.fetchConductors(this.currentPage,this.pageSize,this.currentagent);
   }
 
 }

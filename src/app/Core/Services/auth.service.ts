@@ -104,6 +104,11 @@ export class AuthService {
     return this.http.post(`${this.loginurl}/refresh-token`,{});
   }
 
+updateUserCredentials(userinfo:any):Observable<string>{
+  const url = `${this.loginurl}/updateprofile`;
+  return this.http.put<string>(url,userinfo);
+}
+
   public saveUser(agent: any) {
     const user = agent.agent;
     this.user.next(user);

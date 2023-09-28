@@ -32,7 +32,7 @@ export class PermissionsComponent implements OnInit  {
     this._permissionservice.fetchpermissions().subscribe(
       (res) => {
         
-        this.permissions = res
+        this.permissions = res.filter((perm)=> perm.permissionName !=='defaultPermission')
         this.groupPermissionsByGroup();
         for (let v of this.permissions){
           if (this.assignedPermissions.includes(v.TYPE)){

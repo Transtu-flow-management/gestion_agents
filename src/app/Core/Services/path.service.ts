@@ -41,4 +41,9 @@ export class PathService {
     const rsurl = this.gs.uri +`/lines/all`
     return this.http.get<String[]>(rsurl);
   }
+  public retreivePathss():Observable<Path[]>{
+    //const rsurl =`http://localhost:5300/api/resx`
+    const rsurl = this.gs.uri+this.url  +`/all`
+    return this.http.get<Path[]>(rsurl);
+  }
 }

@@ -33,7 +33,6 @@ import {MatExpansionModule} from '@angular/material/expansion';
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import {MatStepperModule} from '@angular/material/stepper';
-import { SpinnerComponent } from './Core/spinner/spinner.component';
 import { AccessdeniedComponent } from './accessdenied/accessdenied.component';
 import {  httpInterceptorProviders } from './Core/Services/auth.interceptor';
 import { ReportComponent } from './Dialogs/report/report.component';
@@ -48,7 +47,6 @@ export const API_URL = new InjectionToken<String>('API_URL');
 @NgModule({
   declarations: [
     AppComponent,
-    SpinnerComponent,
     AccessdeniedComponent,
     ReportComponent,
     ShowreportComponent,

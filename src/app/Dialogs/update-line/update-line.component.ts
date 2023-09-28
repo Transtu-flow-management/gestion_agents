@@ -40,11 +40,11 @@ export class UpdateLineComponent implements OnInit {
 
     this.updateForm = this.fb.group({
       nameFr: new FormControl(line.nameFr, [Validators.required,]),
-      nameAr: new FormControl(line.nameAr, [Validators.required,]),
+      nameAr: new FormControl(line.nameAr, [Validators.required,this.arabicTextValidator()]),
       start_fr: new FormControl(line.start_fr, [Validators.required,]),
-      start_ar: new FormControl(line.start_ar, [Validators.required,]),
+      start_ar: new FormControl(line.start_ar, [Validators.required,this.arabicTextValidator()]),
       end_fr: new FormControl(line.end_fr, [Validators.required,]),
-      end_ar: new FormControl(line.end_ar, [Validators.required,]),
+      end_ar: new FormControl(line.end_ar, [Validators.required,this.arabicTextValidator]),
       warehouse: new FormControl(this.entrpt.value, [Validators.required]),
       depot : new FormControl(line.warehouse)
     });
@@ -62,6 +62,15 @@ export class UpdateLineComponent implements OnInit {
       })
     );
     this.entrpt.setValue(this.data.line.warehouse);
+  }
+  arabicTextValidator() {
+    return (control) => {
+      const arabicTextPattern = /^[\u0600-\u06FF\s]+$/;
+      if (!arabicTextPattern.test(control.value)) {
+        return { notArabic: true };
+      }
+      return null;
+    };
   }
   displayFn(entropot: Depot): string {
     return entropot && entropot.name ? entropot.name : '';

@@ -33,6 +33,8 @@
                         class="text-red-500 text-xs italic">Veillez verifier que le champ non vide </div>
                     <div *ngIf="isFormSubmitted && updateForm.get('startAr').errors?.['minlength']  && updateForm.get('startAr').invalid && updateForm.get('startAr')"
                         class="text-red-500 text-xs italic">le nom doit contient minimum 4 lettres</div>
+                        <div *ngIf="isFormSubmitted && updateForm.get('startAr').hasError('notArabic') && updateForm.get('startAr')"
+                        class="text-red-500 text-xs italic">le texte doit être en arabe</div>
                 </ng-container> 
             </div>
         </div>
@@ -58,6 +60,8 @@
                         class="text-red-500 text-xs italic">Veillez verifier que le champ non vide </div>
                     <div *ngIf="isFormSubmitted && updateForm.get('endAr').errors?.['minlength']  && updateForm.get('endAr').invalid && updateForm.get('endAr')"
                         class="text-red-500 text-xs italic">le nom doit contient minimum 4 lettres</div>
+                        <div *ngIf="isFormSubmitted && updateForm.get('endAr').hasError('notArabic') && updateForm.get('endAr')"
+                        class="text-red-500 text-xs italic">le texte doit être en arabe</div>
                 </ng-container> 
             </div>
         </div>

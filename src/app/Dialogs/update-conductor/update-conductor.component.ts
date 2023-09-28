@@ -27,8 +27,8 @@ export class UpdateConductorComponent {
       const conductor :any = data.conductor
 
     this.updateForm = this.fb.group({
-      name: new FormControl(conductor.name, [Validators.required, Validators.minLength(6)]),
-      surname: new FormControl(conductor.surname, [Validators.required, Validators.minLength(6)]),
+      name: new FormControl(conductor.name, [Validators.required, Validators.minLength(2)]),
+      surname: new FormControl(conductor.surname, [Validators.required, Validators.minLength(2)]),
       uid: new FormControl(conductor.uid,Validators.required),
     });
 

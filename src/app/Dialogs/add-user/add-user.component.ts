@@ -62,7 +62,7 @@ export class AddUserComponent implements OnInit{
       depot : new FormControl('',this.depotValidator()),
       password: new FormControl ('',[Validators.required, Validators.minLength(8)]),
       con_password: new FormControl ('',[Validators.required, Validators.minLength(8)]),
-      address:new FormControl ('',[Validators.required, Validators.minLength(12)]),
+      address:new FormControl ('',[Validators.required, Validators.minLength(5)]),
       phone:new FormControl ('',[Validators.required, Validators.minLength(8)]),
       dateOfBirth: new FormControl(null), //not required
       checked: [false]
@@ -152,9 +152,9 @@ export class AddUserComponent implements OnInit{
     }
     formdata.append('warehouse',this.addForm.value.depot);
     
-    this._service.register(formdata).subscribe((valid)=>{
+    this._service.register(formdata).subscribe(()=>{
       this.openAddToast("Agent ajouté Avec Success");
-      this.dialog.close(formdata);
+      this.dialog.close();
     },
     (error) => {
       const errorMessage = `Erreur lors de l'ajout d'un agent : ${error.status}`;

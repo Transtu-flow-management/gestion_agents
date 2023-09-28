@@ -34,7 +34,7 @@ private isRefreshing = false;
       }
       return next.handle(req).pipe(
         catchError((err: HttpErrorResponse) => {
-          if (err.status === 401 || err.status === 500) {
+          if (err.status === 401 ) {
             this.authService.logout();
           } 
           return throwError(err);

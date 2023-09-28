@@ -1,7 +1,10 @@
 import { Component, Inject } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { ReclamService } from 'src/app/Core/Services/reclam.service';
+import { FailedToastComponent } from 'src/app/alerts/failed-toast/failed-toast.component';
+import { SuccessToastComponent } from 'src/app/alerts/success-toast/success-toast.component';
 
 @Component({
   selector: 'app-report',
@@ -11,7 +14,9 @@ import { ReclamService } from 'src/app/Core/Services/reclam.service';
 export class ReportComponent {
 
   modalform : FormGroup;
-constructor(private fb:FormBuilder,private RecS :ReclamService,@Inject(MAT_DIALOG_DATA) public data: any){
+constructor(private fb:FormBuilder,private RecS :ReclamService,
+  private snackBar:MatSnackBar, private dialog:MatDialog,
+  @Inject(MAT_DIALOG_DATA) public data: any){
  const formData:any = this.data.formData;
   this.modalform = this.fb.group({
     context:new FormControl('',Validators.required),
@@ -24,13 +29,39 @@ constructor(private fb:FormBuilder,private RecS :ReclamService,@Inject(MAT_DIALO
 
 }
 
+close(){
+  this.dialog.closeAll();
+}
+openAddToast(message:string){
+  this.snackBar.openFromComponent(SuccessToastComponent,{
+    data :{message:message},
+    duration:5000,
+    horizontalPosition:"end",
+    verticalPosition:"top",
+    panelClass: ['snack-green','snack-size','snack-position']
+  })
+ }
+ openfailToast(message:string):void{
+  this.snackBar.openFromComponent(FailedToastComponent,{
+    data: {message:message},duration: 5000,
+    horizontalPosition: "end",
+       verticalPosition:"bottom",
+       panelClass : ['snack-red','snack-size']
+  });
+   }
+
 submitform():void{
   const formvalue = this.modalform.value;
   
   console.log(formvalue);
   if (this.modalform.valid){
    this.RecS.createReclam(formvalue).subscribe(()=>{
-    console.log("validé");
+    this.RecS.sendmail(formvalue).subscribe(()=>{
+      this.openAddToast("Rapport envoyé au destinatiare");
+      this.close()
+    })
+   },(err)=>{
+    this.openfailToast("Erreur l\'ors de l\'envoi");
    })
   }
 }

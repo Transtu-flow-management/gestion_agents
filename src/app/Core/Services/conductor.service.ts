@@ -12,9 +12,10 @@ export class ConductorService {
   constructor(private http : HttpClient,private gs:GlobalService) { }
 
 
-  public getconductors(page: number, size: number):Observable<Conductor[]>{
+  public getconductors(page: number, size: number,agentId:number):Observable<Conductor[]>{
     const gurl= this.gs.uri + this.url;
     let params = new HttpParams()
+    .set('agentId',agentId)
     .set('page', page.toString())
     .set('size', size.toString());
    
@@ -36,6 +37,12 @@ export class ConductorService {
     return this.http.post<Conductor>(aurl,conductor);
 
   }
+  public searchagent(query :String){
+    let params = new HttpParams()
+    .set('query', query.toString())
+    const url =  this.gs.uri +this.url+`/search`;
+    return this.http.get<Conductor[]>(url,{params});
+  }
   public updateconductor(id:number,conductor:Conductor):Observable<Conductor>{
     const updurl = this.gs.uri +this.url +`/update/${id}`;
     return this.http.put<Conductor>(updurl,conductor);
@@ -43,5 +50,14 @@ export class ConductorService {
   public getallDrivers():Observable<Conductor[]>{
     const getall = this.gs.uri + this.url +`/all`;
     return this.http.get<Conductor[]>(getall);
+  }
+  public getconductorsSorted(page: number, size: number,agentId:number):Observable<Conductor[]>{
+    const gurl= this.gs.uri + this.url+`/sorted`;
+    let params = new HttpParams()
+    .set('agentId',agentId)
+    .set('page', page.toString())
+    .set('size', size.toString());
+   
+    return this.http.get<Conductor[]>(gurl,{params});
   }
 }

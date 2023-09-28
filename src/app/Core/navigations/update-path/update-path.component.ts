@@ -46,9 +46,9 @@ export class UpdatePathComponent implements AfterViewInit {
 
         this.updateForm = this.fb.group({
           startFr: new FormControl(pathData.startFr || '', [Validators.required, Validators.minLength(4)]),
-          startAr: new FormControl(pathData.startAr || '', [Validators.required, Validators.minLength(4)]),
+          startAr: new FormControl(pathData.startAr || '', [Validators.required, Validators.minLength(4),this.arabicTextValidator()]),
           endFr: new FormControl(pathData.endFr || '', [Validators.required, Validators.minLength(4)]),
-          endAr: new FormControl(pathData.endAr || '', [Validators.required, Validators.minLength(4)]),
+          endAr: new FormControl(pathData.endAr || '', [Validators.required, Validators.minLength(4),this.arabicTextValidator()]),
           type: new FormControl(pathData.type || 0, [Validators.required, allowedValues]),
           data: new FormControl(pathData.data || '', [Validators.required]),
           line: new FormControl(pathData.line.id, [Validators.required]),
@@ -88,7 +88,15 @@ export class UpdatePathComponent implements AfterViewInit {
     this.enableClickToAddMarker();
   }
 
-
+  arabicTextValidator() {
+    return (control) => {
+      const arabicTextPattern = /^[\u0600-\u06FF\s]+$/;
+      if (!arabicTextPattern.test(control.value)) {
+        return { notArabic: true };
+      }
+      return null;
+    };
+  }
 
   update(): void {
     this.isFormSubmitted = true;

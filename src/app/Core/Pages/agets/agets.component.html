@@ -45,19 +45,25 @@
           un Agent</span></button>
         </div>
     </div>
-  </div>
+    </div>
 
   <table class="w-full border-collapse bg-white text-center text- text-gray-600">
     <thead class="bg-[#DDDDDD]">
       <tr>
         <th scope="col" class="font-medium text-gray-900">Id</th>
         <th scope="col" class=" font-medium text-gray-900">Image</th>
-        <th scope="col" class=" font-medium text-gray-900">Nom</th>
+        <th scope="col" (click)="sortByName()" class=" font-medium text-gray-900 cursor-pointer">Nom
+          <span *ngIf="currentOrder.field === 'name' && currentOrder.direction === 'asc'">&#9650;</span>
+          <span *ngIf="currentOrder.field === 'name' && currentOrder.direction === 'desc'">&#9660;</span>
+        </th>
         <th scope="col" class=" font-medium text-gray-900">prenom</th>
-        <th scope="col" class=" font-medium text-gray-900">Email</th>
+        <th scope="col" class=" font-medium text-gray-900 ">Email</th>
         <th scope="col" class=" font-medium text-gray-900">Role</th>
         <th scope="col" class=" font-medium text-gray-900">Dépôt</th>
-        <th scope="col" class="p font-medium text-gray-900">Date de Creation</th>
+        <th scope="col" (click)="sortByDate()" class="p font-medium text-gray-900 cursor-pointer">Date de Creation
+          <span *ngIf="currentOrderDate.field === 'dateOfInsertion' && currentOrderDate.direction === 'asc'">&#9650;</span>
+          <span *ngIf="currentOrderDate.field === 'dateOfInsertion' && currentOrderDate.direction === 'desc'">&#9660;</span>
+        </th>
         <th scope="col" class=" font-medium text-gray-900">Date de Modification</th>
         <th scope="col" class="px-4 py-4 font-medium text-gray-900">Actions</th>
       </tr>
@@ -74,7 +80,7 @@
           <div class="flex-shrink-0">
             <img
               class="w-10 h-10 rounded-full"
-              [src]="'http://localhost:5300/api/agents/' + agent.imageUrl"
+              [src]="'http://localhost:5300/api/agents/img/' + agent.imageUrl"
               (error)="onImageError($event)"
             >
           </div>
@@ -84,20 +90,20 @@
             {{agent.name}}
           </span>
         </td>
-        <td class="px-2">
+        <td class="px-2 ">
           <div class="flex gap-2">
-            <span class="font-medium text-gray-700">
+            <span class="font-medium text-gray-700 pl-4">
               {{agent.surname}}
             </span>
           </div>
         </td>
-        <td class="px-2 ">
+        <td class="px-2 flex justify-center">
           <div class="flex gap-2">
-            <span class="font-medium text-gray-700">
+            <span class="font-medium text-gray-700 pt-4">
               {{agent.username}}
             </span>
           </div>
-
+        </td>
         <td class="px-2">
           <ng-container *ngIf="agent.roleName && agent.roleName.length > 0; else assignRoleBtn">
 

@@ -46,6 +46,8 @@ export class AgetsComponent implements OnInit, AfterViewInit {
   isfilterclicked=false;
   pageSizeOptions: number[] = [5, 10, 20,50];
   agentPerm :any;
+  currentOrder = { field: 'name', direction: 'asc' }; 
+  currentOrderDate = { field: 'dateOfInsertion', direction: 'asc' }; 
 
   constructor(private agentservice: UserServiceService,private authserv:AuthService,
     private dialog: MatDialog,
@@ -62,8 +64,9 @@ export class AgetsComponent implements OnInit, AfterViewInit {
     
   }
   ngAfterViewInit() {
-
+   
   }
+
 
   public fetchAgents(): void {
     this.agentservice.getAgentsPage(this.currentPage, this.pageSize).subscribe(
@@ -80,7 +83,7 @@ export class AgetsComponent implements OnInit, AfterViewInit {
   }
   onImageError(event: Event) {
     const imgElement = event.target as HTMLImageElement;
-    imgElement.src = '/assets/user.png'; // Replace with the path to your default image
+    imgElement.src = '/assets/user.png';
   }
   public loadagentspages(page: number, pagesize: number): void {
     if (this.filteredAgents && this.filteredAgents.length > 0) {
@@ -183,7 +186,30 @@ export class AgetsComponent implements OnInit, AfterViewInit {
         })
   });
   }
-
+  sortByName() {
+ this.currentOrder.field = 'name';
+    this.currentOrder.direction = (this.currentOrder.direction === 'asc') ? 'desc' : 'asc';
+      this.agentservice.getAgentsSorted(this.currentPage, this.pageSize).subscribe((res: any) => {
+        this.agents = res.content;
+        this.totalElements = res.totalElements;
+        this.totalPages = res.totalPages;
+      }, (error) => {
+        console.log("error getting agent pages", error);
+      });
+    
+  }
+  sortByDate() {
+    this.currentOrder.field = 'dateOfInsertion';
+       this.currentOrderDate.direction = (this.currentOrderDate.direction === 'asc') ? 'desc' : 'asc';
+         this.agentservice.getAgentsSortedDate(this.currentPage, this.pageSize).subscribe((res: any) => {
+           this.agents = res.content;
+           this.totalElements = res.totalElements;
+           this.totalPages = res.totalPages;
+         }, (error) => {
+           console.log("error getting agent pages", error);
+         });
+       
+     }
   public getRoles(): void {
     this.roleservice.getRoles().subscribe(
       role => { this.role = role },

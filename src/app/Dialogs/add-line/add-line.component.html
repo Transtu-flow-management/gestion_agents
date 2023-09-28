@@ -54,6 +54,8 @@
             <div
               *ngIf="isFormSubmitted && addForm.get('nameAr').errors?.['required']  && addForm.get('nameAr')"
               class="text-red-500 text-xs italic">Veillez verifier que le champ non vide </div>
+              <div *ngIf="isFormSubmitted && addForm.get('nameAr').hasError('notArabic') && addForm.get('nameAr')"
+                        class="text-red-500 text-xs italic">le texte doit être en arabe</div>
           
           </ng-container>
       </div> 
@@ -82,7 +84,8 @@
             <div
               *ngIf="isFormSubmitted && addForm.get('start_ar').errors?.['required']  && addForm.get('start_ar')"
               class="text-red-500 text-xs italic">Veillez verifier que le champ non vide </div>
-           
+              <div *ngIf="isFormSubmitted && addForm.get('start_ar').hasError('notArabic') && addForm.get('start_ar')"
+              class="text-red-500 text-xs italic">le texte doit être en arabe</div>
           </ng-container>
       </div> 
       <div class="my-8"></div> <!-- Add spacing here -->
@@ -110,7 +113,8 @@
             <div
               *ngIf="isFormSubmitted && addForm.get('end_ar').errors?.['required']  && addForm.get('end_ar')"
               class="text-red-500 text-xs italic">Veillez verifier que le champ non vide </div>
-          
+              <div *ngIf="isFormSubmitted && addForm.get('end_ar').hasError('notArabic') && addForm.get('end_ar')"
+              class="text-red-500 text-xs italic">le texte doit être en arabe</div>
           </ng-container>
       </div> 
       

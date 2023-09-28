@@ -24,24 +24,24 @@ numberOfAgents :number;
 enmacrche : number;
 enpanne : number;
   userinfo: any;
-  constructor(private as: UserServiceService,private carservice:CarService,private cs :ConductorService,){
+  constructor(private as: UserServiceService,private carservice:CarService,private cs :ConductorService){
     this.countagents();
     this.countCars();
   }
 ngOnInit(): void {
-
-
+this.countDrivers();
 }
 countDrivers(){
   this.cs.getallDrivers().subscribe((drv)=>{
     this.driver = drv;
+    this.numberOfAgents = drv.length;
+  
   })
 
 }
 countagents(){
   this.as.getagetns().subscribe((agetns)=>{
-    this.users = agetns;
-    this.numberOfAgents = agetns.length;    
+    this.users = agetns; 
   })
 }
 countCars(){

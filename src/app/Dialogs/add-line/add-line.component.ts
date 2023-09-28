@@ -32,16 +32,25 @@ export class AddLineComponent implements OnInit{
   constructor(private dialog :MatDialog,private fb:FormBuilder,private snackBar:MatSnackBar ,private _lineservice :LinesService,private _warehouseService:EntropotService){
      this.addForm = this.fb.group({
       nameFr: new FormControl('', [Validators.required,]),
-      nameAr: new FormControl('', [Validators.required,]),
+      nameAr: new FormControl('', [Validators.required,this.arabicTextValidator()]),
       start_fr: new FormControl('', [Validators.required, ]),
-      start_ar: new FormControl('', [Validators.required, ]),
+      start_ar: new FormControl('', [Validators.required,this.arabicTextValidator()]),
       end_fr: new FormControl('', [Validators.required,]),
-      end_ar: new FormControl('', [Validators.required, ]),
+      end_ar: new FormControl('', [Validators.required, this.arabicTextValidator()]),
       warehouse:  new FormControl(this.entrpt, [Validators.required])
     });
     this._warehouseService.getAllentrp().subscribe(warehouses => {
       this.warehouse = warehouses;
     });
+  }
+  arabicTextValidator() {
+    return (control) => {
+      const arabicTextPattern = /^[\u0600-\u06FF\s]+$/;
+      if (!arabicTextPattern.test(control.value)) {
+        return { notArabic: true };
+      }
+      return null;
+    };
   }
   ngOnInit() {
     this.filteredOptions = this.entrpt.valueChanges.pipe(
@@ -108,6 +117,7 @@ add(): void {
   }
     this._lineservice.addline(formValue).subscribe(() => {
       this.openAddToast('ligne ajoutée avec succès');
+      this.close();
     }, (error) => {
       this.openfailToast('Erreur lors de l\'ajout d\'une ligne');
       console.log(error);

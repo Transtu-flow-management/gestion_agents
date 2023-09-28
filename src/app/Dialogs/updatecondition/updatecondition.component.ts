@@ -27,9 +27,9 @@ export class UpdateconditionComponent {
     const condition :any = data.condition
     this.updateForm = this.fb.group({
       
-      name: new FormControl(condition.name, [Validators.required, Validators.minLength(6)]),
-      tracking: new FormControl(condition.tracking, [Validators.required, Validators.pattern(/^\d$/),Validators.max(9),Validators.min(0)]),
-      visibility: new FormControl(condition.visibility, [Validators.required, Validators.pattern(/^\d$/),Validators.max(9),Validators.min(0)]),
+      name: new FormControl(condition.name, [Validators.required, Validators.minLength(2)]),
+      tracking: new FormControl(condition.tracking, [Validators.required,Validators.max(9),Validators.min(0)]),
+      visibility: new FormControl(condition.visibility, [Validators.required,Validators.max(9),Validators.min(0)]),
     })
 
   }
@@ -84,6 +84,7 @@ update(){
   if (!this.isFormUnchanged()){
     this._condtitionservice.updateCondition(this.data.condition.id,condition).subscribe(()=>{
       this.openToast('La condition a été mis à jour');
+      this.close();
       this.dialogRef.close();
     },()=>{
       this.openErrorToast("erreur updating condition");

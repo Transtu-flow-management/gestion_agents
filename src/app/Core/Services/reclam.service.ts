@@ -23,6 +23,10 @@ export class ReclamService {
     const curl = this.gs.uri +this.url+'/add';
    return this.http.post<Reclammation>(curl,reclam);
   }
+  public sendmail(reclam:Reclammation):Observable<Reclammation>{
+    const surl = this.gs.uri+this.url+'/send';
+    return this.http.post<Reclammation>(surl,reclam);
+  }
 
 
 }

@@ -1,4 +1,4 @@
-import { Component, ElementRef, AfterViewInit,ViewContainerRef,ViewChild } from '@angular/core';
+import { Component, ElementRef, AfterViewInit,ViewContainerRef,ViewChild, OnInit } from '@angular/core';
 import { MatSnackBar, MatSnackBarHorizontalPosition, MatSnackBarVerticalPosition } from '@angular/material/snack-bar';
 
 import { AbstractControl, FormBuilder, FormControl, FormGroup, ValidationErrors, Validators } from '@angular/forms';
@@ -13,6 +13,8 @@ import 'leaflet-routing-machine';
 import "leaflet-control-geocoder/dist/Control.Geocoder.js";
 import { WarningComponent } from 'src/app/alerts/warning/warning.component';
 import { DynamicPopupComponent } from '../../Pages/dynamic-popup/dynamic-popup.component';
+import { Path } from '../../Models/Path';
+import { Observable, map, startWith } from 'rxjs';
 
 function allowedValues(control: FormControl) {
   const value = control.value;
@@ -29,19 +31,28 @@ function allowedValues(control: FormControl) {
   styleUrls: ['./add-path.component.css']
 
 })
-export class AddPathComponent implements AfterViewInit {
+export class AddPathComponent implements AfterViewInit,OnInit {
   @ViewChild('popupPlaceholder', { read: ViewContainerRef }) popupPlaceholder!: ViewContainerRef;
 
   horizontalPosition: MatSnackBarHorizontalPosition = 'start';
   verticalPosition: MatSnackBarVerticalPosition = 'bottom';c
   lines: Lines[] = [];
+  Path:Path[] = [];
   showdialg: boolean = true;
   map: L.Map;
   smallIcon: L.Icon;
   redicon: L.Icon;
   marker: L.Marker;
   public data:string;
+  filteredOptions: Observable<Path[]>;
+  filteredOptionsAR: Observable<Path[]>;
+  filteredOptionsEF: Observable<Path[]>;
+  filteredOptionsEA: Observable<Path[]>;
   addForm: FormGroup;
+  startfr = new FormControl<Path>(null);
+  startar = new FormControl<Path>(null);
+  endfr = new FormControl<Path>(null);
+  endar = new FormControl<Path>(null);
   componentRef: any;
   isFormSubmitted = false;
   constructor(private elementRef: ElementRef, private http: HttpClient,
@@ -50,14 +61,23 @@ export class AddPathComponent implements AfterViewInit {
       private snackBar: MatSnackBar) {
     this.addForm = this.fb.group({
      
-      startFr: new FormControl('', [Validators.required,Validators.minLength(4)]),
-      startAr: new FormControl('', [Validators.required,Validators.minLength(4)]),
-      endFr: new FormControl('', [Validators.required,Validators.minLength(4)]),
-      endAr: new FormControl('', [Validators.required,Validators.minLength(4)]),
+      startFr: new FormControl(this.startfr, [Validators.required,Validators.minLength(4)]),
+      startAr: new FormControl(this.startar, [Validators.required,Validators.minLength(4),this.arabicTextValidator()]),
+      endFr: new FormControl(this.endfr, [Validators.required,Validators.minLength(4)]),
+      endAr: new FormControl(this.endar, [Validators.required,Validators.minLength(4),this.arabicTextValidator()]),
       type:new FormControl('', [Validators.required]),
       data:new FormControl('', [Validators.required]),
       line:new FormControl('', [Validators.required]),
     })
+  }
+  arabicTextValidator() {
+    return (control) => {
+      const arabicTextPattern = /^[\u0600-\u06FF\s]+$/;
+      if (!arabicTextPattern.test(control.value)) {
+        return { notArabic: true };
+      }
+      return null;
+    };
   }
  showPopup() {
     this.viewContainerRef.clear();
@@ -67,7 +87,6 @@ export class AddPathComponent implements AfterViewInit {
     componentRef.instance.isFormSubmitted = this.isFormSubmitted;
   }
 
-
   capaciteValidator(control: AbstractControl): ValidationErrors | null {
     const value = control.value;
     if (value !== null && (isNaN(value) || value > 999)) {
@@ -75,8 +94,45 @@ export class AddPathComponent implements AfterViewInit {
     }
     return null;
   }
+  ngOnInit(): void {
+    this._pathsertvice.retreivePathss().subscribe((pats)=>{
+      this.Path = pats;
+    },(err)=>{
+      console.log(err);
+    })
+    
+    this.filteredOptions = this.startfr.valueChanges.pipe(
+      startWith(''),
+      map(value => {
+        const name = typeof value === 'string' ? value : value?.startFr;
+        return name ? this._filter(name as string) : this.Path.slice();
+      })
+    );
+    this.filteredOptionsAR = this.startar.valueChanges.pipe(
+      startWith(''),
+      map(value => {
+        const name = typeof value === 'string' ? value : value?.startAr;
+        return name ? this._filterSA(name as string) : this.Path.slice();
+      })
+    );
+    this.filteredOptionsEF = this.endfr.valueChanges.pipe(
+      startWith(''),
+      map(value => {
+        const name = typeof value === 'string' ? value : value?.endFr;
+        return name ? this._filterEF(name as string) : this.Path.slice();
+      })
+    );
+    this.filteredOptionsEA = this.endar.valueChanges.pipe(
+      startWith(''),
+      map(value => {
+        const name = typeof value === 'string' ? value : value?.endAr;
+        return name ? this._filterEA(name as string) : this.Path.slice();
+      })
+    );
+  }
 
   ngAfterViewInit(): void {
+
     this.createMap();
     this.initializeMarkerIcon();
     this.getLineNames();
@@ -98,6 +154,14 @@ export class AddPathComponent implements AfterViewInit {
       const selectedLineId = formvalue.line;
     const selectedLine = this.lines.find(line => line.id === selectedLineId);  
       formvalue.line = selectedLine;
+      const selectedSfr :Path = this.startfr.value;
+      formvalue.startFr = selectedSfr.startFr;
+      const selectedSar :Path = this.startar.value;
+      formvalue.startAr = selectedSfr.startAr;
+      const selectedEfr :Path = this.endfr.value;
+      formvalue.endFr = selectedSfr.endFr;
+      const selectedEar :Path = this.endar.value;
+      formvalue.endAr = selectedSfr.endAr;
       this._pathsertvice.addpath(formvalue).subscribe(
         () => {
         
@@ -142,7 +206,75 @@ export class AddPathComponent implements AfterViewInit {
       panelClass: ['snack-red', 'snack-size']
     });
   }
- 
+  displayFn(path: Path): string {
+    return path && path.startFr ? path.startFr : '';
+  }
+  private _filter(name: string): Path[] {
+    const filterValue = name.toLowerCase();
+    const uniqueStartArValues = new Set<string>();
+    const uniquePaths: Path[] = this.Path.filter((option) => {
+      const startArLowerCase = option.startFr.toLowerCase();
+      if (startArLowerCase.includes(filterValue) && !uniqueStartArValues.has(startArLowerCase)) {
+        uniqueStartArValues.add(startArLowerCase);
+        return true;
+      }
+      return false;
+    });
+  
+    return uniquePaths;
+  }
+  
+  displayFnSA(path: Path): string {
+    return path && path.startAr ? path.startAr : '';
+  }
+  private _filterSA(name: string): Path[] {
+    const filterValue = name.toLowerCase();
+    const uniqueStartArValues = new Set<string>();
+    const uniquePaths: Path[] = this.Path.filter((option) => {
+      const startArLowerCase = option.startAr.toLowerCase();
+      if (startArLowerCase.includes(filterValue) && !uniqueStartArValues.has(startArLowerCase)) {
+        uniqueStartArValues.add(startArLowerCase);
+        return true;
+      }
+      return false;
+    });
+  
+    return uniquePaths;
+  }
+  displayFnEF(path: Path): string {
+    return path && path.endFr ? path.endFr : '';
+  }
+  private _filterEF(name: string): Path[] {
+    const filterValue = name.toLowerCase();
+    const uniqueStartArValues = new Set<string>();
+    const uniquePaths: Path[] = this.Path.filter((option) => {
+      const startArLowerCase = option.endFr.toLowerCase();
+      if (startArLowerCase.includes(filterValue) && !uniqueStartArValues.has(startArLowerCase)) {
+        uniqueStartArValues.add(startArLowerCase);
+        return true;
+      }
+      return false;
+    });
+  
+    return uniquePaths;
+  }
+  displayFnEA(path: Path): string {
+    return path && path.endAr ? path.endAr : '';
+  }
+  private _filterEA(name: string): Path[] {
+    const filterValue = name.toLowerCase();
+    const uniqueStartArValues = new Set<string>();
+    const uniquePaths: Path[] = this.Path.filter((option) => {
+      const startArLowerCase = option.endAr.toLowerCase();
+      if (startArLowerCase.includes(filterValue) && !uniqueStartArValues.has(startArLowerCase)) {
+        uniqueStartArValues.add(startArLowerCase);
+        return true;
+      }
+      return false;
+    });
+  
+    return uniquePaths;
+  }
   createMap(): void {
     const centralLocation = {
       lat: 36.8392,
@@ -307,19 +439,18 @@ export class AddPathComponent implements AfterViewInit {
     }
     const updateRouting = (): void => {
       if (startMarker && endMarker) {
-        //const popupTextS = `Location FR: ${this.addForm.get('startFr').value} <br> Location AR:${this.addForm.get('startAr').value}`;
-        //const popupTextE = `Location FR: ${this.addForm.get('endFr').value} <br> Location AR:${this.addForm.get('endAr').value}`;
-        const inputpopup = ``;
+        const popupTextS = `Location FR: ${this.addForm.get('startFr').value} <br> Location AR:${this.addForm.get('startAr').value}`;
+        const popupTextE = `Location FR: ${this.addForm.get('endFr').value} <br> Location AR:${this.addForm.get('endAr').value}`;
         initialiszeroute();
         routingPlan = new L.Routing.Plan([startMarker.getLatLng(), endMarker.getLatLng()], {
-
           createMarker: (i, waypoints, n) => {
             if (i === 0) {
-              startMarker = L.marker(waypoints.latLng, { icon: this.smallIcon, draggable: true }).on('dragend', onDragEndStart).bindPopup(this.componentRef).openPopup()
+              startMarker = L.marker(waypoints.latLng, { icon: this.smallIcon, draggable: true }).on('dragend', onDragEndStart).bindPopup(popupTextS).openPopup()
               savedData.addLayer(startMarker)
               return startMarker;
             } else if (i === n - 1) {
-              endMarker = L.marker(waypoints.latLng, { icon: this.redicon, draggable: true }).on('dragend', onDragEndEnd).bindPopup('helo').openPopup()
+              endMarker = L.marker(waypoints.latLng, { icon: this.redicon, draggable: true }).on('dragend', onDragEndEnd).bindPopup(popupTextE).openPopup()
+              savedData.addLayer(endMarker)
               return endMarker;
             }
             return null;
@@ -344,7 +475,6 @@ export class AddPathComponent implements AfterViewInit {
 
       }
     };
-
     const onDragEndStart = (event: L.LeafletEvent): void => {
    
       startMarker.options.draggable = true;

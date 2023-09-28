@@ -168,9 +168,8 @@ export class AddCarComponent implements OnInit {
 
       this._carService.addcar(formvalue).subscribe(
         () => {
-        
-          console.log(formvalue);
           this.openAddToast('Vehicule ajouté avec succès');
+          this.close();
         },
         (error) => {
           const errormessage = `Erreur lors de l'ajout d'un traget : ${error.status}`;

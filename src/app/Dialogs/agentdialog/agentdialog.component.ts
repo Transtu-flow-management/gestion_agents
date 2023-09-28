@@ -176,14 +176,14 @@ export class AgentdialogComponent implements OnInit {
       this.service.patchAgentimg(this.data.agent.id, formdata, this.selectedImage).subscribe((res) => {
        
         this.openToast("agent a été mis à jour");
-        this.dialogRef.close(res);
+        this.dialogRef.close();
       }, (error) => {
         console.log("error patching agent avec image ", error);
       });
     } else
       this.service.patchAgentimg(this.data.agent.id, formdata).subscribe((res) => {
        this.openToast("agent a été mis à jour");
-        this.dialogRef.close(res);
+        this.dialogRef.close();
       }, (error) => {
         console.log("error patching agent sans image", error);
       });

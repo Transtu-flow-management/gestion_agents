@@ -27,9 +27,24 @@ export class UserServiceService {
   }
   getagetns():Observable<Agent[]>{
     return this.http.get<Agent[]>(this.usersUrl);
-
   }
 
+  getAgentsSorted(page: number, size: number): Observable<Agent[]> {
+    const url = `${this.usersUrl}/sorted`;
+    let params = new HttpParams()
+      .set('page', page.toString())
+      .set('size', size.toString());
+
+    return this.http.get<Agent[]>(url, { params });
+  }
+  getAgentsSortedDate(page: number, size: number): Observable<Agent[]> {
+    const url = `${this.usersUrl}/sortedDate`;
+    let params = new HttpParams()
+      .set('page', page.toString())
+      .set('size', size.toString());
+
+    return this.http.get<Agent[]>(url, { params });
+  }
   public createAgent(agent : Agent):Observable<Agent>{
     const url = `${this.usersUrl}/create`;
    return this.http.post<Agent>(url,agent);
@@ -46,7 +61,7 @@ export class UserServiceService {
   }
  
  public updateAgent(id:number,agent) {
-  const url = `${this.usersUrl}/update/${id}`;
+  const url = `${this.usersUrl}/profile/${id}`;
     return this.http.put<Agent>(url, agent);
   }
   patchAgent(agentId: number, champs: Map<String, any>): Observable<Agent> {
@@ -89,8 +104,6 @@ export class UserServiceService {
       // A client-side or network error occurred. Handle it accordingly.
       console.error('An error occurred:', httpError.error.message);
     } else {
-      // The backend returned an unsuccessful response code.
-      // The response body may contain clues as to what went wrong.
       console.error(
         `Backend returned code ${httpError.status}, ` +
         `body was: ${httpError.error}`);

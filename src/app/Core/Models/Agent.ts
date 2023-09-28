@@ -6,6 +6,7 @@ export interface Agent {
     name: string;
     surname: string;
     imageUrl:string;
+    password:string;
     username: string;
     roleName: string;
     address:string;

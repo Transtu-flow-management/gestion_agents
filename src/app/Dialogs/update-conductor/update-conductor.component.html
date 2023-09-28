@@ -25,7 +25,7 @@
   </div>
   <div class="max-w-2xl mx-auto">
   
-    <p class="text-green-950 pt-20px normal-case text-6xl	 font-sherif antialiased	font-medium	leading-loose">Ajouter un Conducteur</p>
+    <p class="text-green-950 pt-20px normal-case text-6xl	 font-sherif antialiased	font-medium	leading-loose">Modifier le Conducteur</p>
       
     <form [formGroup]="updateForm">
       <div class="relative z-0 mt-4 w-full group max-w-s">
@@ -41,7 +41,7 @@
               class="text-red-500 text-xs italic">Veillez verifier que le champ non vide </div>
             <div
               *ngIf="isFormSubmitted && updateForm.get('name').errors?.['minlength']  && updateForm.get('name').invalid && updateForm.get('name')"
-              class="text-red-500 text-xs italic">le nom doit contient minimum 6 lettres</div>
+              class="text-red-500 text-xs italic">le nom doit contient minimum 2 lettres</div>
           </ng-container>
       </div> 
       <div class="my-8"></div> <!-- Add spacing  -->

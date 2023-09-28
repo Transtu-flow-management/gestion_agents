@@ -13,7 +13,7 @@
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                 d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
             </svg>
-            <input class="bg-[#DDDDDD] outline-none w-80" type="text" [(ngModel)]="term" 
+            <input class="bg-[#DDDDDD] outline-none w-80" type="text" [(ngModel)]="term" (input)="searchAgent(term)"
               placeholder="Chercher un Conducteur."   /> 
           </div>
         
@@ -33,7 +33,7 @@
           <button [disabled]="isButtonDisabled" [ngClass]="{'bg-red-50 hover:bg-red-100': isButtonDisabled}" class= "bg-[#B7B78A] px-3 py-4 text-sm shadow-sm font-small tracking-wider text-gray-100 rounded-md hover:shadow-2xl hover:bg-amber-700" (click)="getDatePickerValue()">filtrer</button>
         </div>
          </div>
-         <div *ngIf="hasAuthority('readCara')">
+         <div *ngIf="hasAuthority('readCar')">
         <button (click)="openAddConductorDialog()"
           class="bg-[#F8AF26] px-3 py-2 text-sm shadow-sm font-medium tracking-wider text-black-100 rounded-full hover:shadow-2xl hover:bg-amber-700"><span class="flex items-center font-medium"> <mat-icon>add</mat-icon>Ajouter
             un Conduteur</span></button>
@@ -44,8 +44,12 @@
       <thead class="bg-[#DDDDDD] ">
         <tr>
           <th scope="col" class=" font-medium text-gray-900 ">Id</th>
-          <th scope="col" class=" font-medium text-gray-900">Nom Complet</th>
+          <th scope="col" (click)="sortByName()" class=" font-medium text-gray-900 cursor-pointer">Nom Complet
+            <span *ngIf="currentOrder.field === 'name' && currentOrder.direction === 'asc'">&#9650;</span>
+            <span *ngIf="currentOrder.field === 'name' && currentOrder.direction === 'desc'">&#9660;</span>
+          </th>
           <th scope="col" class=" font-medium text-gray-900">UID</th>
+          <th scope="col" class=" font-medium text-gray-900">Role</th>
           <th scope="col" class="font-medium text-gray-900">Date de Creation</th>
           <th scope="col" class=" font-medium text-gray-900">Date de Modification</th>
           <th scope="col" class="px-4 py-4 font-medium text-gray-900">Actions</th>
@@ -68,7 +72,11 @@
               {{conductor.uid}}
             </span>
           </td>
-         
+          <td class="px-2 ">
+            <span class="font-medium text-gray-700">
+              {{ conductor.type === 0 ? 'chauffeur' : conductor.type === 1 ? 'confeuilleur' : conductor.type }}
+            </span>
+          </td>
           <td class="px-2 ">
             <span
             class="inline-flex items-center  bg-zinc-50 px-2 py-1 text-xs font-semibold text-stone-600">
