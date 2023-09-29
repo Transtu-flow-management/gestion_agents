@@ -73,7 +73,7 @@ public class AgentController {
     }
 
     @PatchMapping("/update/{agentid}")
-   @PreAuthorize("hasAuthority('update')")
+   //@PreAuthorize("hasAuthority('update')")
     public ResponseEntity<AgentDTO> patched(@PathVariable int agentid,@RequestParam Map<String, Object> champs, @RequestParam(value = "image",required = false) MultipartFile file) {
         Agent patch = service.patchAgent(agentid, champs,file);
         AgentDTO patchedDTO = service.convertDTOToDocument(patch);

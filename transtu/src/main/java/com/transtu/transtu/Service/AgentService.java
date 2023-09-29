@@ -73,7 +73,7 @@ public class AgentService  {
         Agent agentexist = isExisting.get();
         String username = agentexist.getUsername();
         Agent user = agentRepo.findByUsername(username);
-
+            if (!agent.getNewPassword().isEmpty() && agent.getNewPassword() != null  && agent.getPassword() != null && !agent.getPassword().isEmpty())
             if (passwordEncoder.matches(agent.getPassword(), user.getPassword())) {
                agentexist.setPassword(passwordEncoder.encode(agent.getNewPassword()));
             }else {

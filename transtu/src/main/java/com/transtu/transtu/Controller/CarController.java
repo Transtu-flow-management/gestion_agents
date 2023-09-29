@@ -23,25 +23,19 @@ public class CarController {
     private CarService carService;
 
     @GetMapping
-    @PreAuthorize("hasAuthority('readCar')")
-    public Page<Car> getAll(@RequestParam(defaultValue = "0") int page,
+    @PreAuthorize("hasAnyAuthority('readCar','defaultPermission')")
+    public Page<Car> getAll(@RequestParam(name = "agentId") Integer agentId,@RequestParam(defaultValue = "0") int page,
                              @RequestParam(defaultValue = "5") int size){
         Pageable pageable = PageRequest.of(page, size);
-        return carService.getallCars(pageable);
+        return carService.getallCars(agentId,pageable);
     }
     @GetMapping("/sorted")
-    @PreAuthorize("hasAuthority('readCar')")
-    public Page<Car> getAllSorted(@RequestParam(defaultValue = "0") int page,
+    @PreAuthorize("hasAnyAuthority('readCar','defaultPermission')")
+    public Page<Car> getAllSorted(@RequestParam(name = "agentId") Integer agentId
+            ,@RequestParam(defaultValue = "0") int page,
                             @RequestParam(defaultValue = "5") int size){
         Pageable pageable = PageRequest.of(page, size);
-        return carService.getallCarsSorted(pageable);
-    }
-    @GetMapping("/sortedbrand")
-    @PreAuthorize("hasAuthority('readCar')")
-    public Page<Car> getAllSortedBrand(@RequestParam(defaultValue = "0") int page,
-                                  @RequestParam(defaultValue = "5") int size){
-        Pageable pageable = PageRequest.of(page, size);
-        return carService.getallCarsSortedBrand(pageable);
+        return carService.getallCarsSorted(agentId,pageable);
     }
     @GetMapping("/all")
     public List<Car>findall(){

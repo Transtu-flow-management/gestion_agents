@@ -63,7 +63,7 @@ public class SecurityConfig {
                         .allowedMethods("*")
                         .allowedHeaders("*")
                         .allowCredentials(true);
-                System.out.println("CORS Configuration Executed");
+                System.out.println("CORS configuration executed");
             }
         };
     }

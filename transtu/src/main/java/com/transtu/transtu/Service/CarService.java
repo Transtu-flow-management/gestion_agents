@@ -1,6 +1,7 @@
 package com.transtu.transtu.Service;
 
 import com.transtu.transtu.Document.*;
+import com.transtu.transtu.Handlers.NotFoundExcemptionhandler;
 import com.transtu.transtu.Handlers.NotFoundHandler;
 import com.transtu.transtu.Repositoy.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,21 +30,58 @@ private  ConductorRepo conductorRepo;
 @Autowired
 private  BrandRepo brandRepo;
 @Autowired
+private AgentRepo agentRepo;
+@Autowired
 private  entropotRepo entropotRepo;
-    public Page<Car> getallCars(Pageable pageable){
-        return  carRepo.findAll(pageable);
+
+    public Page<Car> getallCars(Integer agentId, Pageable pageable) {
+        Agent agent = agentRepo.findById(agentId).orElseThrow(()-> new NotFoundExcemptionhandler(agentId));
+        boolean hasAllWarehousesPrivilege = hasAllWarehousesPrivilege(agent.getId());
+        if (agent != null ) {
+            if (agent.getWarehouse() != null){
+                Integer warehouseId = agent.getWarehouse().getId();
+                if (warehouseId !=null){
+                    return carRepo.findBywarehouseId(warehouseId, pageable);}
+            }
+            if (hasAllWarehousesPrivilege){
+                return carRepo.findAll(pageable);}
+
+        }
+        return Page.empty();
     }
+
     private Sort.Order currentOrder = Sort.Order.asc("matricule");
     private Sort.Order currentOrderbrand = Sort.Order.asc("brand");
-    public Page<Car> getallCarsSorted(Pageable pageable){
+
+    public Page<Car> getallCarsSorted(Integer agentId, Pageable pageable) {
+        Agent agent = agentRepo.findById(agentId).orElseThrow(()-> new NotFoundExcemptionhandler(agentId));
         currentOrder = (currentOrder.isAscending()) ? Sort.Order.desc("matricule") : Sort.Order.asc("matricule");
         Pageable sortedPageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(),  Sort.by(currentOrder));
-        return  carRepo.findAll(sortedPageable);
+        boolean hasAllWarehousesPrivilege = hasAllWarehousesPrivilege(agent.getId());
+        if (agent != null ) {
+            if (agent.getWarehouse() != null){
+                Integer warehouseId = agent.getWarehouse().getId();
+                if (warehouseId !=null){
+                    return carRepo.findBywarehouseId(warehouseId, pageable);}
+            }
+            if (hasAllWarehousesPrivilege){
+                return carRepo.findAll(sortedPageable);}
+
+        }
+        return Page.empty();
     }
-    public Page<Car> getallCarsSortedBrand(Pageable pageable){
-        currentOrder = (currentOrderbrand.isAscending()) ? Sort.Order.desc("brand") : Sort.Order.asc("brand");
-        Pageable sortedPageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(),  Sort.by(currentOrder));
-        return  carRepo.findAll(sortedPageable);
+
+
+
+    private boolean hasAllWarehousesPrivilege(Integer agentId) {
+        Agent user = agentRepo.findById(agentId).orElseThrow(()-> new NotFoundExcemptionhandler(agentId));
+        if (user!=null){
+            Role userrole = user.getRole();
+            if (userrole!=null &&userrole.getPermissions().contains(Permissions.DEFAULT_PERMISSION)){
+                return true;
+            }
+        }
+        return false;
     }
     public List<Car>findallCars(){
         return carRepo.findAll();

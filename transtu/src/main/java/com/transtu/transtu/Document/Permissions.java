@@ -68,6 +68,7 @@ public enum Permissions implements Serializable {
     PCRR("pcr_read","PCR"),
     PCRW("pcr_write","PCR"),
     PCRD("pcr_Delete","PCR"),
+    PCRGPS("ReadGPS","PCR"),
     DEFAULT_PERMISSION("defaultPermission", "defaultGroup");
     private final String permissionName;
     private final String group;
