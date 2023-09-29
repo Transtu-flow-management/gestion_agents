@@ -52,5 +52,54 @@ countCars(){
   })
 }
 
+chartOptions = {
+  title: {
+    text: "Nombre de marques de vehicules"
+  },
+  animationEnabled: true,
+  axisY: {
+  includeZero: true
+  },
+  data: [{
+  type: "column", //change type to bar, line, area, pie, etc
+  indexLabel: "{y}", //Shows y value on all Data Points
+  indexLabelFontColor: "#5A5757",
+  dataPoints: [
+    { x: 10, y: 71 ,indexLabel:"MAN"},
+    { x: 20, y: 55 ,indexLabel:"Reneault"},
+    { x: 30, y: 50 ,indexLabel:"Peugeot" },
+    { x: 40, y: 65 ,indexLabel:"DACIA"},
+    { x: 50, y: 71 },
+    { x: 60, y: 92, indexLabel: "Volvo Highest\u2191" },
+    { x: 70, y: 68 },
+    { x: 80, y: 38, indexLabel: "MERCEDES Lowest\u2193"  },
+    { x: 90, y: 54 },
+    { x: 100, y: 60 }
+  ]
+  }]
+}
+chartOptionsPie = {
+  animationEnabled: true,
+  theme: "dark2",
+  exportEnabled: true,
+  title: {
+  text: "Véhicule avec le plus de pannes"
+  },
+  subtitles: [{
+  text: "Median hours/week"
+  }],
+  data: [{
+  type: "pie", //change type to column, line, area, doughnut, etc
+  indexLabel: "{name}: {y}%",
+  dataPoints: [
+    { name: "MAN", y: 9.1 },
+    { name: "Mercedes", y: 3.7 },
+    { name: "Renault", y: 36.4 },
+    { name: "Volvo", y: 30.7 },
+    { name: "Peugeot", y: 20.1 }
+  ]
+  }]
+}
+
   }
 

@@ -163,7 +163,7 @@ this.snackBar.openFromComponent(FailedToastComponent,{
         .bindPopup(popupText)
         .openPopup();
 
-      this.getAddressFromCoordinates(lat, lng,450).then((address: string) => {
+      this.getAddressFromCoordinates(lat, lng,250).then((address: string) => {
         console.log('Address:', address,' avec long =',this.long," et latt =",this.latt);
         this.adresse=address;
        this.addForm.patchValue({

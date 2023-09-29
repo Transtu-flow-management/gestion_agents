@@ -47,8 +47,7 @@
                         class="text-red-500 text-xs italic">Veillez verifier que le champ non vide </div>
                     <div *ngIf="isFormSubmitted && addForm.get('startAr').errors?.['minlength']  && addForm.get('startAr').invalid && addForm.get('startAr')"
                         class="text-red-500 text-xs italic">le nom doit contient minimum 4 lettres</div>
-                        <div *ngIf="isFormSubmitted && addForm.get('startAr').hasError('notArabic') && addForm.get('startAr')"
-                        class="text-red-500 text-xs italic">le texte doit être en arabe</div>
+                       
                 </ng-container> 
             </div>
         </div>
@@ -86,8 +85,7 @@
                         class="text-red-500 text-xs italic">Veillez verifier que le champ non vide </div>
                     <div *ngIf="isFormSubmitted && addForm.get('endAr').errors?.['minlength']  && addForm.get('endAr').invalid && addForm.get('endAr')"
                         class="text-red-500 text-xs italic">le nom doit contient minimum 4 lettres</div>
-                        <div *ngIf="isFormSubmitted && addForm.get('endAr').hasError('notArabic') && addForm.get('endAr')"
-                        class="text-red-500 text-xs italic">le texte doit être en arabe</div>
+                       
                 </ng-container> 
             </div>
         </div>

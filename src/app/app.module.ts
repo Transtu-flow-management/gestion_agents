@@ -37,6 +37,8 @@ import { AccessdeniedComponent } from './accessdenied/accessdenied.component';
 import {  httpInterceptorProviders } from './Core/Services/auth.interceptor';
 import { ReportComponent } from './Dialogs/report/report.component';
 import { ShowreportComponent } from './Dialogs/showreport/showreport.component';
+import { InvestigationsComponent } from './Core/navigations/investigations/investigations.component';
+import { WeatherComponent } from './Core/Pages/weather/weather.component';
 
 
 
@@ -50,6 +52,8 @@ export const API_URL = new InjectionToken<String>('API_URL');
     AccessdeniedComponent,
     ReportComponent,
     ShowreportComponent,
+    InvestigationsComponent,
+    WeatherComponent,
  
   ],
   imports: [

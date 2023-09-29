@@ -28,9 +28,8 @@
               <span *ngIf="currentOrder.field === 'matricule' && currentOrder.direction === 'asc'">&#9650;</span>
               <span *ngIf="currentOrder.field === 'matricule' && currentOrder.direction === 'desc'">&#9660;</span>
             </th>
-            <th scope="col" class="  font-medium text-gray-900 cursor-pointer"(click)="sortByBrand()">Marque
-              <span *ngIf="currentOrderBrand.field === 'brand' && currentOrderBrand.direction === 'asc'">&#9650;</span>
-              <span *ngIf="currentOrderBrand.field === 'brand' && currentOrderBrand.direction === 'desc'">&#9660;</span>
+            <th scope="col" class="  font-medium text-gray-900 cursor-pointer">Marque
+            
             </th>
             <th scope="col" class="  font-medium text-gray-900">Reseau</th>
             <th scope="col" class=" font-medium text-gray-900">Depot</th>

@@ -12,6 +12,7 @@ import { loginDTO } from '../DTO/login';
 })
 export class SigninComponent{
   isLoading = false; 
+  isconencted = false;
   constructor (private authservice : AuthService, private formBuilder: FormBuilder,private router: Router ) { 
     this.nameForm = this.formBuilder.group({
       username: '',
@@ -20,7 +21,7 @@ export class SigninComponent{
 }
  
 public nameForm = new FormGroup({
-  username: new FormControl('', [Validators.required, Validators.minLength(3)]),
+  username: new FormControl('', [Validators.required, Validators.minLength(3),Validators.email]),
   password: new FormControl('', [Validators.required, Validators.minLength(6)]),
 });
 
@@ -41,7 +42,7 @@ public nameForm = new FormGroup({
         },
         error => {
           console.error('Login failed:', error);
-          // Handle login error (display error message, etc.)
+         this.isconencted = true;
         }
       );
       this.isLoading = false;

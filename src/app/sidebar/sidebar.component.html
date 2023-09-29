@@ -164,6 +164,7 @@
     </mat-accordion>
 
     <div class="my-4 bg-gray-500 h-[2px]"></div>
+    <div *ngIf="hasAuthority('pcr_read')">
     <mat-accordion multi>
       <mat-expansion-panel
         class="mt-2 flex items-start rounded-md px-4 duration-300 cursor-pointer text-white bg-[#001449] pl-3.5"
@@ -208,7 +209,8 @@
             <span class="text-[15px] ml-4 text-gray-200 font-bold capitalize" routerLink="/addstop">Arrêts</span>
           </div>
         </div>
-        <div
+        <div *ngIf="hasAuthority('ReadGPS')">
+        <div 
           class="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-[#001469] text-white"
           routerLinkActive="text-[15px] ml-3 text-gray-200 font-bold bg-[#001499]">
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-compass-fill"
@@ -218,9 +220,11 @@
           </svg>
           <span class="text-[15px] ml-4 text-gray-200 font-bold capitalize" routerLink="/gps">Live tracking</span>
         </div>
-
+      </div>
       </mat-expansion-panel>
     </mat-accordion>
+  </div>
+  <div *ngIf="hasAuthority('pcr_write')">
     <div class="p-3 mt-4 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-blue-600 text-white">
       <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chat-square-fill"
         viewBox="0 0 16 16">
@@ -229,6 +233,7 @@
       </svg>
       <span class="text-[15px] ml-4 text-gray-200 font-bold " routerLink="/reclammation">Réclamations</span>
     </div>
+  </div>
     <div class="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-blue-600 text-white">
       <i class="bi bi-gear-fill"></i>
       <span class="text-[15px] ml-4 text-gray-200 font-bold " routerLink="/add">Parametres</span>

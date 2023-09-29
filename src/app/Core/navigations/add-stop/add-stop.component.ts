@@ -42,7 +42,7 @@ export class AddStopComponent implements AfterViewInit {
   public message: string;
   paths: Path[] = [];
   map: L.Map;
-  stopMarkers: L.Marker[] = []
+  stopMarkers: L.Marker[] = [];
   marker: L.Marker;
   startMarkerdraw: L.Marker;
   endMarkerdraw: L.Marker;
@@ -179,8 +179,8 @@ export class AddStopComponent implements AfterViewInit {
         .bindPopup(popupText)
         .openPopup();
       this.addForm.patchValue({
-        lat: this.long,
-        lng: this.latt
+        lat: this.latt,
+        lng: this.long
       });
 
     });

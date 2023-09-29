@@ -27,6 +27,7 @@ export class TestComponent implements OnInit{
       surname: [''],
       username: [''],
       phone:[''],
+      address:[''],
       newPassword: [''],
       password : [''],
     });
@@ -42,6 +43,7 @@ export class TestComponent implements OnInit{
         surname: this.userinfo.surname,
         username: this.userinfo.username,
         phone: this.userinfo.phone,
+        address:this.userinfo.addres
       });
     }    
     console.log(this.updateForm.value)
@@ -80,10 +82,33 @@ export class TestComponent implements OnInit{
   public patchAgent(): void {
     const formvalue = this.updateForm.value;
     this.service.updateAgent(this.userinfo.id,formvalue).subscribe((res)=>{
-      console.log("updated :",res);
+      this.openToast("agent a été mis à jour");
     },(err)=>{
       console.log("error : ",err);
     })
+    var formdata = new FormData();
+    const values = this.updateForm.getRawValue();
+    Object.keys(values).forEach((key) => {
+      if (values[key] !== this.userinfo[key] && values[key] !== null && values[key] !== '') {
+        console.log("82 :  ",this.userinfo[key]);
+        if (key === 'file') {
+          const files = values[key] as File[];
+          if (files && files.length > 0) {
+            files.forEach((file) => {
+              formdata.append('image', file, file.name);
+            });
+          }
+        }
+        }});
+        if (this.selectedImage) {
+          this.service.patchAgentimg(this.userinfo.id, formdata, this.selectedImage).subscribe((res) => {
+           
+            this.openToast("agent a été mis à jour");
+          
+          }, (error) => {
+            console.log("error patching agent avec image ", error);
+          });
+        }
  /*   const newpass = this.updateForm.get('password').value;
     var formdata = new FormData();
     const values = this.updateForm.getRawValue();

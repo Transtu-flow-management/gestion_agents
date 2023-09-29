@@ -13,30 +13,25 @@ export class CarService {
   constructor(private http : HttpClient,private gs:GlobalService) { }
 
   
-  public getCars(page: number, size: number):Observable<Car[]>{
+  public getCars(page: number, size: number,agentid:number):Observable<Car[]>{
     const gurl= this.gs.uri + this.url;
     let params = new HttpParams()
+    .set('agentId',agentid)
     .set('page', page.toString())
     .set('size', size.toString());
    
     return this.http.get<Car[]>(gurl,{params});
   }
-  public getCarsSorted(page: number, size: number):Observable<Car[]>{
+  public getCarsSorted(page: number, size: number,agentId:number):Observable<Car[]>{
     const gurl= this.gs.uri + this.url+`/sorted`;
     let params = new HttpParams()
+    .set('agentId',agentId)
     .set('page', page.toString())
     .set('size', size.toString());
    
     return this.http.get<Car[]>(gurl,{params});
   }
-  public getCarsSortedBrand(page: number, size: number):Observable<Car[]>{
-    const gurl= this.gs.uri + this.url+`/sortedbrand`;
-    let params = new HttpParams()
-    .set('page', page.toString())
-    .set('size', size.toString());
-   
-    return this.http.get<Car[]>(gurl,{params});
-  }
+ 
 public findcars():Observable<Car[]>{
   const gurl= this.gs.uri + this.url+`/all`;
   return this.http.get<Car[]>(gurl);

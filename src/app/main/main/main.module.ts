@@ -43,6 +43,7 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatListModule } from '@angular/material/list';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
+import { CanvasJSAngularChartsModule } from '@canvasjs/angular-charts';
 import { MatTableModule } from '@angular/material/table';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -75,6 +76,8 @@ import { ReclammationComponent } from 'src/app/Core/Pages/reclammation/reclammat
 import { RecArchiveComponent } from 'src/app/Core/Pages/rec-archive/rec-archive.component';
 import { AccessdeniedComponent } from 'src/app/accessdenied/accessdenied.component';
 import { TypeTextPipe } from 'src/app/type-text.pipe';
+import { InvestigationsComponent } from 'src/app/Core/navigations/investigations/investigations.component';
+import { WeatherComponent } from 'src/app/Core/Pages/weather/weather.component';
 
 
 const approute: Routes = [
@@ -96,7 +99,9 @@ const approute: Routes = [
   {path:'updatepath',component:UpdatePathComponent,canActivate:[AuthGuard]},
   {path:'addstop',component:AddStopComponent,canActivate:[AuthGuard]},
   {path:'cars',component:CarsComponent,canActivate:[AuthGuard,PermissionsGuard],data:{authorities:['readCar']}},
+  {path:'history',component:InvestigationsComponent,canActivate:[AuthGuard,PermissionsGuard],data:{authorities:['readCar']}},
   {path:'gps',component:GpsdataComponent,canActivate:[AuthGuard]},
+  {path:'weather',component:WeatherComponent,canActivate:[AuthGuard]},
   {path: 'access-denied',
   component:AccessdeniedComponent 
 },
@@ -168,6 +173,7 @@ const approute: Routes = [
       MatSidenavModule,
       MatListModule,
       MatIconModule,
+      CanvasJSAngularChartsModule,
       MatSelectModule,
       MatTableModule,
       MatDialogModule,

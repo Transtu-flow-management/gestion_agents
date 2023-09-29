@@ -62,9 +62,9 @@ export class AddPathComponent implements AfterViewInit,OnInit {
     this.addForm = this.fb.group({
      
       startFr: new FormControl(this.startfr, [Validators.required,Validators.minLength(4)]),
-      startAr: new FormControl(this.startar, [Validators.required,Validators.minLength(4),this.arabicTextValidator()]),
+      startAr: new FormControl(this.startar, [Validators.required,Validators.minLength(4)]),
       endFr: new FormControl(this.endfr, [Validators.required,Validators.minLength(4)]),
-      endAr: new FormControl(this.endar, [Validators.required,Validators.minLength(4),this.arabicTextValidator()]),
+      endAr: new FormControl(this.endar, [Validators.required,Validators.minLength(4)]),
       type:new FormControl('', [Validators.required]),
       data:new FormControl('', [Validators.required]),
       line:new FormControl('', [Validators.required]),
