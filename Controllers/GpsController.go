@@ -11,8 +11,6 @@ import (
 
 	"github.com/gorilla/websocket"
 	"github.com/redis/go-redis/v9"
-	"go.mongodb.org/mongo-driver/mongo"
-	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 var ctx = context.Background()
@@ -35,7 +33,6 @@ func HandleWebSocket(w http.ResponseWriter, r *http.Request) {
 	}
 	defer conn.Close()
 
-	
 	currentVehicleID := ""
 
 	for {
@@ -55,14 +52,13 @@ func HandleWebSocket(w http.ResponseWriter, r *http.Request) {
 					fmt.Println("Stopping updates for old vehicle ID:", vehicleID)
 					return
 				}
-
 				fullData, lat, lang, err := GetLocationData(vehicleID)
 				if err != nil {
 					fmt.Println("Error starting updates:", err)
-					
+
 				}
 
-//codeBy oussama omrani
+				//codeBy oussama omrani
 				response := struct {
 					FullData  string  `json:"fullData"`
 					Latitude  float64 `json:"lat"`
@@ -132,7 +128,6 @@ func StoreLocation(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		
 		if distance >= 50.0 {
 			// Store new location data
 			if err := configs.GetRedisClient().Set(ctx, key, data, 0).Err(); err != nil {
@@ -140,7 +135,6 @@ func StoreLocation(w http.ResponseWriter, r *http.Request) {
 				return
 			}
 
-		
 			_, err := configs.GetRedisClient().GeoAdd(ctx, "GeoADDlocations", &redis.GeoLocation{
 				Name:      "vehicule:location:" + location.Matricule,
 				Latitude:  location.Lat,
@@ -167,7 +161,7 @@ func StoreLocation(w http.ResponseWriter, r *http.Request) {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
-		fmt.Printf("Received POST request data1: %+v\n", location)
+		fmt.Printf("Received POST request data: %+v\n", location)
 	}
 
 	w.WriteHeader(http.StatusOK)
@@ -182,10 +176,7 @@ func StoreLocationwithoutCond(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
-
-	// Store the full data in Redis (you can choose your own key)
 	key := "location:" + location.Matricule
-
 	formattedData := fmt.Sprintf(
 		"{Matricule:%s, Lat:%f, Lang:%f, Alt:%f, Speed:%f, Bearing:%f, Acc:%f, Addr:%s, RunningTime:%s, VersionAndroid:%s}",
 		location.Matricule,
@@ -199,7 +190,6 @@ func StoreLocationwithoutCond(w http.ResponseWriter, r *http.Request) {
 		location.RunningTime,
 		location.VersionAndroid,
 	)
-
 	go func() {
 		if err := configs.GetRedisClient().Set(ctx, key, formattedData, 0).Err(); err != nil {
 			fmt.Printf("Error storing data in Redis: %s\n", err)
@@ -220,22 +210,14 @@ func StoreLocationwithoutCond(w http.ResponseWriter, r *http.Request) {
 	}()
 
 	go func() {
-		client, err := mongo.Connect(ctx, options.Client().ApplyURI(configs.EnvMongoURI()))
-		if err != nil {
-			fmt.Printf("Error connecting to MongoDB: %s\n", err)
-			return
-		}
-		defer client.Disconnect(ctx)
-
 		collectionName := "vehicule_" + location.Matricule
-		collection := client.Database("GPS").Collection(collectionName)
-		_, err = collection.InsertOne(context.Background(), location)
+		collection := configs.GetMongoClient().Database(configs.GetDbname()).Collection(collectionName)
+		_, err = collection.InsertOne(ctx, location)
 		if err != nil {
 			fmt.Printf("Error storing data in MongoDB: %s\n", err)
 		}
 	}()
-
-	fmt.Printf("Received POST request data1: %+v\n", location)
+	fmt.Printf("Received POST request data: %+v\n", location)
 
 	w.WriteHeader(http.StatusOK)
 	fmt.Fprintln(w, "Location data stored successfully")

@@ -13,40 +13,44 @@ import (
 
 
 var redisClient *redis.Client
-
+var mongoClient *mongo.Client
 func ConnectDB() {
     // Connect to MongoDB
     mongoURL := EnvMongoURI()
-    client, err := mongo.NewClient(options.Client().ApplyURI(mongoURL))
+    log.Printf("Listening on mongo : %s", mongoURL)
+    clientOptions := options.Client().ApplyURI(mongoURL)
+    client, err := mongo.Connect(context.Background(), clientOptions)
     if err != nil {
         log.Fatal(err)
     }
     ctx := context.Background()
-    err = client.Connect(ctx)
+    err = client.Ping(ctx, nil)
     if err != nil {
         log.Fatal(err)
     }
-    defer client.Disconnect(ctx)
+    //defer client.Disconnect(ctx)
 
     err = client.Ping(ctx, nil)
     if err != nil {
         log.Fatal(err)
     }
     fmt.Println("Connected to MongoDB")
+    mongoClient = client
 
-   
+ //connect to redis
     redisURL := EnvRedisURI()
+    log.Printf("Listening on Redis : %s...", redisURL)
     parsedURL, err := url.Parse(redisURL)
    redisHost := parsedURL.Hostname()
     redisPort := parsedURL.Port()
 
     options := &redis.Options{
         Addr:     redisHost + ":" + redisPort,
-        Password: "", // Add your Redis password if required
+        Password: "",
         DB:       0,
     }
     redisClient = redis.NewClient(options)
-    // Test the connection to Redis
+    // Test connection vers Redis
     pong, err := redisClient.Ping(ctx).Result()
     if err != nil {
         log.Fatal("Error connecting to Redis:", err)
@@ -56,4 +60,7 @@ func ConnectDB() {
 
 func GetRedisClient() *redis.Client {
     return redisClient
+}
+func GetMongoClient() *mongo.Client {
+    return mongoClient
 }
