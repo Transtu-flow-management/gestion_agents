@@ -43,9 +43,9 @@ public class LineService {
         line.setWarehouse(warehouse);
         String nameFr = line.getNameFr();
         String nameAr = line.getNameAr();
-        if (lineRepo.existsByNameFr(nameFr) || lineRepo.existsByNameAr(nameAr)) {
+       /* if (lineRepo.existsByNameFr(nameFr) || lineRepo.existsByNameAr(nameAr)) {
             throw new IllegalArgumentException("name already exists");
-        }
+        }*/
         line.setDateOfInsertion(new Date());
         Line newLine = lineRepo.save(line);
         return newLine;

@@ -44,10 +44,10 @@ public class PathService {
         String nameAr = path.getStartAr();
         String endAr = path.getEndAr();
         String endFr = path.getEndFr();
-        if (((pathRepo.existsByStartFr(nameFr) || pathRepo.existsByStartAr(nameAr))
+       /* if (((pathRepo.existsByStartFr(nameFr) || pathRepo.existsByStartAr(nameAr))
                 && (pathRepo.existsByEndAr(endAr) || pathRepo.existsByEndFr(endFr)))) {
             throw new IllegalArgumentException("start path and end path should be different");
-        }
+        }*/
         path.setDateOfInsertion(new Date());
         Path savedpath = pathRepo.save(path);
         return savedpath;

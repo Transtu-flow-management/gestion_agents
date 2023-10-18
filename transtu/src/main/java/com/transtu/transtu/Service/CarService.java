@@ -165,7 +165,7 @@ public Car CreateCar(Car car){
             }
         }
         newcar.setDateOfModification(new Date());
-        return carRepo.save(oldcar);
+        return carRepo.save(newcar);
 }
 
     public void Deleteall() {

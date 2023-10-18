@@ -234,7 +234,8 @@ public class AgentService  {
     public ResponseEntity<Resource> getFile(String filename) {
         Resource file = storegeService.loadFile(filename);
         HttpHeaders headers = new HttpHeaders();
-        headers.setContentDisposition(ContentDisposition.inline().filename(file.getFilename()).build());
+        if (!file.getFilename().equals(null)){
+        headers.setContentDisposition(ContentDisposition.inline().filename(file.getFilename()).build());}
         return ResponseEntity.ok()
                 .headers(headers)
                 .body(file);
